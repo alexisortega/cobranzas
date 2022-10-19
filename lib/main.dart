@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/material.dart';
-
 import 'ui/onboarding_screen.dart';
 
-void main(){
+void main() {
   runApp(MyApp());
 }
 

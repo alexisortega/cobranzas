@@ -1,6 +1,6 @@
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/ui/root_page.dart';
-import 'package:cobranzas/ui/screens/signup_page.dart';
+import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_textfield.dart';
 import 'package:cobranzas/ui/screens/widgets/forgot_password.dart';
 import 'package:flutter/material.dart';

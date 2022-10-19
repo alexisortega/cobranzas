@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "884285337726",
+    "project_id": "gestorcobranza-721b0",
+    "storage_bucket": "gestorcobranza-721b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884285337726:android:7459ea09b4c247cbaa682f",
+        "android_client_info": {
+          "package_name": "com.idconexion.cobranzas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884285337726-vuscjecuda0pqa30pk9te6349nqjph9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Qq5kd22iUcbrDbIl9_XDEA2kQAgRFgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884285337726-vuscjecuda0pqa30pk9te6349nqjph9g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
