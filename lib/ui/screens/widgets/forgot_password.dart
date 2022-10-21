@@ -1,8 +1,7 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/ui/screens/widgets/custom_textfield.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cobranzas/ui/screens/widgets/custom_textfield.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -11,7 +10,7 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    final vacio2 = TextEditingController();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -37,10 +36,11 @@ class ForgotPassword extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const CustomTextfield(
-                obscureText: false,
-                hintText: 'Correo Eléctronico',
-                icon: Icons.alternate_email,
+              CustomTextfield(
+                  controlador: vacio2,
+                  obscureText: false,
+                  hintText: 'Correo Eléctronico',
+                  icon: Icons.alternate_email,
               ),
               const SizedBox(
                 height: 20,
@@ -74,7 +74,7 @@ class ForgotPassword extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       PageTransition(
-                          child: const SignIn(),
+                          child: SignIn(),
                           type: PageTransitionType.bottomToTop));
                 },
                 child: Center(
