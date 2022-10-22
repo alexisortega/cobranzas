@@ -10,7 +10,7 @@ class Constants {
   static var descriptionOne = "Puedes relizar creditos rapidos y sencillos";
   static var titleTwo = "Control de clientes";
   static var descriptionTwo =
-      "Reliza pagos o actualiza la información de tus clientes";
-  static var titleThree = "Gestiona tus operaciones";
-  static var descriptionThree = "Observa las operaciones del dia ";
+      "reliza pagos o actuliza la información de tus clientes";
+  static var titleThree = "Observa tus operaciones";
+  static var descriptionThree = "observa las operaciones del dia ";
 }

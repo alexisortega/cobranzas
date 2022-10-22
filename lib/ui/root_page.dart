@@ -1,6 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/models/instancias.dart';
+import 'package:cobranzas/models/plants.dart';
 import 'package:cobranzas/scan_page.dart';
 import 'package:cobranzas/ui/screens/card_page.dart';
 import 'package:cobranzas/ui/screens/favorite_page.dart';

@@ -10,7 +10,7 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final vacio = TextEditingController();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -36,24 +36,21 @@ class SignUp extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              CustomTextfield(
-                  controlador: vacio,
-                  obscureText: false,
-                  hintText: 'Correo Eléctronico',
-                  icon: Icons.alternate_email,
-             ),
-              CustomTextfield(
-                  controlador: vacio,
-                  obscureText: false,
-                  hintText: 'Nombre Completo',
-                  icon: Icons.person,
-                 ),
-              CustomTextfield(
-                  controlador: vacio,
-                  obscureText: true,
-                  hintText: 'Contraseña',
-                  icon: Icons.lock,
-                  ),
+              const CustomTextfield(
+                obscureText: false,
+                hintText: 'Correo Eléctronico',
+                icon: Icons.alternate_email,
+              ),
+              const CustomTextfield(
+                obscureText: false,
+                hintText: 'Nombre Completo',
+                icon: Icons.person,
+              ),
+              const CustomTextfield(
+                obscureText: true,
+                hintText: 'Contraseña',
+                icon: Icons.lock,
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -126,7 +123,7 @@ class SignUp extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       PageTransition(
-                          child: SignIn(),
+                          child: const SignIn(),
                           type: PageTransitionType.bottomToTop));
                 },
                 child: Center(

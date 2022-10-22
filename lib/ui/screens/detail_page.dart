@@ -1,5 +1,5 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/models/instancias.dart';
+import 'package:cobranzas/models/plants.dart';
 import 'package:flutter/material.dart';
 
 

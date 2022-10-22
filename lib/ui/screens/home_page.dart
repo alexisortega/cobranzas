@@ -1,5 +1,5 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/models/instancias.dart';
+import 'package:cobranzas/models/plants.dart';
 import 'package:cobranzas/ui/screens/detail_page.dart';
 import 'package:cobranzas/ui/screens/widgets/plant_widget.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                           child: TextField(
                         showCursor: false,
                         decoration: InputDecoration(
-                          hintText: 'BUSCAR',
+                          hintText: 'Search Plant',
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
                         ),

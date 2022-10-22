@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "884285337726-c83mr8v19rha29mdjfu1hikdfrcrcbg6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.idconexion.cobranzas",
-            "certificate_hash": "8b1b10bb289e7ab927ce24f3c405bdcc10681adc"
-          }
-        },
-        {
           "client_id": "884285337726-vuscjecuda0pqa30pk9te6349nqjph9g.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -40,10 +40,9 @@ dependencies:
   page_transition: ^2.0.9
   flutter_onboarding: ^0.0.9
   google_sign_in: ^5.4.2
-  firebase_auth: ^4.0.2
+  firebase_auth: ^4.0.1
   flutter_signin_button: ^2.0.0
   get: ^4.6.5
-  cloud_firestore: ^4.0.1
   firebase_core:
 
 
