@@ -1,7 +1,6 @@
 import 'package:cobranzas/constants.dart';
 import 'package:flutter/material.dart';
 
-
 class ProfileWidget extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -21,7 +20,7 @@ class ProfileWidget extends StatelessWidget {
           Row(
             children: [
               Icon(
-                icon,
+                icon ,
                 color: Constants.blackColor.withOpacity(.5),
                 size: 24,
               ),
@@ -42,7 +41,7 @@ class ProfileWidget extends StatelessWidget {
             Icons.arrow_forward_ios,
             color: Constants.blackColor.withOpacity(.4),
             size: 16,
-          )
+          ),
         ],
       ),
     );

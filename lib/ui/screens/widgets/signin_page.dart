@@ -1,11 +1,14 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/ui/root_page.dart';
+import 'package:cobranzas/controllers/controllers.dart';
+import 'package:cobranzas/repository/authentication.dart';
+
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
-import 'package:cobranzas/ui/screens/widgets/custom_textfield.dart';
+
 import 'package:cobranzas/ui/screens/widgets/forgot_password.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
+
 
 class SignIn extends StatelessWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -14,174 +17,186 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    final controller2 = Get.put(SingUpController());
+
+    borrar_campos_login() {
+      controller2.emailLogin.clear();
+      controller2.passwordlogin.clear();
+    }
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/LOGIN.png',
-                height: 300,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                '¡ BIENVENIDO ! ',
-                style: TextStyle(
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.blue),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const CustomTextfield(
-                obscureText: false,
-                hintText: 'Correo Eléctronico',
-                icon: Icons.alternate_email,
-              ),
-              const CustomTextfield(
-                obscureText: true,
-                hintText: 'Contraseña',
-                icon: Icons.lock,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-
-                  
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const RootPage(),
-                          type: PageTransitionType.bottomToTop));
-                },
-                child: Container(
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    color: Constants.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: const Center(
-                    child: Text(
-                      'Ingresar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/LOGIN.png',
+                  height: 300,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  '¡ BIENVENIDO ! ',
+                  style: TextStyle(
+                      fontSize: 35.0,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                TextFormField(
+                  controller: controller2.emailLogin,
+                  decoration: const InputDecoration(
+                      label: Text("Correo Eléctronico"),
+                      prefixIcon: Icon(Icons.email)),
+                ),
+                TextFormField(
+                  controller: controller2.passwordlogin,
+                  decoration: const InputDecoration(
+                      label: Text("contraseña"), prefixIcon: Icon(Icons.lock)),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    authenticationRepository().loginWithEmailAndPassword1(
+                        controller2.emailLogin.text.trim(),
+                        controller2.passwordlogin.text.trim());
+                    borrar_campos_login();
+                  },
+                  child: Container(
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      color: Constants.primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 20),
+                    child: const Center(
+                      child: Text(
+                        'Ingresar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const ForgotPassword(),
-                          type: PageTransitionType.bottomToTop));
-                },
-                child: Center(
-                  child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: '¿Olvidaste tú contraseña? ',
-                        style: TextStyle(
-                          color: Constants.blackColor,
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            child: const ForgotPassword(),
+                            type: PageTransitionType.bottomToTop));
+                  },
+                  child: Center(
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: '¿Olvidaste tú contraseña? ',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Recupérala aquí',
-                        style: TextStyle(
-                          color: Constants.primaryColor,
+                        TextSpan(
+                          text: 'Recupérala aquí',
+                          style: TextStyle(
+                            color: Constants.primaryColor,
+                          ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: const [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('Por'),
-                  ),
-                  Expanded(child: Divider()),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: size.width,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Constants.primaryColor),
-                    borderRadius: BorderRadius.circular(10)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      child: Image.asset('assets/images/google.png'),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: const [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text('Por'),
                     ),
-                    Text(
-                      'Ingresa con Google',
-                      style: TextStyle(
-                        color: Constants.blackColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
+                    Expanded(child: Divider()),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const SignUp(),
-                          type: PageTransitionType.bottomToTop));
-                },
-                child: Center(
-                  child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: '¿No tienes una cuenta? ',
-                        style: TextStyle(
-                          color: Constants.blackColor,
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Constants.primaryColor),
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        child: Image.asset('assets/images/google.png'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          print("HOLA SOY EL boton google");
+                        },
+                        child: Text(
+                          'Ingresa con Google',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
-                      TextSpan(
-                        text: 'Registraté',
-                        style: TextStyle(
-                          color: Constants.primaryColor,
-                        ),
-                      ),
-                    ]),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            child: SignUp(),
+                            type: PageTransitionType.bottomToTop));
+                  },
+                  child: Center(
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: '¿No tienes una cuenta? ',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Registraté',
+                          style: TextStyle(
+                            color: Constants.primaryColor,
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,11 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/models/plants.dart';
+import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/scan_page.dart';
 import 'package:cobranzas/ui/screens/card_page.dart';
 import 'package:cobranzas/ui/screens/favorite_page.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/profile_page.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:page_transition/page_transition.dart';
@@ -33,22 +35,22 @@ class _RootPageState extends State<RootPage> {
       CartPage(
         addedToCartPlants: myCart,
       ),
-      const ProfilePage(),
+      ProfilePage(),
     ];
   }
 
   //List of the pages icons
   List<IconData> iconList = [
     Icons.home,
-    Icons.favorite,
-    Icons.shopping_cart,
+    Icons.credit_card,
+    Icons.more,
     Icons.person,
   ];
 
   //List of the pages titles
   List<String> titleList = [
-    'Home',
-    'Favorite',
+    'Clientes',
+    'Pagos',
     'Cart',
     'Profile',
   ];
@@ -68,10 +70,19 @@ class _RootPageState extends State<RootPage> {
                 fontSize: 24,
               ),
             ),
-            Icon(
-              Icons.notifications,
-              color: Constants.blackColor,
-              size: 30.0,
+            IconButton(
+              icon: const Icon(
+                Icons.login_outlined,
+                color: Colors.orange,
+                size: 40,
+              ),
+              onPressed: () {
+                //
+
+                authenticationRepository().LogoOut();
+                //    SingUpController().emailLogin.dispose();
+                //    SingUpController().passwordlogin.dispose();
+              },
             )
           ],
         ),
@@ -87,7 +98,7 @@ class _RootPageState extends State<RootPage> {
           Navigator.push(
               context,
               PageTransition(
-                  child:const  ScanPage(),
+                  child: const ScanPage(),
                   type: PageTransitionType.bottomToTop));
         },
         backgroundColor: Constants.primaryColor,

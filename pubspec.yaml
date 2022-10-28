@@ -43,7 +43,9 @@ dependencies:
   firebase_auth: ^4.0.1
   flutter_signin_button: ^2.0.0
   get: ^4.6.5
-  firebase_core:
+  firebase_core: ^2.1.0
+  awesome_snackbar_content: ^0.0.8
+  
 
 
 dev_dependencies:

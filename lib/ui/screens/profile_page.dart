@@ -2,7 +2,6 @@ import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/profile_widget.dart';
 import 'package:flutter/material.dart';
 
-
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -17,6 +16,7 @@ class ProfilePage extends StatelessWidget {
         width: size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               width: 150,
@@ -33,7 +33,7 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 10.0,
             ),
             SizedBox(
               width: size.width * .3,
@@ -88,8 +88,10 @@ class ProfilePage extends StatelessWidget {
                     title: 'Share',
                   ),
                   ProfileWidget(
-                    icon: Icons.logout,
+                    icon: Icons.abc,
                     title: 'Log Out',
+                    
+                                        
                   ),
                 ],
               ),

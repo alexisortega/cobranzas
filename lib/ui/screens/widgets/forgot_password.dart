@@ -1,7 +1,10 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/ui/screens/widgets/custom_textfield.dart';
+import 'package:cobranzas/controllers/controllers.dart';
+import 'package:cobranzas/repository/authentication.dart';
+
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -11,6 +14,7 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final controller3 = Get.put(SingUpController());
 
     return Scaffold(
       body: Padding(
@@ -37,16 +41,21 @@ class ForgotPassword extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const CustomTextfield(
-                obscureText: false,
-                hintText: 'Correo Eléctronico',
-                icon: Icons.alternate_email,
+              TextFormField(
+                controller: controller3.passwordRecuperar,
+                decoration: const InputDecoration(
+                    label: Text("contraseña"), prefixIcon: Icon(Icons.lock)),
               ),
               const SizedBox(
                 height: 20,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  authenticationRepository().EnviarLinkResetContrasena(
+                      controller3.passwordRecuperar.text.trim());
+
+                  controller3.passwordRecuperar.clear();
+                },
                 child: Container(
                   width: size.width,
                   decoration: BoxDecoration(
@@ -81,7 +90,7 @@ class ForgotPassword extends StatelessWidget {
                   child: Text.rich(
                     TextSpan(children: [
                       TextSpan(
-                        text: 'Have an Account? ',
+                        text: 'Regresar? ',
                         style: TextStyle(
                           color: Constants.blackColor,
                         ),

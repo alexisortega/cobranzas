@@ -23,17 +23,12 @@ class _HomePageState extends State<HomePage> {
 
     //Plants category
     List<String> _plantTypes = [
-      'Recommended',
-      'Indoor',
-      'Outdoor',
-      'Garden',
-      'Supplement',
+      'clientes ',
+      'nuevo cliente ',
+      'prueba1 ',
+      'prueba2 ',
+      'prueba3 ',
     ];
-
-    //Toggle Favorite button
-    bool toggleIsFavorated(bool isFavorited) {
-      return !isFavorited;
-    }
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -66,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                           child: TextField(
                         showCursor: false,
                         decoration: InputDecoration(
-                          hintText: 'Search Plant',
+                          hintText: 'Buscar cliente',
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,
                         ),
@@ -81,142 +76,44 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          const SizedBox(
+            height: 20.0,
+          ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            height: 50.0,
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            height: 30.0,
             width: size.width,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _plantTypes.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (BuildContext, int Index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(.8),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          selectedIndex = index;
+                          selectedIndex = Index;
+
+                          switch (Index) {
+                            case 0:
+                              _showDialog();
+
+                              break;
+
+                            default:
+                          }
                         });
                       },
                       child: Text(
-                        _plantTypes[index],
+                        _plantTypes[Index],
                         style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: selectedIndex == index
-                              ? FontWeight.bold
-                              : FontWeight.w300,
-                          color: selectedIndex == index
-                              ? Constants.primaryColor
-                              : Constants.blackColor,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-          SizedBox(
-            height: size.height * .3,
-            child: ListView.builder(
-                itemCount: _plantList.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              child: DetailPage(
-                                plantId: _plantList[index].plantId,
-                              ),
-                              type: PageTransitionType.bottomToTop));
-                    },
-                    child: Container(
-                      width: 200,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      // ignore: sort_child_properties_last
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 10,
-                            right: 20,
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    bool isFavorited = toggleIsFavorated(
-                                        _plantList[index].isFavorated);
-                                    _plantList[index].isFavorated = isFavorited;
-                                  });
-                                },
-                                icon: Icon(
-                                  _plantList[index].isFavorated == true
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: Constants.primaryColor,
-                                ),
-                                iconSize: 30,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 50,
-                            right: 50,
-                            top: 50,
-                            bottom: 50,
-                            child: Image.asset(_plantList[index].imageURL),
-                          ),
-                          Positioned(
-                            bottom: 15,
-                            left: 20,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _plantList[index].category,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  _plantList[index].plantName,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 15,
-                            right: 20,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                r'$' + _plantList[index].price.toString(),
-                                style: TextStyle(
-                                    color: Constants.primaryColor,
-                                    fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                        color: Constants.primaryColor.withOpacity(.8),
-                        borderRadius: BorderRadius.circular(20),
+                            fontSize: 22.0,
+                            fontWeight: selectedIndex == Index
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: selectedIndex == Index
+                                ? Colors.blue
+                                : Colors.orange[300]),
                       ),
                     ),
                   );
@@ -225,25 +122,29 @@ class _HomePageState extends State<HomePage> {
           Container(
             padding: const EdgeInsets.only(left: 16, bottom: 20, top: 20),
             child: const Text(
-              'New Plants',
+              'Todos los Cientes',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18.0,
+                fontSize: 25.0,
               ),
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            height: size.height * .5,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            height: size.height * .70,
             child: ListView.builder(
                 itemCount: _plantList.length,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, PageTransition(child: 
-                        DetailPage(plantId: _plantList[index].plantId), type: PageTransitionType.bottomToTop));
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                child: DetailPage(
+                                    plantId: _plantList[index].plantId),
+                                type: PageTransitionType.bottomToTop));
                       },
                       child: PlantWidget(index: index, plantList: _plantList));
                 }),
@@ -251,5 +152,28 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     ));
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: const Text("Alert Dialog title"),
+          content: const Text("Alert Dialog body"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              child: const Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
