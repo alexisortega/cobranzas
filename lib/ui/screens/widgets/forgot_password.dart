@@ -9,12 +9,11 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
-
+  ForgotPassword({Key? key}) : super(key: key);
+  final controller3 = Get.put(SingUpController());
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final controller3 = Get.put(SingUpController());
 
     return Scaffold(
       body: Padding(
@@ -54,7 +53,7 @@ class ForgotPassword extends StatelessWidget {
                   authenticationRepository().EnviarLinkResetContrasena(
                       controller3.passwordRecuperar.text.trim());
 
-                  controller3.passwordRecuperar.clear();
+                  borrar_campos_resetcont();
                 },
                 child: Container(
                   width: size.width,
@@ -85,6 +84,7 @@ class ForgotPassword extends StatelessWidget {
                       PageTransition(
                           child: const SignIn(),
                           type: PageTransitionType.bottomToTop));
+                  borrar_campos_resetcont();
                 },
                 child: Center(
                   child: Text.rich(
@@ -110,5 +110,9 @@ class ForgotPassword extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void borrar_campos_resetcont() {
+    controller3.passwordRecuperar.clear();
   }
 }

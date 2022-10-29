@@ -79,7 +79,9 @@ class _RootPageState extends State<RootPage> {
               onPressed: () {
                 //
 
+                //   authenticationRepository().LogoOut();
                 authenticationRepository().LogoOut();
+
                 //    SingUpController().emailLogin.dispose();
                 //    SingUpController().passwordlogin.dispose();
               },

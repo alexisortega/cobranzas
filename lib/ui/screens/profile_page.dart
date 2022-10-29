@@ -11,61 +11,71 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         height: size.height,
         width: size.width,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              width: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Constants.primaryColor.withOpacity(.5),
-                  width: 5.0,
-                ),
-              ),
-              child: const CircleAvatar(
-                radius: 60,
-                backgroundImage: ExactAssetImage('assets/images/profile.jpg'),
-              ),
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            SizedBox(
-              width: size.width * .3,
-              child: Row(
-                children: [
-                  Text(
-                    'John Doe',
-                    style: TextStyle(
-                      color: Constants.blackColor,
-                      fontSize: 20,
+            SizedBox(height: size.height * .01),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Constants.primaryColor.withOpacity(.5),
+                      width: 8.0,
                     ),
                   ),
+                  child: const CircleAvatar(
+                    radius: 60,
+                    backgroundImage:
+                        ExactAssetImage('assets/images/profile.jpg'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   SizedBox(
-                      height: 24,
-                      child: Image.asset("assets/images/verified.png")),
-                ],
-              ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'John Doe',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(
+                            height: 24,
+                            child: Image.asset("assets/images/verified.png")),
+                      ],
+                    ),
+                  ),
+                ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'johndoe@gmail.com',
+                  style: TextStyle(
+                    color: Constants.blackColor,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'johndoe@gmail.com',
-              style: TextStyle(
-                color: Constants.blackColor.withOpacity(.3),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              height: size.height * .7,
-              width: size.width,
+            const SizedBox(height: .3),
+            SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
                   ProfileWidget(
                     icon: Icons.person,
@@ -90,8 +100,6 @@ class ProfilePage extends StatelessWidget {
                   ProfileWidget(
                     icon: Icons.abc,
                     title: 'Log Out',
-                    
-                                        
                   ),
                 ],
               ),

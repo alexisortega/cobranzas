@@ -1,12 +1,11 @@
-
 import 'package:cobranzas/repository/Exception/signup_email_paswword_failure.dart';
 import 'package:cobranzas/ui/onboarding_screen.dart';
 import 'package:cobranzas/ui/root_page.dart';
-
-
+import 'package:cobranzas/ui/screens/home_page.dart';
+import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -53,13 +52,19 @@ class authenticationRepository extends GetxController {
     try {
       await _auth1.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-     // ignore: avoid_print
-     print("'''FIREBASE AUTH EXCEPTION 2'''-${e.code}");
+      // ignore: avoid_print
+      print("'''FIREBASE AUTH EXCEPTION 2'''-${e.code}");
     } catch (_) {}
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> LogoOut() async => await _auth1.signOut();
+  // Future<void> LogoOut() async => await _auth1.signOut();
+
+  LogoOut() async {
+    FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+   // setState(() {});
+  }
 
   void EnviarLinkResetContrasena(String trim) async {
     try {
@@ -67,11 +72,11 @@ class authenticationRepository extends GetxController {
 
       await auth.sendPasswordResetEmail(email: trim);
     } catch (e) {
-      print(e.toString());
+      print("Error " + e.toString());
     }
   }
 
-/*  HandleAuthState() async {
+  HandleAuthState() async {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
@@ -81,9 +86,9 @@ class authenticationRepository extends GetxController {
             return const SignIn();
           }
         });
-  }*/
+  }
 
- /* SignInWithGoogle() async {
+  SignInWithGoogle() async {
     final GoogleSignInAccount? googleUser1 =
         await GoogleSignIn(scopes: <String>["email"]).signIn();
 
@@ -94,5 +99,34 @@ class authenticationRepository extends GetxController {
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
     return await FirebaseAuth.instance.signInWithCredential(Credential);
-  }*/
+  }
+
+  static Future<User?> SignInWithGoogle2(
+      {required BuildContext context}) async {
+    FirebaseAuth auth2 = FirebaseAuth.instance;
+    User? user2;
+    GoogleSignIn objGoogleSign = GoogleSignIn();
+    GoogleSignInAccount? objGoogleSignInAccount = await objGoogleSign.signIn();
+
+    if (objGoogleSignInAccount != null) {
+      GoogleSignInAuthentication objGoogleSignInAuthentication =
+          await objGoogleSignInAccount.authentication;
+      AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: objGoogleSignInAuthentication.accessToken,
+          idToken: objGoogleSignInAuthentication.idToken);
+
+      try {
+        UserCredential userCredential =
+            await await FirebaseAuth.instance.signInWithCredential(credential);
+
+        user2 = userCredential.user;
+        return user2;
+      } on FirebaseAuthException catch (e) {
+        print("Error en la autentificacion ${e.hashCode.toString()}");
+      }
+    }
+  }
+
+  void setState(Null Function() param0) {}
+
 }

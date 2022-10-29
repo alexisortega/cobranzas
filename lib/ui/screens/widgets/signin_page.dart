@@ -1,14 +1,14 @@
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/controllers/controllers.dart';
 import 'package:cobranzas/repository/authentication.dart';
-
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
-
 import 'package:cobranzas/ui/screens/widgets/forgot_password.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class SignIn extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/images/LOGIN.png',
-                  height: 300,
+                  height: 250,
                 ),
                 const SizedBox(
                   height: 30,
@@ -98,8 +98,9 @@ class SignIn extends StatelessWidget {
                     Navigator.pushReplacement(
                         context,
                         PageTransition(
-                            child: const ForgotPassword(),
+                            child: ForgotPassword(),
                             type: PageTransitionType.bottomToTop));
+                    borrar_campos_login();
                   },
                   child: Center(
                     child: Text.rich(
@@ -151,8 +152,14 @@ class SignIn extends StatelessWidget {
                         child: Image.asset('assets/images/google.png'),
                       ),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          User? userGoogle =
+                              await authenticationRepository.SignInWithGoogle2(
+                                  context: context);
+                          print(userGoogle?.emailVerified);
                           print("HOLA SOY EL boton google");
+
+                          // authenticationRepository().SignInWithGoogle();
                         },
                         child: Text(
                           'Ingresa con Google',
@@ -175,6 +182,7 @@ class SignIn extends StatelessWidget {
                         PageTransition(
                             child: SignUp(),
                             type: PageTransitionType.bottomToTop));
+                    borrar_campos_login();
                   },
                   child: Center(
                     child: Text.rich(

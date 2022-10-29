@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
-
 class SignUp extends StatelessWidget {
   SignUp({Key? key}) : super(key: key);
 
@@ -30,7 +29,7 @@ class SignUp extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/Registro.png',
-                  height: 300,
+                  height: 250,
                 ),
                 const SizedBox(
                   height: 15,
@@ -148,11 +147,14 @@ class SignUp extends StatelessWidget {
                         height: 30,
                         child: Image.asset('assets/images/google.png'),
                       ),
-                      Text(
-                        'Ingresar con Google',
-                        style: TextStyle(
-                          color: Constants.blackColor,
-                          fontSize: 18.0,
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Ingresar con Google',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
                     ],
@@ -168,6 +170,7 @@ class SignUp extends StatelessWidget {
                         PageTransition(
                             child: const SignIn(),
                             type: PageTransitionType.bottomToTop));
+                    borrar_campos();
                   },
                   child: Center(
                     child: Text.rich(
