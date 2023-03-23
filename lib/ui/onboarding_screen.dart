@@ -1,4 +1,5 @@
 import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/ui/screens/widgets/animations_transtions.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 
@@ -12,16 +13,24 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int currentIndex = 0;
+  @override
+  late String pres1;
+  late String pres2;
+  late String pres3;
+  void initState() {
+    super.initState();
+    pres1 = "assets/imagenPres2.png";
+    pres2 = 'assets/imagenPres.png';
+    pres3 = 'assets/imagenPres3.png';
+  }
 
   @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return Scaffold(
-      
-      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20, top: 20),
@@ -54,17 +63,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             controller: _pageController,
             children: [
               createPage(
-                image: 'assets/imagenPres2.png',
+                image: pres1,
                 title: Constants.titleOne,
                 description: Constants.descriptionOne,
               ),
               createPage(
-                image: 'assets/imagenPres.png',
+                image: pres2,
                 title: Constants.titleTwo,
                 description: Constants.descriptionTwo,
               ),
               createPage(
-                image: 'assets/imagenPres3.png',
+                image: pres3,
                 title: Constants.titleThree,
                 description: Constants.descriptionThree,
               ),
@@ -84,7 +93,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Constants.primaryColor,
+                color: Constants.blueColor,
               ),
               child: IconButton(
                   onPressed: () {
@@ -105,9 +114,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     });
                   },
                   icon: const Icon(
-                    Icons.play_arrow_rounded,
-                    size: 25,
-                    color: Colors.white,
+                    Icons.arrow_forward_ios_rounded,
+                    color: Colors.orange,
                   )),
             ),
           ),
@@ -126,7 +134,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       width: isActive ? 20 : 8,
       margin: const EdgeInsets.only(right: 5.0),
       decoration: BoxDecoration(
-        color: Constants.primaryColor,
+        color: Constants.blueColor,
         borderRadius: BorderRadius.circular(5),
       ),
     );
@@ -148,6 +156,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
+// ignore: camel_case_types
 class createPage extends StatelessWidget {
   final String image;
   final String title;
@@ -162,50 +171,91 @@ class createPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 50, right: 50, bottom: 80),
-          child: Column(
+    Size size = MediaQuery.of(context).size;
 
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 150, top: 10),
+      child: Container(
+        height: size.height,
+        width: size.width,
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-         
-                SizedBox(
-                height: 350,
-                child: Image.asset(image),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Constants.primaryColor,
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
+              SizedBox(
+                height: size.height * 0.35,
+                width: size.width * .75,
+                child: shakeTransition(
+                  duration: const Duration(milliseconds: 400),
+                  offset: 140.0,
+                  axis: Axis.vertical,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Image.asset(image),
+                  ),
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 5,
               ),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+              shakeTransition(
+                duration: const Duration(milliseconds: 900),
+                offset: 140.0,
+                axis: Axis.horizontal,
+                child: Container(
+                  color: Colors.transparent,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Constants.blueColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
-              
+              shakeTransition(
+                duration: const Duration(milliseconds: 900),
+                offset: 140.0,
+                axis: Axis.vertical,
+                child: Container(
+                  height: 40,
+                  color: Colors.transparent,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        color: Constants.orangeColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),
-      
+      ),
     );
   }
 }

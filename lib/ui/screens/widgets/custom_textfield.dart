@@ -1,6 +1,4 @@
-import 'package:cobranzas/constants.dart';
 import 'package:flutter/material.dart';
-
 
 class CustomTextfield extends StatelessWidget {
   final IconData icon;
@@ -9,35 +7,35 @@ class CustomTextfield extends StatelessWidget {
 
   const CustomTextfield({
     Key? key,
-    required this.icon ,
+    required this.icon,
     required this.obscureText,
-    required this.hintText, 
-    required TextEditingController ?controller, 
-    
+    required this.hintText,
+    required TextEditingController controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-   
-   
     return TextFormField(
-    
-    
-      controller: TextEditingController() ,
+      // controller: TextEditingController(),
       obscureText: obscureText,
-      style: TextStyle(
-      color: Constants.blackColor,
-      
+      style: const TextStyle(
+        color: Colors.black,
       ),
+
       decoration: InputDecoration(
-        border: InputBorder.none,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          borderSide: BorderSide(
+            color: Colors.redAccent,
+            width: 3,
+          ),
+        ),
         prefixIcon: Icon(
           icon,
-          color: Constants.blackColor.withOpacity(.3),
+          color: Colors.blue.withOpacity(.9),
         ),
         hintText: hintText,
       ),
-      cursorColor: Constants.blackColor.withOpacity(.5),
     );
   }
 }

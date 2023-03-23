@@ -43,22 +43,23 @@ class ForgotPassword extends StatelessWidget {
               TextFormField(
                 controller: controller3.passwordRecuperar,
                 decoration: const InputDecoration(
-                    label: Text("contraseña"), prefixIcon: Icon(Icons.lock)),
+                    label: Text("Correo eléctronico"),
+                    prefixIcon: Icon(Icons.lock)),
               ),
               const SizedBox(
                 height: 20,
               ),
               GestureDetector(
                 onTap: () {
-                  authenticationRepository().EnviarLinkResetContrasena(
+                  authenticationRepository().enviarLinkResetContrasena(
                       controller3.passwordRecuperar.text.trim());
 
-                  borrar_campos_resetcont();
+                  borrarCamposResetCont();
                 },
                 child: Container(
                   width: size.width,
                   decoration: BoxDecoration(
-                    color: Constants.primaryColor,
+                    color: Constants.blueColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   padding:
@@ -84,7 +85,7 @@ class ForgotPassword extends StatelessWidget {
                       PageTransition(
                           child: const SignIn(),
                           type: PageTransitionType.bottomToTop));
-                  borrar_campos_resetcont();
+                  borrarCamposResetCont();
                 },
                 child: Center(
                   child: Text.rich(
@@ -92,13 +93,13 @@ class ForgotPassword extends StatelessWidget {
                       TextSpan(
                         text: 'Regresar? ',
                         style: TextStyle(
-                          color: Constants.blackColor,
+                          color: Constants.orangeColor,
                         ),
                       ),
                       TextSpan(
                         text: 'Login',
                         style: TextStyle(
-                          color: Constants.primaryColor,
+                          color: Constants.blueColor,
                         ),
                       ),
                     ]),
@@ -112,7 +113,7 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  void borrar_campos_resetcont() {
+  void borrarCamposResetCont() {
     controller3.passwordRecuperar.clear();
   }
 }

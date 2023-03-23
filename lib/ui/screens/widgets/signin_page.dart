@@ -7,19 +7,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
+  static final _formKey3 = GlobalKey<FormState>();
 
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     final controller2 = Get.put(SingUpController());
 
-    borrar_campos_login() {
+    void borrarCamposlogin() {
       controller2.emailLogin.clear();
       controller2.passwordlogin.clear();
     }
@@ -29,6 +33,7 @@ class SignIn extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
+            key: SignIn._formKey3,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,8 +63,9 @@ class SignIn extends StatelessWidget {
                 ),
                 TextFormField(
                   controller: controller2.passwordlogin,
+                  obscureText: true,
                   decoration: const InputDecoration(
-                      label: Text("contraseña"), prefixIcon: Icon(Icons.lock)),
+                      label: Text("Contraseña"), prefixIcon: Icon(Icons.lock)),
                 ),
                 const SizedBox(
                   height: 10,
@@ -68,13 +74,14 @@ class SignIn extends StatelessWidget {
                   onTap: () {
                     authenticationRepository().loginWithEmailAndPassword1(
                         controller2.emailLogin.text.trim(),
-                        controller2.passwordlogin.text.trim());
-                    borrar_campos_login();
+                        controller2.passwordlogin.text.trim(),
+                        context);
+                    borrarCamposlogin();
                   },
                   child: Container(
                     width: size.width,
                     decoration: BoxDecoration(
-                      color: Constants.primaryColor,
+                      color: Constants.blueColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -100,7 +107,7 @@ class SignIn extends StatelessWidget {
                         PageTransition(
                             child: ForgotPassword(),
                             type: PageTransitionType.bottomToTop));
-                    borrar_campos_login();
+                    borrarCamposlogin();
                   },
                   child: Center(
                     child: Text.rich(
@@ -108,13 +115,13 @@ class SignIn extends StatelessWidget {
                         TextSpan(
                           text: '¿Olvidaste tú contraseña? ',
                           style: TextStyle(
-                            color: Constants.blackColor,
+                            color: Constants.orangeColor,
                           ),
                         ),
                         TextSpan(
                           text: 'Recupérala aquí',
                           style: TextStyle(
-                            color: Constants.primaryColor,
+                            color: Constants.blueColor,
                           ),
                         ),
                       ]),
@@ -140,7 +147,7 @@ class SignIn extends StatelessWidget {
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Constants.primaryColor),
+                      border: Border.all(color: Constants.blueColor),
                       borderRadius: BorderRadius.circular(10)),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -153,18 +160,18 @@ class SignIn extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          User? userGoogle =
-                              await authenticationRepository.SignInWithGoogle2(
-                                  context: context);
-                          print(userGoogle?.emailVerified);
-                          print("HOLA SOY EL boton google");
+                          User? userGoogle = await authenticationRepository
+                              .signInWithGoogle2(context: context);
+
+                          print(
+                              "verificación con google ['${userGoogle?.emailVerified}']");
 
                           // authenticationRepository().SignInWithGoogle();
                         },
                         child: Text(
                           'Ingresa con Google',
                           style: TextStyle(
-                            color: Constants.blackColor,
+                            color: Constants.orangeColor,
                             fontSize: 18.0,
                           ),
                         ),
@@ -182,7 +189,7 @@ class SignIn extends StatelessWidget {
                         PageTransition(
                             child: SignUp(),
                             type: PageTransitionType.bottomToTop));
-                    borrar_campos_login();
+                    borrarCamposlogin();
                   },
                   child: Center(
                     child: Text.rich(
@@ -190,13 +197,13 @@ class SignIn extends StatelessWidget {
                         TextSpan(
                           text: '¿No tienes una cuenta? ',
                           style: TextStyle(
-                            color: Constants.blackColor,
+                            color: Constants.orangeColor,
                           ),
                         ),
                         TextSpan(
                           text: 'Registraté',
                           style: TextStyle(
-                            color: Constants.primaryColor,
+                            color: Constants.blueColor,
                           ),
                         ),
                       ]),

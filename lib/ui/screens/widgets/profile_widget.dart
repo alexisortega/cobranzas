@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ProfileWidget extends StatelessWidget {
   final IconData icon;
   final String title;
+
   const ProfileWidget({
     Key? key,
     required this.icon,
@@ -12,16 +13,18 @@ class ProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18),
+      color: Colors.transparent,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(
-                icon ,
-                color: Constants.blackColor.withOpacity(.5),
+                icon,
+                color: Constants.blueColor.withOpacity(.5),
                 size: 24,
               ),
               const SizedBox(
@@ -30,7 +33,7 @@ class ProfileWidget extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  color: Constants.blackColor,
+                  color: Constants.blueColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -38,9 +41,9 @@ class ProfileWidget extends StatelessWidget {
             ],
           ),
           Icon(
-            Icons.arrow_forward_ios,
-            color: Constants.blackColor.withOpacity(.4),
-            size: 16,
+            Icons.arrow_right_sharp,
+            color: Constants.blueColor,
+            size: 40,
           ),
         ],
       ),

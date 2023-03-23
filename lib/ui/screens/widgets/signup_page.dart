@@ -2,6 +2,7 @@ import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/controllers/controllers.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
@@ -53,14 +54,16 @@ class SignUp extends StatelessWidget {
                 TextFormField(
                   controller: controller1.fullnameRegistrar,
                   decoration: const InputDecoration(
-                      label: Text("Nombre Compreto"),
+                      label: Text("Nombre Completo"),
                       prefixIcon: Icon(Icons.person)),
                 ),
                 TextFormField(
-                  controller: controller1.passwordRegistrar,
-                  decoration: const InputDecoration(
-                      label: Text("password"), prefixIcon: Icon(Icons.lock)),
-                ),
+                    controller: controller1.passwordRegistrar,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      label: Text("Contraseña"),
+                      prefixIcon: Icon(Icons.lock),
+                    )),
                 /* TextField(
                   controller: controller1.password,
                   decoration: const InputDecoration(
@@ -91,17 +94,17 @@ class SignUp extends StatelessWidget {
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       SingUpController.instance.registerUser(
-                        controller1.emailRegistrar.text.trim(),
-                        controller1.passwordRegistrar.text.trim(),
-                      );
+                          controller1.emailRegistrar.text.trim(),
+                          controller1.passwordRegistrar.text.trim(),
+                          context);
 
-                      borrar_campos();
+                      borrarCampos();
                     }
                   },
                   child: Container(
                     width: size.width,
                     decoration: BoxDecoration(
-                      color: Constants.primaryColor,
+                      color: Constants.blueColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -136,7 +139,7 @@ class SignUp extends StatelessWidget {
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Constants.primaryColor),
+                      border: Border.all(color: Constants.blueColor),
                       borderRadius: BorderRadius.circular(10)),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -148,11 +151,22 @@ class SignUp extends StatelessWidget {
                         child: Image.asset('assets/images/google.png'),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          try {
+                            User? userGoogle = await authenticationRepository
+                                .signInWithGoogle2(context: context);
+
+                            print(userGoogle?.emailVerified);
+                            print("HOLA SOY EL boton google");
+                          } on FirebaseAuthException catch (_) {
+                            authenticationRepository.validaciones(
+                                "Error al iniciar intente de nuevo");
+                          } catch (_) {}
+                        },
                         child: Text(
                           'Ingresar con Google',
                           style: TextStyle(
-                            color: Constants.blackColor,
+                            color: Constants.orangeColor,
                             fontSize: 18.0,
                           ),
                         ),
@@ -170,7 +184,7 @@ class SignUp extends StatelessWidget {
                         PageTransition(
                             child: const SignIn(),
                             type: PageTransitionType.bottomToTop));
-                    borrar_campos();
+                    borrarCampos();
                   },
                   child: Center(
                     child: Text.rich(
@@ -178,13 +192,13 @@ class SignUp extends StatelessWidget {
                         TextSpan(
                           text: '¿Ya tienes una cuenta? ',
                           style: TextStyle(
-                            color: Constants.blackColor,
+                            color: Constants.orangeColor,
                           ),
                         ),
                         TextSpan(
                           text: 'Login',
                           style: TextStyle(
-                            color: Constants.primaryColor,
+                            color: Constants.blueColor,
                           ),
                         ),
                       ]),
@@ -199,7 +213,7 @@ class SignUp extends StatelessWidget {
     );
   }
 
-  borrar_campos() {
+  borrarCampos() {
     controller1.emailRegistrar.clear();
     controller1.fullnameRegistrar.clear();
     controller1.passwordRegistrar.clear();
