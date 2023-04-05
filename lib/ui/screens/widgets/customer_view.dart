@@ -109,19 +109,19 @@ scroll(
     List<dynamic> datos,
     Size size,
     int cont,
-    String codigo_cliente,
+    String codigoCliente,
     String nombre,
-    String apellido_p,
-    String apellido_m,
+    String apellidoP,
+    String apellidoM,
     String genero,
     String curp,
     String calle,
     String colonia,
-    String municipio_delegacion,
+    String municipioDelegacion,
     String estado,
-    String codigo_postal,
-    String numero_tel,
-    String fecha_nacimiento,
+    String codigoPostal,
+    String numeroTel,
+    String fechaNacimiento,
     String urlFoto) {
   return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -182,7 +182,7 @@ scroll(
                             flex: 1,
                             child: Center(
                               child: textViewCustomer(
-                                  texto: "ID:$codigo_cliente",
+                                  texto: "ID:$codigoCliente",
                                   color: Colors.red.withOpacity(0.9),
                                   size: 20),
                             ))
@@ -207,11 +207,11 @@ scroll(
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Apellido Paterno:", apellido_p),
+                      Customerdate("Apellido Paterno:", apellidoP),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Apellido Materno:", apellido_m),
+                      Customerdate("Apellido Materno:", apellidoM),
                       const SizedBox(
                         height: 5,
                       ),
@@ -223,7 +223,7 @@ scroll(
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Fecha de\nnacimiento:", fecha_nacimiento),
+                      Customerdate("Fecha de\nnacimiento:", fechaNacimiento),
                       const SizedBox(
                         height: 5,
                       ),
@@ -255,7 +255,7 @@ scroll(
                   width: size.width * 0.80,
                   child: Column(
                     children: [
-                      Customerdate("Teléfono: ", numero_tel),
+                      Customerdate("Teléfono: ", numeroTel),
                       const SizedBox(
                         height: 5,
                       ),
@@ -300,7 +300,7 @@ scroll(
                         height: 10,
                       ),
                       Customerdate(
-                          "Municipio\ndelegación:", municipio_delegacion),
+                          "Municipio\ndelegación:", municipioDelegacion),
                       const SizedBox(
                         height: 10,
                       ),
@@ -308,7 +308,7 @@ scroll(
                       const SizedBox(
                         height: 10,
                       ),
-                      Customerdate("C.P.", codigo_postal),
+                      Customerdate("C.P.", codigoPostal),
                       const SizedBox(
                         height: 5,
                       ),
@@ -325,7 +325,7 @@ scroll(
       });
 }
 
-Row Customerdate(String texto, String numero_tel) {
+Row Customerdate(String texto, String numeroTel) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -336,7 +336,7 @@ Row Customerdate(String texto, String numero_tel) {
             color: Colors.transparent,
             child: Center(
               child: textViewCustomer(
-                  texto: "${texto}", color: Constants.blueColor, size: 17),
+                  texto: texto, color: Constants.blueColor, size: 17),
             ),
           )),
       Expanded(
@@ -347,7 +347,7 @@ Row Customerdate(String texto, String numero_tel) {
             color: Colors.transparent,
             child: Center(
               child: textViewCustomer(
-                  texto: numero_tel,
+                  texto: numeroTel,
                   color: Colors.black.withOpacity(0.75),
                   size: 18),
             ),

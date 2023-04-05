@@ -9,17 +9,17 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class creditDetails extends StatefulWidget {
-  String codigo_credito;
-  double monto_solicitado;
-  double interes_asignado;
-  String dias_semana;
-  Timestamp fecha_prestamo;
-  int numero_pagos;
-  String plazos;
-  String propietario_credito;
-  String status;
+  final String codigo_credito;
+  final double monto_solicitado;
+  final double interes_asignado;
+  final String dias_semana;
+  final Timestamp fecha_prestamo;
+  final int numero_pagos;
+  final String plazos;
+  final String propietario_credito;
+  final String status;
 
-  creditDetails({
+  const creditDetails({
     super.key,
     required this.codigo_credito,
     required this.monto_solicitado,
@@ -89,9 +89,9 @@ class _creditDetailsState extends State<creditDetails> {
                   children: [
                     Container(
                       color: Constants.orangeColor,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             'Información del préstamo',
                             style: TextStyle(
@@ -120,7 +120,7 @@ class _creditDetailsState extends State<creditDetails> {
                             width: 15,
                           ),
                           Text(
-                            "${widget.codigo_credito}",
+                            widget.codigo_credito,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -185,7 +185,7 @@ class _creditDetailsState extends State<creditDetails> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Container(
@@ -195,8 +195,8 @@ class _creditDetailsState extends State<creditDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Monto total a pagar'),
-                                SizedBox(height: 5),
+                                const Text('Monto total a pagar'),
+                                const SizedBox(height: 5),
                                 Text(
                                     '${(widget.monto_solicitado) + (widget.interes_asignado / 100)} ',
                                     style: const TextStyle(
@@ -214,7 +214,7 @@ class _creditDetailsState extends State<creditDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text('interés por periodo'),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
                                     "${interesPorPeriodo(
                                       widget.plazos,
@@ -233,7 +233,7 @@ class _creditDetailsState extends State<creditDetails> {
                               children: [
                                 const Text('Tipo de periodo'),
                                 const SizedBox(height: 5),
-                                Text('${widget.plazos}',
+                                Text(widget.plazos,
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
@@ -256,12 +256,12 @@ class _creditDetailsState extends State<creditDetails> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('Estado actual'),
-                              SizedBox(height: 5),
+                            children: [
+                              const Text('Estado actual'),
+                              const SizedBox(height: 5),
                               Text(
-                                'Actualizado',
-                                style: TextStyle(
+                                widget.status,
+                                style: const TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -275,12 +275,13 @@ class _creditDetailsState extends State<creditDetails> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('Primer Pago'),
-                              SizedBox(height: 5),
+                            children: [
+                              const Text('Primer Pago'),
+                              const SizedBox(height: 5),
                               Text(
-                                '01/04/2022',
-                                style: TextStyle(
+                                primerPago(widget.fecha_prestamo, widget.plazos)
+                                    .toString(),
+                                style: const TextStyle(
                                   color: Colors.orange,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -290,15 +291,15 @@ class _creditDetailsState extends State<creditDetails> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Row(
+                    const Row(
                       children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text('Proximo pago'),
                               SizedBox(height: 5),
                               Text(
@@ -311,13 +312,13 @@ class _creditDetailsState extends State<creditDetails> {
                             ],
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text('Ultimo Pago'),
                               SizedBox(height: 5),
                               Text(
@@ -349,7 +350,7 @@ class _creditDetailsState extends State<creditDetails> {
                             children: [
                               const SizedBox(height: 5),
                               Text(
-                                "${widget.propietario_credito}",
+                                widget.propietario_credito,
                                 style: TextStyle(
                                     color: Constants.blueColor,
                                     fontWeight: FontWeight.bold,
@@ -364,7 +365,7 @@ class _creditDetailsState extends State<creditDetails> {
                                     flex: 1,
                                     child: TextButton.icon(
                                         style: ElevatedButton.styleFrom(
-                                          primary: Colors.blue,
+                                          backgroundColor: Colors.blue,
                                           textStyle: const TextStyle(
                                               color: Colors.white,
                                               inherit: false),
@@ -410,14 +411,14 @@ class _creditDetailsState extends State<creditDetails> {
                                           style: TextStyle(color: Colors.white),
                                         )),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Expanded(
                                     flex: 1,
                                     child: TextButton.icon(
                                         style: ElevatedButton.styleFrom(
-                                          primary: Colors.red[400],
+                                          backgroundColor: Colors.red[400],
                                           textStyle: const TextStyle(
                                               color: Colors.white,
                                               inherit: false),
@@ -431,7 +432,7 @@ class _creditDetailsState extends State<creditDetails> {
                                           Navigator.push(
                                               context,
                                               PageTransition(
-                                                  child: PaymentScreen(),
+                                                  child: const PaymentScreen(),
                                                   type: PageTransitionType
                                                       .bottomToTop));
                                         },
@@ -580,6 +581,40 @@ class _creditDetailsState extends State<creditDetails> {
                         ))
                   ])),
         ));
+  }
+
+  primerPago(Timestamp fechaPrestamo, String plazo) {
+    DateTime primerPago = fechaPrestamo.toDate();
+    DateTime nuevafecha;
+    String mostrarfecha;
+    if (plazo.isCaseInsensitiveContains("diario")) {
+      nuevafecha = primerPago.add(const Duration(days: 1));
+      mostrarfecha =
+          nuevafecha.toString().substring(0, 10).split("-").reversed.join("/");
+      return mostrarfecha;
+    } else if (plazo.isCaseInsensitiveContains("semanal")) {
+      nuevafecha = primerPago.add(const Duration(days: 7));
+      mostrarfecha =
+          nuevafecha.toString().substring(0, 10).split("-").reversed.join("/");
+      return mostrarfecha;
+    } else if (plazo.isCaseInsensitiveContains("catorcenal")) {
+      nuevafecha = primerPago.add(const Duration(days: 14));
+      mostrarfecha =
+          nuevafecha.toString().substring(0, 10).split("-").reversed.join("/");
+      return mostrarfecha;
+    } else if (plazo.isCaseInsensitiveContains("quincenal")) {
+      nuevafecha = primerPago.add(const Duration(days: 15));
+      mostrarfecha =
+          nuevafecha.toString().substring(0, 10).split("-").reversed.join("/");
+      return mostrarfecha;
+    } else if (plazo.isCaseInsensitiveContains("mensual")) {
+      nuevafecha = primerPago.add(const Duration(days: 30));
+      mostrarfecha =
+          nuevafecha.toString().substring(0, 10).split("-").reversed.join("/");
+      return mostrarfecha;
+    } else {
+      return;
+    }
   }
 
   TipoPlazo(String plazo) {

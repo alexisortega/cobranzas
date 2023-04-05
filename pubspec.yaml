@@ -57,10 +57,13 @@ dependencies:
   flutter_spinkit: ^5.1.0
   cached_network_image: ^3.2.3
   flutter_cache_manager: ^3.3.0
-  google_fonts: ^3.0.1
   dropdown_search: ^5.0.5
   intl: ^0.17.0
   camera: ^0.10.3+2
+  google_fonts: ^4.0.3
+  flutter_keyboard_visibility: ^5.4.0
+  
+  
   
 
 dev_dependencies:
@@ -92,7 +95,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/
-  #   - images/a_dot_ham.jpeg
+     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

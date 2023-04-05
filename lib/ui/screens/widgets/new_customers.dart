@@ -1099,9 +1099,9 @@ class _NewcustomersState extends State<Newcustomers> {
               Size.fromWidth(size.width / 2),
               //Size.fromHeight(size.height / 2)
             )),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(
               Icons.save_as,
               color: Colors.black,

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
+import 'package:cobranzas/models/data_table_credit_payments.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -104,16 +105,7 @@ class _creditSimulationState extends State<creditSimulation> {
                   color: Colors.transparent,
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                            child: paymentNumberList(
-                          widget.numero_pagos!,
-                          widget.fecha_prestamo,
-                          widget.plazos,
-                          widget.monto_solicitado,
-                          widget.interes_asignado,
-                        )),
-                      ),
+                      Expanded(child: Container()),
                     ],
                   ),
                 ),
@@ -125,8 +117,8 @@ class _creditSimulationState extends State<creditSimulation> {
 }
 
 paymentNumberList(
-  int numero_pagos,
-  DateTime fecha_prestamo,
+  int numeroPagos,
+  DateTime fechaPrestamo,
   String plazos,
   double montoPrestamo,
   double tasaInteres,
@@ -153,47 +145,47 @@ paymentNumberList(
     InteresperiodoPlazo = tasaInteres / 365;
     cuotaPlazo = montoPrestamo *
         InteresperiodoPlazo /
-        (1 - pow(1 + InteresperiodoPlazo, -numero_pagos));
+        (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
 
-    print("interes periodo diario " + "$InteresperiodoPlazo");
+    print("interes periodo diario " "$InteresperiodoPlazo");
     print("Cuota diario $cuotaPlazo ");
   }
   if (plazos.toString().isCaseInsensitiveContains("semanal")) {
     InteresperiodoPlazo = tasaInteres / 52;
     cuotaPlazo = montoPrestamo *
         InteresperiodoPlazo /
-        (1 - pow(1 + InteresperiodoPlazo, -numero_pagos));
+        (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
 
-    print("interes periodo semanal " + "$InteresperiodoPlazo");
+    print("interes periodo semanal " "$InteresperiodoPlazo");
     print("Cuota semanal $cuotaPlazo ");
   } else if (plazos.toString().isCaseInsensitiveContains("catorcenal")) {
     InteresperiodoPlazo = tasaInteres / 26;
     cuotaPlazo = montoPrestamo *
         InteresperiodoPlazo /
-        (1 - pow(1 + InteresperiodoPlazo, -numero_pagos));
+        (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
 
-    print("interes periodo catorcenal " + "$InteresperiodoPlazo");
+    print("interes periodo catorcenal " "$InteresperiodoPlazo");
     print("Cuota catorcenal $cuotaPlazo ");
   } else if (plazos.toString().isCaseInsensitiveContains("quincenal")) {
     InteresperiodoPlazo = tasaInteres / 12;
     cuotaPlazo = montoPrestamo *
         InteresperiodoPlazo /
-        (1 - pow(1 + InteresperiodoPlazo, -numero_pagos));
+        (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
 
-    print("interes periodo quincenal " + "$InteresperiodoPlazo");
+    print("interes periodo quincenal " "$InteresperiodoPlazo");
     print("Cuota quincenal $cuotaPlazo ");
   } else if (plazos.toString().isCaseInsensitiveContains("mensual")) {
     InteresperiodoPlazo = tasaInteres / 12;
     cuotaPlazo = montoPrestamo *
         InteresperiodoPlazo /
-        (1 - pow(1 + InteresperiodoPlazo, -numero_pagos));
+        (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
 
-    print("interes periodo mensual " + "$InteresperiodoPlazo");
+    print("interes periodo mensual " "$InteresperiodoPlazo");
     print("Cuota mensual $cuotaPlazo ");
   }
   saldoInsoluto = montoPrestamo;
   amortizacion = 0.0;
-  for (var i = 0; i < numero_pagos; i++) {
+  for (var i = 0; i < numeroPagos; i++) {
     int index = i + 1;
 
     abonoTotal = cuotaPlazo;
@@ -202,7 +194,7 @@ paymentNumberList(
       saldoInsoluto = montoPrestamo;
       capitalInsoluto = montoPrestamo;
     }
-    
+
     interesTotal = capitalInsoluto * InteresperiodoPlazo;
     amortizacion = abonoTotal - interesTotal;
     saldoInsoluto = saldoInsoluto - amortizacion;
@@ -215,7 +207,7 @@ paymentNumberList(
     double saldoInsoluto2D = double.parse(formatter.format(saldoInsoluto));
     late DateTime nuevafecha;
 //RESULTADO FIMAlES DEL PRESTAMO
-    sumaTotal = abono2D * numero_pagos;
+    sumaTotal = abono2D * numeroPagos;
     CapitalTotal = CapitalTotal + amortizacion2D;
     sumaInteres = sumaTotal - CapitalTotal;
 
@@ -225,25 +217,25 @@ paymentNumberList(
 
     if (plazos.isCaseInsensitiveContains("diario")) {
       //
-      nuevafecha = fecha_prestamo.add(Duration(days: index * 1));
+      nuevafecha = fechaPrestamo.add(Duration(days: index * 1));
 
       //
     }
     if (plazos.isCaseInsensitiveContains("semanal")) {
       //
-      nuevafecha = fecha_prestamo.add(Duration(days: index * 7));
+      nuevafecha = fechaPrestamo.add(Duration(days: index * 7));
 
       //
     }
     if (plazos.isCaseInsensitiveContains("quincenal")) {
       //
-      nuevafecha = fecha_prestamo.add(Duration(days: index * 15));
+      nuevafecha = fechaPrestamo.add(Duration(days: index * 15));
 
       //
     }
     if (plazos.isCaseInsensitiveContains("mensual")) {
       //
-      nuevafecha = fecha_prestamo.add(Duration(days: index * 30));
+      nuevafecha = fechaPrestamo.add(Duration(days: index * 30));
 
       //
     }
@@ -251,7 +243,7 @@ paymentNumberList(
     if (plazos.isCaseInsensitiveContains("catorcenal")) {
       //
 
-      nuevafecha = fecha_prestamo.add(Duration(days: index * 14));
+      nuevafecha = fechaPrestamo.add(Duration(days: index * 14));
 
       //
     }
@@ -262,7 +254,7 @@ paymentNumberList(
           DataCell(
             Center(
                 child: Text(
-              "${index}",
+              "$index",
               style: TextStyle(
                 color: Constants.blueColor,
                 fontWeight: FontWeight.bold,
@@ -322,7 +314,7 @@ paymentNumberList(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomText(
-                          text: "Capital \$ ${CapitalTotal2D}",
+                          text: "Capital \$ $CapitalTotal2D",
                           font:
                               GoogleFonts.aldrich(fontWeight: FontWeight.bold)),
                       const SizedBox(

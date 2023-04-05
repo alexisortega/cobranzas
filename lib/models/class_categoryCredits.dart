@@ -1,11 +1,13 @@
 import 'package:cobranzas/controllers/creditController.dart';
+
+import 'package:cobranzas/models/animations_transtions.dart';
 import 'package:cobranzas/ui/screens/widgets/allCredits.dart';
-import 'package:cobranzas/ui/screens/widgets/animations_transtions.dart';
+
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:cobranzas/ui/screens/widgets/new_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:page_transition/page_transition.dart';
 
 // ignore: camel_case_types
@@ -22,16 +24,16 @@ class categoryCredit extends StatefulWidget {
 }
 
 class _categoryCreditState extends State<categoryCredit> {
-  static var controllerCredit2 = Get.put(creditController());
+  static var controllerCredits = Get.put(creditController());
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     List<String> Imags = [
-      "assets/credit-card2.png",
-      "assets/credit.png",
-      "assets/bill.png",
-      "assets/debt.png",
+      "assets/nuevoCredito.jpg",
+      "assets/todosLosCreditos.jpg",
+      "assets/fondoListCreditos.jpg",
+      "assets/tarjetaCredito.jpg",
     ];
 
     List<String> NameCategorys = [
@@ -44,6 +46,23 @@ class _categoryCreditState extends State<categoryCredit> {
     @override
     void initState() {
       super.initState();
+      List<String> NameCategorys = [
+        "Nuevo Crédito",
+        "Todos los créditos",
+        "Pagos del día",
+        "Créditos con adeudo",
+      ];
+      List<String> Imags = [
+        "assets/nuevoCredito.jpg",
+        "assets/todosLosCreditos.jpg",
+        "assets/fondoListCreditos.jpg",
+        "assets/tarjetaCredito.jpg",
+      ];
+    }
+
+    @override
+    void dispose() {
+      super.dispose();
     }
 
     return Container(
@@ -88,31 +107,31 @@ Widget getcategory(
     child: shakeTransition(
       axis: Axis.vertical,
       duration: const Duration(milliseconds: 1300),
-      offset: 140,
+      offset: 200,
       child: Container(
-        height: 300.0,
+        height: (size.height / 2) - 100,
         width: (size.width / 2),
         decoration: BoxDecoration(
-            color: Colors.blue[800],
+            //contorno blanco
+            color: Colors.white.withOpacity(0.5),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                blurStyle: BlurStyle.normal,
-                offset: const Offset(8, 40),
-                blurRadius: 13.0,
-                color: Colors.black.withOpacity(0.3),
-                spreadRadius: 2.0,
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
               ),
             ]),
-        child: Card(
-          color: Colors.blue[800],
-          elevation: 35.0,
+        child: Container(
+          color: Colors.transparent,
           child: Column(
             children: <Widget>[
               Stack(
                 children: [
                   Container(
-                    height: 125.0,
+                    height: (size.height / 4) - 10,
+                    width: size.width,
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: const BorderRadius.only(
@@ -121,7 +140,7 @@ Widget getcategory(
                       ),
                       image: DecorationImage(
                         image: AssetImage(imgPath),
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -149,14 +168,17 @@ Widget getcategory(
                           fit: BoxFit.fitWidth,
                           child: CustomText(
                               text: nameCategory,
-                              font: GoogleFonts.aldrich(
-                                  textStyle: const TextStyle(
-                                fontSize: 25,
-                                color: Colors.orange,
-                              ))),
+                              font: const TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ),
-                      ElevatedButton(
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        height: 50,
+                        width: 90,
+                        child: ElevatedButton(
                           onPressed: () async {
                             switch (index) {
                               case 0:
@@ -177,6 +199,7 @@ Widget getcategory(
                                     PageTransition(
                                       duration:
                                           const Duration(milliseconds: 780),
+                                      // ignore: prefer_const_constructors
                                       child: AllCredits(),
                                       type: PageTransitionType.bottomToTop,
                                     ));
@@ -189,7 +212,9 @@ Widget getcategory(
                           },
                           child: const Icon(
                             Icons.arrow_forward,
-                          ))
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

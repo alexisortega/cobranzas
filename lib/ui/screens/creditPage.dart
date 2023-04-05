@@ -4,8 +4,6 @@ import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../constants.dart';
 
 class creditPage extends StatefulWidget {
@@ -67,7 +65,7 @@ class _creditPageState extends State<creditPage>
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: CustomText(
-                          font: GoogleFonts.aldrich(
+                          font: TextStyle(
                             fontSize: 30,
                             color: Constants.blueColor,
                             fontWeight: FontWeight.bold,
@@ -187,13 +185,13 @@ class _creditPageState extends State<creditPage>
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.blue.withOpacity(0.5),
                 isScrollable: true,
-                tabs: <Widget>[
+                tabs: const <Widget>[
                   Tab(
                     child: FittedBox(
                       fit: BoxFit.cover,
                       child: CustomText(
                           text: "Nuevo\nCrédito",
-                          font: GoogleFonts.aldrich(
+                          font: TextStyle(
                             fontSize: 20,
                           )),
                     ),
@@ -203,7 +201,7 @@ class _creditPageState extends State<creditPage>
                       fit: BoxFit.fill,
                       child: CustomText(
                           text: "Todos\nlos Créditos",
-                          font: GoogleFonts.aldrich(fontSize: 20)),
+                          font: TextStyle(fontSize: 20)),
                     ),
                   ),
                   Tab(
@@ -211,7 +209,7 @@ class _creditPageState extends State<creditPage>
                       fit: BoxFit.fill,
                       child: CustomText(
                           text: "Pagos\ndel día",
-                          font: GoogleFonts.aldrich(fontSize: 20)),
+                          font: TextStyle(fontSize: 20)),
                     ),
                   ),
                   Tab(
@@ -219,39 +217,50 @@ class _creditPageState extends State<creditPage>
                       fit: BoxFit.fill,
                       child: CustomText(
                           text: "Créditos\ncon adeudo",
-                          font: GoogleFonts.aldrich(fontSize: 20)),
+                          font: TextStyle(fontSize: 20)),
                     ),
                   ),
                 ],
               ),
             ),
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.orangeAccent[700]),
-                padding: const EdgeInsets.only(top: 10),
-                height: size.height / 1.93,
-                width: size.width / 1.05,
-                child: TabBarView(
-                  dragStartBehavior: DragStartBehavior.down,
-                  controller: tabController,
-                  children: <Widget>[
-                    categoryCredit(
-                      index: index,
-                    ),
-                    categoryCredit(
-                      index: index + 1,
-                    ),
-                    categoryCredit(
-                      index: index + 2,
-                    ),
-                    categoryCredit(
-                      index: index + 3,
-                    ),
-                  ],
-                ),
+            Container(
+              margin: const EdgeInsets.only(
+                left: 10,
+                top: 10,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white.withOpacity(0.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange[700] as Color,
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: const Offset(1, 3),
+                  ),
+                ],
+              ),
+              // Colors.orangeAccent[700]),
+              padding: const EdgeInsets.only(top: 10),
+              height: size.height / 1.93,
+              width: size.width / 1.05,
+              child: TabBarView(
+                dragStartBehavior: DragStartBehavior.down,
+                controller: tabController,
+                children: <Widget>[
+                  categoryCredit(
+                    index: index,
+                  ),
+                  categoryCredit(
+                    index: index + 1,
+                  ),
+                  categoryCredit(
+                    index: index + 2,
+                  ),
+                  categoryCredit(
+                    index: index + 3,
+                  ),
+                ],
               ),
             )
           ],

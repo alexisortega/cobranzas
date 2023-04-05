@@ -122,7 +122,7 @@ class authenticationRepository extends GetxController {
             ));
           });
       Future.delayed(
-        Duration(milliseconds: 500),
+        const Duration(milliseconds: 500),
         () {
           Get.back();
         },
@@ -153,7 +153,7 @@ class authenticationRepository extends GetxController {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
-              return HomePage();
+              return const HomePage();
             } else {
               return const SignIn();
             }

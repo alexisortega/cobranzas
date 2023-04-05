@@ -1,16 +1,15 @@
-// ignore: file_names
-import 'package:cobranzas/constants.dart';
+// ignore: file_name
 
+import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/ui/screens/widgets/credit_Details.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class AllCredits extends StatefulWidget {
   const AllCredits({super.key});
@@ -21,26 +20,25 @@ class AllCredits extends StatefulWidget {
 
 class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
   static var controllerCredit = Get.put(creditController());
-  String searchCredits = "";
 
   bool iconsSearch = false;
-  int cont = 0;
   bool _expanded = false;
-
   late AnimationController controller;
   late Animation<double> animation;
+
+  String fondo = "assets/fondoTodosCreditos.jpg";
 
   @override
   void initState() {
     super.initState();
-
+    fondo = "assets/fondoTodosCreditos.jpg";
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 2000),
     );
     animation = CurvedAnimation(
       parent: controller,
-      curve: Curves.easeInOutCubic,
+      curve: Curves.elasticOut,
     );
   }
 
@@ -65,371 +63,436 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: LayoutBuilder(builder: (BuildContext context, sizeMax) {
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                stretch: true,
-                floating: true,
-                forceElevated: false,
-                elevation: 3.0,
-                backgroundColor: Colors.white,
-                expandedHeight: 165,
-                pinned: false,
-                automaticallyImplyLeading: false,
-                systemOverlayStyle: SystemUiOverlayStyle.light,
-                snap: true,
-                stretchTriggerOffset: 40,
-                shadowColor: Colors.orange,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          iconsSearch = !iconsSearch;
-                          toggleContainer();
-                        });
-                      },
-                      child: Container(
-                        color: Colors.transparent,
-                        child: const Icon(
-                          size: 30,
-                          Icons.search,
-                          color: Colors.amber,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-                bottom: iconsSearch == true
-                    ? PreferredSize(
-                        preferredSize: const Size.fromHeight(48.0),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 15),
-                          child: AnimatedBuilder(
-                            animation: animation,
-                            builder: (context, Widget? child) {
-                              return Container(
-                                height: animation.value * 60,
-                                color: Colors.transparent,
-                                child: child,
-                              );
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              padding: const EdgeInsets.only(
-                                top: 20,
-                              ),
-                              child: Row(
+    return KeyboardDismissOnTap(
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: LayoutBuilder(builder: (BuildContext context, sizeMax) {
+            return CustomScrollView(
+              slivers: <Widget>[
+                KeyboardVisibilityBuilder(
+                  builder: (p0, isKeyboardVisible) => SliverAppBar(
+                    stretch: true,
+                    floating: true,
+                    forceElevated: false,
+                    elevation: 0.0,
+                    backgroundColor: Constants.blueColor,
+                    expandedHeight:
+                        sizeMax.maxWidth > 400 && isKeyboardVisible ? 100 : 175,
+                    collapsedHeight: 60,
+                    pinned: true,
+                    snap: true,
+                    shadowColor: Colors.orange,
+                    actions: <Widget>[
+                      SingleChildScrollView(
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 10, right: 5),
+                          width: size.width,
+                          color: Colors.transparent,
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                    ),
-                                    width: size.width * 0.935,
-                                    height: sizeMax.maxWidth > 300
-                                        ? size.height * 0.15
-                                        : size.height * 0.05,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Constants.blueColor.withOpacity(.1),
-                                      borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            //Icons.search_outlined,
-                                            iconsSearch == true
-                                                ? Icons.search_sharp
-                                                : null,
-                                            color: Constants.blueColor,
-                                            size: 25,
-                                          ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          Get.back();
+                                        });
+                                      },
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: Icon(
+                                          size: 40,
+                                          Icons.arrow_back,
+                                          color: Constants.orangeColor,
                                         ),
-                                        Expanded(
-                                            child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              searchCredits = value;
-                                              print(value);
-                                            });
-                                          },
-                                          controller:
-                                              controllerCredit.filtrarCreditos,
-                                          showCursor: true,
-                                          decoration: const InputDecoration(
-                                            hintText: 'Buscar Crédito ',
-                                            border: InputBorder.none,
-                                            focusedBorder: InputBorder.none,
-                                          ),
-                                        )),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              controllerCredit
-                                                  .filtrarCreditos.text = "";
-                                              searchCredits = "";
-                                              controllerCredit.filtrarCreditos
-                                                  .text = searchCredits;
-                                            });
-
-                                            print(
-                                                "salio de codigo caja de texto");
-                                          },
-                                          child: Icon(
-                                            iconsSearch == true
-                                                ? Icons.dangerous_rounded
-                                                : null,
-                                            size: 20,
-                                            color: Constants.blueColor
-                                                .withOpacity(.7),
-                                          ),
-                                        )
-                                      ],
+                                      ),
                                     ),
-                                  )
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          iconsSearch = !iconsSearch;
+                                          toggleContainer();
+                                        });
+                                      },
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: Icon(
+                                          size: 40,
+                                          Icons.search,
+                                          color: Constants.orangeColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       )
-                    : PreferredSize(
-                        preferredSize: const Size.fromHeight(48.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              color: Colors.transparent,
-                              margin:
-                                  const EdgeInsets.only(left: 15, bottom: 5),
-                              child: Text(
-                                'Conoce los detalles del préstamo...',
-                                style: TextStyle(
-                                  fontSize: sizeMax.maxWidth < 400 ? 15 : 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Constants.orangeColor.withOpacity(0.7),
-                                  fontFamily: 'OpenSans',
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                leading: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Constants.orangeColor.withOpacity(0.5),
-                      ),
-                      child: Icon(
-                        Icons.close,
-                        color: Constants.blueColor,
-                      ),
-                    ),
-                  ),
-                ),
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.parallax,
-                  expandedTitleScale: 2,
-                  title: Stack(alignment: Alignment.center, children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomText(
-                        font: GoogleFonts.aldrich(
-                          color: Constants.blueColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: sizeMax.maxWidth < 400 ? 13 : 15,
-                        ),
-                        text: 'Todos los créditos',
-                      ),
-                    ),
-                  ]),
-                  centerTitle: true,
-                  titlePadding: iconsSearch == true
-                      ? const EdgeInsets.only(bottom: 65)
-                      : const EdgeInsets.only(bottom: 35),
-                ),
-              ),
-              StreamBuilder(
-                stream: controllerCredit.getCredits(),
-                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                  if (snapshot.hasData && snapshot.data.toString() != "[]") {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final credit = snapshot.data?[index];
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.blue[300] as Color,
-                                  spreadRadius: 1,
-                                  blurRadius: 7,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: ListTile(
-                              title: Container(
-                                color: Colors.transparent,
-                                height: 70,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                    ],
+                    bottom: iconsSearch == true
+                        ? PreferredSize(
+                            preferredSize: const Size.fromHeight(38.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 0, bottom: 0),
+                              child: AnimatedBuilder(
+                                animation: animation,
+                                builder: (context, Widget? child) {
+                                  return Container(
+                                    height: animation.value * 60,
+                                    color: Colors.transparent,
+                                    child: child,
+                                  );
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  padding: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
+                                  child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            color: Colors.transparent,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                CustomText(
-                                                    // ignore: prefer_interpolation_to_compose_strings
-                                                    text: "Folio: " +
-                                                        (credit?[
-                                                                "codigo_credito"])
-                                                            .toString(),
-                                                    font:
-                                                        GoogleFonts.aldrich()),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                CustomText(
-                                                    text:
-                                                        "Monto: ${credit?["monto_solicitado"]}",
-                                                    font: GoogleFonts.aldrich(
-                                                        textStyle:
-                                                            const TextStyle()))
-                                              ],
-                                            ),
-                                          )),
-                                      Expanded(
-                                          flex: 1,
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Text(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    "Cliente: ${credit?["propietario_credito"]}",
-                                                    style: const TextStyle(
-                                                        color: Colors.teal),
-                                                  )
-                                                ],
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0,
+                                        ),
+                                        width: size.width * 0.935,
+                                        height: sizeMax.maxWidth > 300
+                                            ? size.height * 0.15
+                                            : size.height * 0.05,
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Colors.blueGrey.withOpacity(.35),
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Icon(
+                                                //Icons.search_outlined,
+                                                iconsSearch == true
+                                                    ? Icons.search_sharp
+                                                    : null,
+                                                color: Constants.blueColor,
+                                                size: 25,
                                               ),
                                             ),
-                                          ))
-                                    ]),
+                                            Expanded(
+                                                child: TextFormField(
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  controllerCredit.search =
+                                                      value;
+                                                  print(value);
+                                                });
+                                              },
+                                              controller: controllerCredit
+                                                  .filtrarCreditos,
+                                              showCursor: true,
+                                              decoration: const InputDecoration(
+                                                hintText: 'Buscar Crédito ',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black),
+                                                border: InputBorder.none,
+                                                focusedBorder: InputBorder.none,
+                                              ),
+                                            )),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  controllerCredit
+                                                      .filtrarCreditos
+                                                      .text = "";
+                                                  controllerCredit.search = "";
+                                                  controllerCredit
+                                                          .filtrarCreditos
+                                                          .text =
+                                                      controllerCredit.search;
+                                                });
+
+                                                print(
+                                                    "salio de codigo caja de texto");
+                                              },
+                                              child: Icon(
+                                                iconsSearch == true
+                                                    ? Icons.dangerous_rounded
+                                                    : null,
+                                                size: 20,
+                                                color: Constants.blueColor
+                                                    .withOpacity(.7),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                              trailing: Container(
-                                  child: const SizedBox(
-                                height: 40,
-                                child: Icon(Icons.arrow_forward_ios_outlined),
-                              )),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      duration:
-                                          const Duration(milliseconds: 780),
-                                      child: creditDetails(
-                                        codigo_credito:
-                                            credit?["codigo_credito"],
-                                        dias_semana:
-                                            (credit?["dias_semana"]).toString(),
-                                        fecha_prestamo:
-                                            (credit?["fecha_prestamo"]),
-                                        interes_asignado:
-                                            credit?["interes_asignado"],
-                                        monto_solicitado:
-                                            credit?["monto_solicitado"],
-                                        numero_pagos: credit?["numero_pagos"],
-                                        plazos: credit?["plazos"],
-                                        propietario_credito:
-                                            credit?["propietario_credito"],
-                                        status: 'activo',
-                                      ),
-                                      type: PageTransitionType.bottomToTop,
-                                    ));
-                              },
                             ),
-                          );
-                        },
-                        childCount: snapshot.data?.length,
-                      ),
-                    );
-                  } else {
-                    return SliverFillRemaining(
-                        child: Container(
-                            width: size.width,
-                            height: size.height,
-                            color: Colors.transparent,
-                            child: Column(
+                          )
+                        : null,
+                    /*PreferredSize(
+                            preferredSize: const Size.fromHeight(48.0),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  height: size.height / 4,
-                                ),
-                                SpinKitThreeBounce(
-                                  duration: const Duration(milliseconds: 2000),
-                                  color: Colors.blue.withOpacity(0.7),
-                                  size: 50,
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Text(
-                                  "No hay datos",
-                                  style: GoogleFonts.aldrich(
-                                    textStyle: TextStyle(
-                                      color: Colors.blue.withOpacity(0.8),
+                                Container(
+                                  color: Colors.transparent,
+                                  margin:
+                                      const EdgeInsets.only(left: 15, bottom: 5),
+                                  child: Text(
+                                    'Conoce los detalles del préstamo...',
+                                    style: TextStyle(
+                                      fontSize: sizeMax.maxWidth < 400 ? 15 : 18,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      height: 2,
+                                      color: Colors.red[50],
+                                      fontFamily: 'OpenSans',
                                     ),
                                   ),
                                 ),
                               ],
-                            )));
-                  }
-                },
-              ),
-            ],
-          );
-        }),
+                            ))*/
+                    leading: null,
+                    automaticallyImplyLeading: false,
+                    /*leading: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Constants.orangeColor.withOpacity(0.5),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            color: Constants.blueColor,
+                          ),
+                        ),
+                      ),
+                    ),*/
+                    flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.pin,
+                        expandedTitleScale: 1.3,
+                        title: iconsSearch == false
+                            ? Text(
+                                'Todos los Créditos',
+                                style: TextStyle(
+                                    color: Constants.blueColor,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                'Todos los Créditos',
+                                style: TextStyle(
+                                    color: Constants.blueColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                        background: Image.asset(
+                          fondo,
+                          fit: BoxFit.fitWidth,
+                        ),
+                        centerTitle: true,
+                        titlePadding: iconsSearch == true
+                            ? const EdgeInsets.only(bottom: 60, left: 205)
+                            : const EdgeInsets.only(bottom: 5)),
+                  ),
+                ),
+//Lista de creditos
+
+                const SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                sliverlistCredits(),
+                const SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
+  }
+
+  StreamBuilder<List<dynamic>> sliverlistCredits() {
+    return StreamBuilder(
+        stream: controllerCredit.getCredits(),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.hasData && snapshot.data.toString() != "[]") {
+            return SliverList.builder(
+              itemCount: snapshot.data?.length ?? 0,
+              itemBuilder: (context, index) {
+                final credit = snapshot.data?[index];
+
+                if (credit["codigo_credito"]
+                        .toString()
+                        .isCaseInsensitiveContains(controllerCredit.search) ||
+                    credit["propietario_credito"]
+                        .toString()
+                        .isCaseInsensitiveContains(controllerCredit.search)) {
+                  return Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 18, right: 18, top: 10, bottom: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue[300] as Color,
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Container(
+                            color: Colors.transparent,
+                            height: 70,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CustomText(
+                                          // ignore: prefer_interpolation_to_compose_strings
+                                          text: "Folio: " +
+                                              (credit?["codigo_credito"])
+                                                  .toString(),
+                                          font: GoogleFonts.aldrich(),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        CustomText(
+                                          text:
+                                              "Monto: ${credit?["monto_solicitado"]}",
+                                          font: GoogleFonts.aldrich(
+                                            textStyle: const TextStyle(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            "Cliente: ${credit?["propietario_credito"]}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.teal),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: Container(
+                            child: const SizedBox(
+                              height: 40,
+                              child: Icon(Icons.arrow_forward_ios_outlined),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                duration: const Duration(milliseconds: 780),
+                                child: creditDetails(
+                                  codigo_credito: credit?["codigo_credito"],
+                                  dias_semana:
+                                      (credit?["dias_semana"]).toString(),
+                                  fecha_prestamo: (credit?["fecha_prestamo"]),
+                                  interes_asignado: credit?["interes_asignado"],
+                                  monto_solicitado: credit?["monto_solicitado"],
+                                  numero_pagos: credit?["numero_pagos"],
+                                  plazos: credit?["plazos"],
+                                  propietario_credito:
+                                      credit?["propietario_credito"],
+                                  status: credit?["status"] ?? "SIN STATUS",
+                                ),
+                                type: PageTransitionType.bottomToTop,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            );
+          } else {
+            return SliverFillRemaining(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 200,
+                  ),
+                  SpinKitThreeBounce(
+                    duration: const Duration(milliseconds: 2000),
+                    color: Colors.blue.withOpacity(0.9),
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "No hay datos",
+                    style: TextStyle(
+                      color: Colors.blue.withOpacity(0.9),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      height: 2,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        });
   }
 }

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({super.key});
+
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  late String _selectedMethod="PayPal";
-  late String _accountNumber="";
-  late String _bankName="";
-  late double _amount=0.0;
+  late String _selectedMethod = "PayPal";
+  late String _accountNumber = "";
+  late String _bankName = "";
+  late double _amount = 0.0;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -21,11 +23,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Pago completado'),
-            content: Text('El pago se ha procesado correctamente'),
+            title: const Text('Pago completado'),
+            content: const Text('El pago se ha procesado correctamente'),
             actions: <Widget>[
               TextButton(
-                child: Text('Aceptar'),
+                child: const Text('Aceptar'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -41,7 +43,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Realizar pago'),
+        title: const Text('Realizar pago'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -50,13 +52,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              const Text(
                 'Método de pago',
                 style: TextStyle(fontSize: 18.0),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               Container(
-                width: 80,
+                color: Colors.transparent,
+                width: 800,
                 height: 50,
                 child: DropdownButtonFormField<String>(
                   value: _selectedMethod,
@@ -65,14 +68,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       _selectedMethod = newValue!;
                     });
                   },
-                  items: [
+                  items: const [
                     DropdownMenuItem(
-                      child: Text('Transferencia bancaria'),
                       value: 'transferencia',
+                      child: Text('Transferencia bancaria'),
                     ),
                     DropdownMenuItem(
-                      child: Text('PayPal'),
                       value: 'PayPal',
+                      child: Text('PayPal'),
                     ),
                   ],
                   validator: (value) {
@@ -83,19 +86,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               if (_selectedMethod == 'transferencia')
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Número de cuenta bancaria',
                       style: TextStyle(fontSize: 18.0),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     TextFormField(
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Ingrese el número de cuenta bancaria',
                         border: OutlineInputBorder(),
                       ),
@@ -109,14 +112,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         _accountNumber = value!;
                       },
                     ),
-                    SizedBox(height: 16.0),
-                    Text(
+                    const SizedBox(height: 16.0),
+                    const Text(
                       'Nombre del banco',
                       style: TextStyle(fontSize: 18.0),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Ingrese el nombre del banco',
                         border: OutlineInputBorder(),
                       ),
@@ -136,14 +139,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       'Correo electrónico de PayPal',
                       style: TextStyle(fontSize: 18.0),
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Ingrese su correo electrónico de PayPal',
                         border: OutlineInputBorder(),
                       ),
@@ -162,15 +165,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ],
                 ),
-              SizedBox(height: 16.0),
-              Text(
+              const SizedBox(height: 16.0),
+              const Text(
                 'Monto',
                 style: TextStyle(fontSize: 18.0),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8.0),
               TextFormField(
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Ingrese el monto a pagar',
                   border: OutlineInputBorder(),
                   prefixText: '\$',
@@ -191,11 +194,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   _amount = double.parse(value!);
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Center(
                 child: TextButton(
-                  child: Text('Realizar pago'),
                   onPressed: _submitForm,
+                  child: const Text('Realizar pago'),
                 ),
               ),
             ],

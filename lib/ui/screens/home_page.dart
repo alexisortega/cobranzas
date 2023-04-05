@@ -13,7 +13,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -335,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                     child: FittedBox(
                       fit: BoxFit.contain,
                       child: CustomText(
-                        font: GoogleFonts.aldrich(
+                        font: TextStyle(
                           fontSize: 30,
                           color: Constants.orangeColor,
                           fontWeight: FontWeight.bold,
@@ -418,13 +418,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Text(
                             "No hay datos",
-                            style: GoogleFonts.aldrich(
-                              textStyle: TextStyle(
-                                color: Colors.blue.withOpacity(0.8),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                height: 2,
-                              ),
+                            style: TextStyle(
+                              color: Colors.blue.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              height: 2,
                             ),
                           ),
                         ],
@@ -719,16 +717,14 @@ class _HomePageState extends State<HomePage> {
                                       child: SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Text(
-                                          maxLines: 2,
-                                          "${snapshot.data?[cont]['codigo_cliente']} ${snapshot.data?[cont]['nombre']}",
-                                          style: GoogleFonts.aldrich(
-                                              textStyle: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Colors.black.withOpacity(0.8),
-                                          )),
-                                        ),
+                                            maxLines: 2,
+                                            "${snapshot.data?[cont]['codigo_cliente']} ${snapshot.data?[cont]['nombre']}",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                            )),
                                       ),
                                     ),
                                     Container(
@@ -819,22 +815,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  /*SizeNameTextContainer(Size size) {
-    if (size.width >= 50 && size.width <= 200) {
-      return size.width / 2.6;
-    } else if (size.width >= 201 && size.width <= 300) {
-      return size.width / 2.5;
-    } else if (size.width >= 301 && size.width <= 400) {
-      return size.width / 2.4;
-    } else if (size.width >= 401 && size.width <= 800) {
-      return size.width - 230;
-    } else if (size.width >= 801 && size.width <= 1000) {
-      return size.width / 1.45;
-    } else if (size.width >= 1001) {
-      return size.width / 0.99;
-    }
-  }*/
 
   SizeNameTextContainer(Size size) {
     if (size.width >= 201) {

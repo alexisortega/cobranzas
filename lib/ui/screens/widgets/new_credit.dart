@@ -4,13 +4,11 @@ import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/controllers/clients_dias_semana.dart';
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/repository/authentication.dart';
-import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class NewCredit extends StatefulWidget {
@@ -22,14 +20,16 @@ class NewCredit extends StatefulWidget {
 
 class _NewCreditState extends State<NewCredit> {
   static var controllerClientes = Get.put(clientsController());
+  var controllerCredit = Get.put(creditController());
   String selectedCustomer = "";
   List<String> List_dias = [];
   List<String> List_dias2 = [];
-
   bool dias_semana_error = false;
   String selectedPlazos = 'Selecciona un plazo';
   late DocumentSnapshot snap;
   List<String> snapList = [];
+  List<String> ItemsCreditsnames = [];
+  String codigo_cliente = "";
 
   final formKey3 = GlobalKey<FormState>();
   List<String> itemsPlazos = [
@@ -45,7 +45,6 @@ class _NewCreditState extends State<NewCredit> {
   Widget build(BuildContext context) {
     var ListMenuCustomers = Future(() => []);
     Size size = MediaQuery.of(context).size;
-    var controllerCredit = Get.put(creditController());
 
     @override
     void initState() {
@@ -225,12 +224,12 @@ class _NewCreditState extends State<NewCredit> {
                                             return const Center(
                                                 child: Text("No hay datos"));
                                           } else {
-                                            List<String> ItemsCreditsnames = [];
+                                            // ignore: non_constant_identifier_names
+
                                             for (int i = 0;
                                                 i < snapshot.data!.docs.length;
                                                 i++) {
                                               snap = snapshot.data!.docs[i];
-                                              snapList.add(snap["nombre"]);
 
                                               ItemsCreditsnames.add(
                                                   snap["codigo_cliente"] +
@@ -343,11 +342,65 @@ class _NewCreditState extends State<NewCredit> {
                                                     ),
                                                   ),
                                                   popupProps: PopupProps.menu(
+                                                    loadingBuilder:
+                                                        (context, searchEntry) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    },
+                                                    scrollbarProps:
+                                                        const ScrollbarProps(
+                                                            interactive: true),
+                                                    emptyBuilder: (context,
+                                                            searchEntry) =>
+                                                        Container(
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      width: size.width,
+                                                      height: size.height,
+                                                      color: Colors.transparent,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            "No se encontrarón resultados",
+                                                            style: TextStyle(
+                                                                color: Constants
+                                                                    .blueColor,
+                                                                fontSize: 17,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Text(
+                                                              "(Necesitas registrar un cliente)",
+                                                              style: TextStyle(
+                                                                  color: Constants
+                                                                      .blueColor)),
+                                                        ],
+                                                      ),
+                                                    ),
                                                     showSearchBox: true,
                                                     fit: FlexFit.loose,
-                                                    constraints:
-                                                        const BoxConstraints
-                                                            .tightFor(),
+                                                    constraints: ItemsCreditsnames
+                                                            .isNotEmpty
+                                                        ? const BoxConstraints
+                                                                .tightForFinite(
+                                                            height: 400,
+                                                            width: 350)
+                                                        : const BoxConstraints
+                                                                .tightFor(
+                                                            height: 400,
+                                                            width: 350),
                                                     title: Padding(
                                                       padding:
                                                           const EdgeInsets.all(
@@ -400,7 +453,7 @@ class _NewCreditState extends State<NewCredit> {
                                                           DismissDirection
                                                               .startToEnd,
                                                       content: Text(
-                                                        "CLIENTE: ${value}",
+                                                        "CLIENTE: $value",
                                                         style: const TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
@@ -773,37 +826,58 @@ class _NewCreditState extends State<NewCredit> {
                                                 color: Colors.cyan),
                                             child: TextButton(
                                               onPressed: () async {
+                                                //
 //codicion de forms
-                                                bool isloading = false;
+                                                /*                           bool isloading = false;
 
                                                 if (formKey3.currentState!
                                                     .validate()) {
 //Loading...
                                                   isloading = true;
                                                   if (isloading == true) {
-                                                    Get.to(
-                                                      () => creditSimulation(
-                                                        numero_pagos: int.parse(
-                                                          controllerCredit
-                                                              .numero_pagos
-                                                              .text,
-                                                        ),
-                                                        plazos: selectedPlazos,
-                                                        monto_solicitado: double
-                                                            .parse(controllerCredit
-                                                                .monto_solicitado
-                                                                .text),
-                                                        fecha_prestamo:
-                                                            DateTime.parse(
-                                                                controllerCredit
-                                                                    .fecha_prestamo
-                                                                    .text),
-                                                        interes_asignado: double
-                                                            .parse(controllerCredit
-                                                                .interes_asignado
-                                                                .text),
-                                                      ),
-                                                    );
+//llamada a la clase creditPayments
+                                                    List<String>
+                                                        extcod_cliente =
+                                                        selectedCustomer
+                                                            .split(" ");
+                                                    codigo_cliente =
+                                                        extcod_cliente[0];
+                                                    Get.to(() => creditPayments(
+                                                          codigo_cliente:
+                                                              codigo_cliente,
+                                                          numero_pagos:
+                                                              int.parse(
+                                                            controllerCredit
+                                                                .numero_pagos
+                                                                .text,
+                                                          ),
+                                                          plazos:
+                                                              selectedPlazos,
+                                                          monto_solicitado:
+                                                              double.parse(
+                                                                  controllerCredit
+                                                                      .monto_solicitado
+                                                                      .text),
+                                                          fecha_prestamo:
+                                                              DateTime.parse(
+                                                                  controllerCredit
+                                                                      .fecha_prestamo
+                                                                      .text),
+                                                          interes_asignado:
+                                                              double.parse(
+                                                                  controllerCredit
+                                                                      .interes_asignado
+                                                                      .text),
+                                                          codigo_credito:
+                                                              controllerCredit
+                                                                  .codigo_credito
+                                                                  .text,
+                                                          dias_semana:
+                                                              List_dias2,
+                                                          propietario_credito:
+                                                              selectedCustomer
+                                                                  .toString(),
+                                                        ));
 
                                                     showDialog(
                                                         barrierDismissible:
@@ -835,7 +909,7 @@ class _NewCreditState extends State<NewCredit> {
                                                     });
                                                   }
                                                 }
-
+*/
                                                 //
                                               },
                                               child: Row(
@@ -843,11 +917,11 @@ class _NewCreditState extends State<NewCredit> {
                                                   Expanded(
                                                     child: Container(
                                                       color: Colors.transparent,
-                                                      child: Row(
+                                                      child: const Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
-                                                        children: const [
+                                                        children: [
                                                           Icon(
                                                             Icons
                                                                 .sentiment_neutral_rounded,
@@ -884,13 +958,49 @@ class _NewCreditState extends State<NewCredit> {
                                             ),
                                             child: TextButton(
                                               onPressed: () async {
-                                                //Method register
+                                                //botón regitrar nuevo crédito
+                                                /* List<String> extcod_cliente =
+                                                    selectedCustomer.split(" ");
+                                                codigo_cliente =
+                                                    extcod_cliente[0];
+
+                                                Get.to(() => creditPayments(
+                                                      codigo_cliente:
+                                                          codigo_cliente,
+                                                      numero_pagos: int.parse(
+                                                        controllerCredit
+                                                            .numero_pagos.text,
+                                                      ),
+                                                      plazos: selectedPlazos,
+                                                      monto_solicitado: double
+                                                          .parse(controllerCredit
+                                                              .monto_solicitado
+                                                              .text),
+                                                      fecha_prestamo:
+                                                          DateTime.parse(
+                                                              controllerCredit
+                                                                  .fecha_prestamo
+                                                                  .text),
+                                                      interes_asignado: double
+                                                          .parse(controllerCredit
+                                                              .interes_asignado
+                                                              .text),
+                                                      codigo_credito:
+                                                          controllerCredit
+                                                              .codigo_credito
+                                                              .text,
+                                                      dias_semana: List_dias2,
+                                                      propietario_credito:
+                                                          selectedCustomer
+                                                              .toString(),
+                                                    ));*/
+
                                                 bool register = false;
                                                 try {
                                                   /*Empiza  condicion de forms*/
                                                   if (formKey3.currentState!
                                                       .validate()) {
-                                                    //Loading...
+                                                    //cargando
                                                     showDialog(
                                                         barrierDismissible:
                                                             false,
@@ -946,12 +1056,16 @@ class _NewCreditState extends State<NewCredit> {
                                                           controllerCredit
                                                               .numero_pagos
                                                               .text),
+                                                      status: "vigente"
+                                                          .trim()
+                                                          .toUpperCase(),
                                                     )
                                                         .whenComplete(() {
                                                       setState(() {
                                                         register = true;
                                                       });
                                                     });
+
                                                     if (register == true) {
                                                       Navigator.of(context)
                                                           .pop();
@@ -989,11 +1103,11 @@ class _NewCreditState extends State<NewCredit> {
                                                 children: [
                                                   Expanded(
                                                     child: Container(
-                                                      child: Row(
+                                                      child: const Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
-                                                        children: const [
+                                                        children: [
                                                           Icon(
                                                             Icons.save,
                                                             color: Colors.black,

@@ -1,5 +1,6 @@
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/ui/screens/widgets/animations_transtions.dart';
+import 'package:cobranzas/models/animations_transtions.dart';
+
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +14,11 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int currentIndex = 0;
-  @override
+
   late String pres1;
   late String pres2;
   late String pres3;
+  @override
   void initState() {
     super.initState();
     pres1 = "assets/imagenPres2.png";

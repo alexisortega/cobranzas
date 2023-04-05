@@ -38,9 +38,9 @@ class creditController extends GetxController {
         .snapshots()
         .map((QuerySnapshot querySnapshot) {
       final List readcredits = [];
-      querySnapshot.docs.forEach((QueryDocumentSnapshot document) {
+      for (var document in querySnapshot.docs) {
         readcredits.add(document.data());
-      });
+      }
       return readcredits;
     });
   }
@@ -54,6 +54,7 @@ class creditController extends GetxController {
     required DateTime fecha_prestamo,
     required String? plazos,
     required int numero_pagos,
+    required String status,
   }) async {
     try {
       //
@@ -68,6 +69,7 @@ class creditController extends GetxController {
         'dias_semana': dias_semana,
         'fecha_prestamo': fecha_prestamo,
         'numero_pagos': numero_pagos,
+        'status': status,
 
         //
       });
