@@ -3,10 +3,12 @@ import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/scan_page.dart';
 import 'package:cobranzas/ui/screens/creditPage.dart';
+import 'package:cobranzas/ui/screens/custom_drawerpage.dart';
 import 'package:cobranzas/ui/screens/othersPage.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RootPage extends StatefulWidget {
@@ -50,11 +52,26 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(.8),
+      drawer: const DrawerPage(),
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.menu, // Cambia el ícono del botón del Drawer
+              color: Constants
+                  .orangeColor, // Cambia el color del ícono del botón del Drawer
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
+        automaticallyImplyLeading: true,
         title: SingleChildScrollView(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -106,12 +123,13 @@ class _RootPageState extends State<RootPage> {
                           style: TextStyle(
                               color: Colors.orange,
                               fontWeight: FontWeight.bold,
-                              fontSize: 18)),
+                              fontSize: 20)),
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.transparent),
                           padding: const MaterialStatePropertyAll(
-                              EdgeInsets.only(right: 10, left: 10)),
+                              EdgeInsets.only(
+                                  right: 10, left: 10, top: 10, bottom: 10)),
                           fixedSize: MaterialStatePropertyAll(size / 2),
                           iconSize: const MaterialStatePropertyAll(40.0),
                           //maximumSize: MaterialStateProperty.all(size),
@@ -126,7 +144,7 @@ class _RootPageState extends State<RootPage> {
             ],
           ),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.white,
         elevation: 0.0,
       ),
       body: IndexedStack(
@@ -142,14 +160,15 @@ class _RootPageState extends State<RootPage> {
                   type: PageTransitionType.bottomToTop));
         },
         backgroundColor: Constants.blueColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         child: Image.asset(
           'assets/images/code-scan-two.png',
-          height: 30.0,
+          height: 25.0,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-          iconSize: 28,
+          iconSize: 30,
           gapWidth: 120,
           blurEffect: true,
           splashRadius: 30,
@@ -161,7 +180,7 @@ class _RootPageState extends State<RootPage> {
           icons: iconList,
           activeIndex: _bottomNavIndex,
           gapLocation: GapLocation.center,
-          notchSmoothness: NotchSmoothness.softEdge,
+          notchSmoothness: NotchSmoothness.smoothEdge,
           onTap: (index) {
             setState(() {
               _bottomNavIndex = index;

@@ -120,320 +120,333 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.only(top: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                  ),
-                  width: size.width * .9,
-                  decoration: BoxDecoration(
-                    color: Constants.blueColor.withOpacity(.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          //Icons.search_outlined,
-                          Icons.search_sharp,
-                          color: Constants.blueColor,
-                          size: 30,
-                        ),
+          scrollDirection: Axis.vertical,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
                       ),
-                      Expanded(
-                          child: TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            search = value;
-                          });
-                        },
-                        controller: controllerClientes.filtrar,
-                        showCursor: true,
-                        decoration: const InputDecoration(
-                          hintText: 'Buscar cliente (Código, Nombre)',
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                        ),
-                      )),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            controllerClientes.filtrar.text = "";
-                            search = "";
-                            controllerClientes.filtrar.text = search;
-                          });
-                          clients = controllerClientes.showClientes();
-                        },
-                        child: Icon(
-                          Icons.dangerous_rounded,
-                          size: 25,
-                          color: Constants.blueColor.withOpacity(.7),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          Container(
-            color: Colors.transparent,
-            padding:
-                const EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 5),
-            margin: const EdgeInsets.only(bottom: 2),
-            //altura del contenedor de los botones
-            height: 90,
-            width: size.width,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: ClientesTypes.length,
-                itemBuilder: (buildContext, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 7.5, left: 7.5),
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 8,
-                      ),
+                      width: size.width * .9,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue[300] as Color,
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(1, 3),
-                          ),
-                        ],
+                        color: Constants.blueColor.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          selectedIndex == index;
-                          switch (index) {
-                            case 0:
-                              //NUEVOS CLIENTES
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    duration: const Duration(milliseconds: 850),
-                                    child: const Newcustomers(),
-                                    type: PageTransitionType.bottomToTop,
-                                  )).then((_) {
-                                setState(() {
-                                  clients = controllerClientes.showClientes();
-                                  statusBottomDelete = false;
-                                });
-                              });
-
-                              break;
-                            case 1:
-                              //ACTUALIZAR
-                              setState(() {
-                                statusBottomDelete = false;
-                                clients = controllerClientes.showClientes();
-                                isloading = true;
-                                Get.to(() => const RootPage());
-                                if (isloading == true) {
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return Center(
-                                            child: SpinKitRing(
-                                          color: Colors.orange.withOpacity(0.9),
-                                          size: 50.0,
-                                          lineWidth: 4,
-                                          duration: const Duration(seconds: 3),
-                                        ));
-                                      });
-
-                                  Future.delayed(
-                                      const Duration(milliseconds: 2000), () {
-                                    setState(() {
-                                      isloading = false;
-                                      Get.back();
-                                    });
-                                  });
-                                } else {}
-                              });
-
-                              break;
-                            case 2:
-                              //Eliminar
-                              setState(() {
-                                statusBottomDelete = !statusBottomDelete;
-                                if (statusBottomDelete == true) {}
-                              });
-                              break;
-                            case 3:
-                              break;
-
-                            default:
-                              break;
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(10),
-                          backgroundColor: Colors
-                              .transparent, //Colors.blue.withOpacity(0.4),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 0.0,
-                        ),
-                        icon: isloading == false
-                            ? listIcon[index]
-                            : listIconUpdate[index],
-                        label: isloading == true
-                            ? ClientsTypesUpdate[index]
-                            : Text(
-                                ClientesTypes[index],
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(.9),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                              ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-          Container(
-            height: 60,
-            width: size.width,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.transparent),
-            padding: const EdgeInsets.only(
-              bottom: 10,
-              top: 15,
-            ),
-            margin: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Card(
-                    elevation: 21.0,
-                    color: Colors.transparent,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: CustomText(
-                        font: TextStyle(
-                          fontSize: 30,
-                          color: Constants.orangeColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        text: 'Todos los clientes',
-                      ),
-                    )),
-              ],
-            ),
-          ),
-          Container(
-            // DATOS DEL CLIENTE
-            color: Colors.transparent,
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 19),
-            height: (size.height / 1.78) - 20,
-            child: FutureBuilder(
-              future: clients,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data.toString() != '[]') {
-                  // LISTA DE CLIENTES
-                  return ListView.builder(
-                      itemCount: snapshot.data?.length, //lista en firebase
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (BuildContext contexto, int cont) {
-                        if ((snapshot.data?[cont]['nombre'])
-                                .toString()
-                                .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['codigo_cliente'])
-                                .toString()
-                                .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_p'])
-                                .toString()
-                                .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_m'])
-                                .toString()
-                                .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_p'] +
-                                    " " +
-                                    snapshot.data?[cont]['apellido_m'])
-                                .toString()
-                                .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['nombre'] +
-                                    " " +
-                                    snapshot.data?[cont]['apellido_p'] +
-                                    " " +
-                                    snapshot.data?[cont]['apellido_m'])
-                                .toString()
-                                .isCaseInsensitiveContains(search)) {
-                          return principalMetodo(
-                            snapshot,
-                            cont,
-                            context,
-                            size,
-                          );
-                        } else {
-                          return Container();
-                        }
-                      });
-                } else {
-                  return Container(
-                      width: size.width,
-                      height: size.height,
-                      color: Colors.transparent,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(
-                            height: 100,
-                          ),
-                          SpinKitThreeBounce(
-                            duration: const Duration(milliseconds: 2000),
-                            color: Colors.blue.withOpacity(0.7),
-                            size: 50,
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "No hay datos",
-                            style: TextStyle(
-                              color: Colors.blue.withOpacity(0.8),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              height: 2,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              //Icons.search_outlined,
+                              Icons.search_sharp,
+                              color: Constants.blueColor,
+                              size: 30,
                             ),
                           ),
+                          Expanded(
+                              child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                search = value;
+                              });
+                            },
+                            controller: controllerClientes.filtrar,
+                            showCursor: true,
+                            decoration: const InputDecoration(
+                              hintText: 'Buscar cliente (Código, Nombre)',
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                            ),
+                          )),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                controllerClientes.filtrar.text = "";
+                                search = "";
+                                controllerClientes.filtrar.text = search;
+                              });
+                              clients = controllerClientes.showClientes();
+                            },
+                            child: Icon(
+                              Icons.dangerous_rounded,
+                              size: 25,
+                              color: Constants.blueColor.withOpacity(.7),
+                            ),
+                          )
                         ],
-                      ));
-                }
-              },
-            ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(
+                    top: 15, bottom: 15, left: 10, right: 5),
+                margin: const EdgeInsets.only(bottom: 2),
+                //altura del contenedor de los botones
+                height: 90,
+                width: size.width,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: ClientesTypes.length,
+                    itemBuilder: (buildContext, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 7.5, left: 7.5),
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue[300] as Color,
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: const Offset(1, 3),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              selectedIndex == index;
+                              switch (index) {
+                                case 0:
+                                  //NUEVOS CLIENTES
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        duration:
+                                            const Duration(milliseconds: 850),
+                                        child: const Newcustomers(),
+                                        type: PageTransitionType.bottomToTop,
+                                      )).then((_) {
+                                    setState(() {
+                                      clients =
+                                          controllerClientes.showClientes();
+                                      statusBottomDelete = false;
+                                    });
+                                  });
+
+                                  break;
+                                case 1:
+                                  //ACTUALIZAR
+                                  setState(() {
+                                    statusBottomDelete = false;
+                                    clients = controllerClientes.showClientes();
+                                    isloading = true;
+                                    Get.to(() => const RootPage());
+                                    if (isloading == true) {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return Center(
+                                                child: SpinKitRing(
+                                              color: Colors.orange
+                                                  .withOpacity(0.9),
+                                              size: 50.0,
+                                              lineWidth: 4,
+                                              duration:
+                                                  const Duration(seconds: 3),
+                                            ));
+                                          });
+
+                                      Future.delayed(
+                                          const Duration(milliseconds: 2000),
+                                          () {
+                                        setState(() {
+                                          isloading = false;
+                                          Get.back();
+                                        });
+                                      });
+                                    } else {}
+                                  });
+
+                                  break;
+                                case 2:
+                                  //Eliminar
+                                  setState(() {
+                                    statusBottomDelete = !statusBottomDelete;
+                                    if (statusBottomDelete == true) {}
+                                  });
+                                  break;
+                                case 3:
+                                  break;
+
+                                default:
+                                  break;
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(10),
+                              backgroundColor: Colors
+                                  .transparent, //Colors.blue.withOpacity(0.4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 0.0,
+                            ),
+                            icon: isloading == false
+                                ? listIcon[index]
+                                : listIconUpdate[index],
+                            label: isloading == true
+                                ? ClientsTypesUpdate[index]
+                                : Text(
+                                    ClientesTypes[index],
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.9),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                  ),
+                          ),
+                        ),
+                      );
+                    }),
+              ),
+              Container(
+                height: 70,
+                width: size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent),
+                padding: const EdgeInsets.only(
+                  bottom: 0,
+                  top: 20,
+                ),
+                margin: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.contain,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 10, left: 10, top: 10, right: 10),
+                        child: Material(
+                          elevation: 24.0,
+                          color: Colors.transparent,
+                          child: CustomText(
+                            font: TextStyle(
+                              fontStyle: FontStyle.normal,
+                              fontSize: 40,
+                              color: Constants.orangeColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            text: 'Todos los clientes',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                // DATOS DEL CLIENTE
+                color: Colors.transparent,
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 19),
+                height: (size.height / 1.78) - 40,
+                child: FutureBuilder(
+                  future: clients,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data.toString() != '[]') {
+                      // LISTA DE CLIENTES
+                      return ListView.builder(
+                          itemCount: snapshot.data?.length, //lista en firebase
+                          scrollDirection: Axis.vertical,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (BuildContext contexto, int cont) {
+                            if ((snapshot.data?[cont]['nombre'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search) ||
+                                (snapshot.data?[cont]['codigo_cliente'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search) ||
+                                (snapshot.data?[cont]['apellido_p'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search) ||
+                                (snapshot.data?[cont]['apellido_m'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search) ||
+                                (snapshot.data?[cont]['apellido_p'] +
+                                        " " +
+                                        snapshot.data?[cont]['apellido_m'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search) ||
+                                (snapshot.data?[cont]['nombre'] +
+                                        " " +
+                                        snapshot.data?[cont]['apellido_p'] +
+                                        " " +
+                                        snapshot.data?[cont]['apellido_m'])
+                                    .toString()
+                                    .isCaseInsensitiveContains(search)) {
+                              return principalMetodo(
+                                snapshot,
+                                cont,
+                                context,
+                                size,
+                              );
+                            } else {
+                              return Container();
+                            }
+                          });
+                    } else {
+                      return Container(
+                          width: size.width,
+                          height: size.height,
+                          color: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 100,
+                              ),
+                              SpinKitThreeBounce(
+                                duration: const Duration(milliseconds: 2000),
+                                color: Colors.blue.withOpacity(0.7),
+                                size: 50,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                "No hay datos",
+                                style: TextStyle(
+                                  color: Colors.blue.withOpacity(0.8),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  height: 2,
+                                ),
+                              ),
+                            ],
+                          ));
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   GestureDetector principalMetodo(
