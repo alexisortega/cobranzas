@@ -158,7 +158,7 @@ class DrawerPage extends StatelessWidget {
                     icon: Icons.exit_to_app,
                     text: 'Cerrar Sesión',
                     onTap: () => Navigator.pop(context),
-                    textColor: Constants.orangeColor,
+                    textColor: Colors.cyan[900] as Color,
                   ),
                 ],
               ),
@@ -178,14 +178,20 @@ class DrawerPage extends StatelessWidget {
   }) {
     return subOptions != null
         ? ExpansionTile(
-            
-            leading: Icon(icon, color: textColor),
-            title: Text(text, style: TextStyle(color: textColor)),
+            leading: Icon(
+              icon,
+              color: textColor,
+            ),
+            title: Text(text,
+                style:
+                    TextStyle(color: textColor, fontWeight: FontWeight.bold)),
             children: subOptions,
           )
         : ListTile(
             leading: Icon(icon, color: textColor),
-            title: Text(text, style: TextStyle(color: textColor)),
+            title: Text(text,
+                style:
+                    TextStyle(color: textColor, fontWeight: FontWeight.bold)),
             onTap: onTap,
           );
   }
