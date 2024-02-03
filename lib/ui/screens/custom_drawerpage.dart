@@ -3,147 +3,190 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DrawerPage extends StatelessWidget {
-  const DrawerPage({super.key});
+  const DrawerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Drawer(
-      child: SingleChildScrollView(
-        child: Container(
-          height: size.height,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue[400] as Color,
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ListView(
-            
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
+      backgroundColor: Colors.blue.withOpacity(0.4),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(.3),
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue[300] as Color,
+              spreadRadius: 0,
+              blurRadius: 0,
+              offset: const Offset(-25, 30),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 12, left: 15, bottom: 15, right: 10),
+              child: Card(
+                margin: EdgeInsets.zero,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.blue,
-                            child: Icon(
-                              Icons.person,
-                              color: Color.fromARGB(255, 5, 33, 82),
-                              size: 40,
-                            ),
-                          ),
-                          SizedBox(height: 10, width: 10),
-                          Text(
-                            '¡Hola, nombre!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
+                child: Container(
+                  height: (size.height * 0.2),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue[600] as Color,
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: const Offset(1, 3),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            "correo",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: size.height * 0.02,
+                        left: size.width * 0.05,
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Constants.blueColor,
+                              child: const Icon(Icons.person_outline,
+                                  size: 45.0, color: Colors.white70),
                             ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            const Text("(Administrador)",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.black54)),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: size.height * 0.1,
+                        left: size.width * 0.03,
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '¡Hola, Alexis!',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text('usuario@example.com',
+                                style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: IconButton(
+                          iconSize: 30,
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.amber,
+                            applyTextScaling: false,
                           ),
-                        ],
-                      )
+                          onPressed: () {
+                            Get.back(); // Navegar hacia atrás
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-              ListTile(
-                title: const Text(
-                  'Inicio',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  createDrawerItem(
+                    icon: Icons.home,
+                    text: 'Inicio',
+                    onTap: () => Navigator.pop(context),
                   ),
-                ),
-                leading: const Icon(Icons.home, color: Colors.white),
-                onTap: () {
-                  // Lógica para navegar a la pantalla de inicio
-                  Navigator.pop(context); // Cierra el Drawer
-                },
-              ),
-              ListTile(
-                title: const Text(
-                  'Perfil',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  createDrawerItem(
+                    icon: Icons.person,
+                    text: 'Perfil',
+                    onTap: () => Navigator.pop(context),
+                    subOptions: [
+                      createDrawerItem(
+                        icon: Icons.info,
+                        text: 'Información de Perfil',
+                        onTap: () {
+                          // Lógica para la subopción de Información de Perfil
+                          print('Perfil > Información de Perfil');
+                          Navigator.pop(context);
+                        },
+                      ),
+                      createDrawerItem(
+                        icon: Icons.settings,
+                        text: 'Configuración de Perfil',
+                        onTap: () {
+                          // Lógica para la subopción de Configuración de Perfil
+                          print('Perfil > Configuración de Perfil');
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                leading: const Icon(Icons.person, color: Colors.white),
-                onTap: () {
-                  // Lógica para navegar a la pantalla de perfil
-                  Navigator.pop(context); // Cierra el Drawer
-                },
-              ),
-              ListTile(
-                title: const Text(
-                  'Configuración',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  createDrawerItem(
+                    icon: Icons.settings,
+                    text: 'Configuración',
+                    onTap: () => Navigator.pop(context),
                   ),
-                ),
-                leading: const Icon(Icons.settings, color: Colors.white),
-                onTap: () {
-                  // Lógica para navegar a la pantalla de configuración
-                  Navigator.pop(context); // Cierra el Drawer
-                },
-              ),
-              const Divider(color: Colors.white),
-              ListTile(
-                title: const Text(
-                  'Cerrar Sesión',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: EdgeInsets.only(right: size.width * 0.06),
+                    child: Divider(color: Colors.blueGrey.withOpacity(0.5)),
                   ),
-                ),
-                leading: const Icon(Icons.exit_to_app, color: Colors.red),
-                onTap: () {
-                  // Lógica para cerrar sesión
-                  Navigator.pop(context); // Cierra el Drawer
-                },
+                  createDrawerItem(
+                    icon: Icons.exit_to_app,
+                    text: 'Cerrar Sesión',
+                    onTap: () => Navigator.pop(context),
+                    textColor: Constants.orangeColor,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Widget createDrawerItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+    Color textColor = const Color.fromARGB(255, 2, 54, 102),
+    List<Widget>? subOptions,
+  }) {
+    return subOptions != null
+        ? ExpansionTile(
+            
+            leading: Icon(icon, color: textColor),
+            title: Text(text, style: TextStyle(color: textColor)),
+            children: subOptions,
+          )
+        : ListTile(
+            leading: Icon(icon, color: textColor),
+            title: Text(text, style: TextStyle(color: textColor)),
+            onTap: onTap,
+          );
   }
 }
