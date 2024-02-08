@@ -1,4 +1,7 @@
 import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/ui/root_page.dart';
+import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -118,12 +121,12 @@ class DrawerPage extends StatelessWidget {
                   createDrawerItem(
                     icon: Icons.home,
                     text: 'Inicio',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Get.offAll(() => const RootPage()),
                   ),
                   createDrawerItem(
                     icon: Icons.person,
                     text: 'Perfil',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {},
                     subOptions: [
                       createDrawerItem(
                         icon: Icons.info,
@@ -157,7 +160,10 @@ class DrawerPage extends StatelessWidget {
                   createDrawerItem(
                     icon: Icons.exit_to_app,
                     text: 'Cerrar Sesión',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      authenticationRepository.showcerrarSesion(
+                          "¿Estás seguro que quieres cerrar sesión?", context);
+                    },
                     textColor: Colors.cyan[900] as Color,
                   ),
                 ],
@@ -177,15 +183,20 @@ class DrawerPage extends StatelessWidget {
     List<Widget>? subOptions,
   }) {
     return subOptions != null
-        ? ExpansionTile(
-            leading: Icon(
-              icon,
-              color: textColor,
+        ? Theme(
+            data: ThemeData().copyWith(
+              dividerColor: Colors.transparent,
             ),
-            title: Text(text,
-                style:
-                    TextStyle(color: textColor, fontWeight: FontWeight.bold)),
-            children: subOptions,
+            child: ExpansionTile(
+              leading: Icon(
+                icon,
+                color: textColor,
+              ),
+              title: Text(text,
+                  style:
+                      TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+              children: subOptions,
+            ),
           )
         : ListTile(
             leading: Icon(icon, color: textColor),

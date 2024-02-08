@@ -57,10 +57,24 @@ class _RootPageState extends State<RootPage> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu, // Cambia el ícono del botón del Drawer
-              color: Constants
-                  .orangeColor, // Cambia el color del ícono del botón del Drawer
+            icon: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange[400] as Color,
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: const Offset(1, 3),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.menu, // Cambia el ícono del botón del Drawer
+                color: Colors.black.withOpacity(
+                    0.6), // Cambia el color del ícono del botón del Drawer
+              ),
             ),
             onPressed: () {
               Scaffold.of(context).openDrawer();

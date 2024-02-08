@@ -22,8 +22,4 @@ class SingUpController extends GetxController {
       password,
     );
   }
-  
-
-
-
 }
