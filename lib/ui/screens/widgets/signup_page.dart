@@ -7,12 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
 
   static authenticationRepository get instance => Get.find();
-  static final _formKey = GlobalKey<FormState>();
+  static final _formKey1 = GlobalKey<FormState>();
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   final controller1 = Get.put(SingUpController());
+
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -23,7 +31,7 @@ class SignUp extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey,
+            key: SignUp._formKey1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,58 +55,80 @@ class SignUp extends StatelessWidget {
                 ),
                 TextFormField(
                   controller: controller1.emailRegistrar,
-                  decoration: const InputDecoration(
-                      label: Text("Correo Eléctronico"),
-                      prefixIcon: Icon(Icons.email)),
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    label: const Text("Correo Eléctronico"),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Constants.blueColor,
+                    ),
+                  ),
                 ),
                 TextFormField(
                   controller: controller1.fullnameRegistrar,
-                  decoration: const InputDecoration(
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
                       label: Text("Nombre Completo"),
-                      prefixIcon: Icon(Icons.person)),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: Constants.blueColor,
+                      )),
                 ),
                 TextFormField(
-                    controller: controller1.passwordRegistrar,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      label: Text("Contraseña"),
-                      prefixIcon: Icon(Icons.lock),
-                    )),
-                /* TextField(
-                  controller: controller1.password,
-                  decoration: const InputDecoration(
-                      label: Text("password"),
-                      prefixIcon: Icon(Icons.password)),
-                ), CustomTextfield(
-                  Controller: controller1.email,
-                  obscureText: false,
-                  hintText: 'Correo electronico',
-                  icon: Icons.alternate_email,
+                  controller: controller1.passwordRegistrar,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    labelText: "Contraseña",
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Constants.blueColor,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.green,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
+                  ),
                 ),
-                CustomTextfield(
-                  Controller: controller1.fullname,
-                  obscureText: false,
-                  hintText: 'Nombre Completo',
-                  icon: Icons.person,
-                ),
-                CustomTextfield(
-                  Controller: controller1.password,
-                  obscureText: false,
-                  hintText: 'contraseña',
-                  icon: Icons.password,
-                ),*/
                 const SizedBox(
                   height: 10,
                 ),
+                TextFormField(
+                    controller: controller1.telRegistrar,
+                    keyboardType: TextInputType.phone,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      label: const Text("Teléfono"),
+                      prefixIcon: Icon(
+                        Icons.phone_iphone_outlined,
+                        color: Constants.blueColor,
+                      ),
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
                 GestureDetector(
                   onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      SingUpController.instance.registerUser(
+                    if (SignUp._formKey1.currentState!.validate()) {
+                      try {
+                        SingUpController.instance.registerUser(
                           controller1.emailRegistrar.text.trim(),
                           controller1.passwordRegistrar.text.trim(),
-                          context);
+                          controller1.fullnameRegistrar.text.trim(),
+                          int.parse(controller1.telRegistrar.text.trim()),
+                        );
 
-                      borrarCampos();
+                        borrarCampos();
+                      } catch (e) {}
+                    } else {
+                      print("error de registro");
                     }
                   },
                   child: Container(
@@ -175,7 +205,7 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -217,5 +247,6 @@ class SignUp extends StatelessWidget {
     controller1.emailRegistrar.clear();
     controller1.fullnameRegistrar.clear();
     controller1.passwordRegistrar.clear();
+    controller1.telRegistrar.clear();
   }
 }

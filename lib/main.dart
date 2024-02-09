@@ -1,3 +1,4 @@
+import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/firebase_options.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class MyApp extends StatelessWidget {
       title: "Gestor de Cobranza",
       home: OnboardingScreen(),
       debugShowCheckedModeBanner: false,
-      
     );
   }
 }

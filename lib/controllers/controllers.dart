@@ -16,10 +16,19 @@ class SingUpController extends GetxController {
   final passwordlogin = TextEditingController();
   final passwordRecuperar = TextEditingController();
 
-  void registerUser(String email, String password, [addItem]) {
+  final telRegistrar = TextEditingController();
+
+  void registerUser(
+    String email,
+    String password,
+    String fullname,
+    int telRegister,
+  ) {
     authenticationRepository.instance.createUserWithEmailAndPassword1(
       email,
       password,
+      fullname,
+      telRegister,
     );
   }
 }

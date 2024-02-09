@@ -109,42 +109,7 @@ class clientsController extends GetxController {
       print(e.hashCode.toString());
     }
 
-    /* Future funcion_prueba(
-        {required String codigo_cliente,
-        required String nombre,
-        required String apellido_m,
-        required String apellido_p,
-        required String curp,
-        required String calle,
-        required String colonia,
-        required String municipio_delegacion,
-        required String estado,
-        required int codigo_postal,
-        required DateTime fecha_nacimiento,
-        required double monto_inicial,
-        required double interes_asignado,
-        required double monto_solicitado,
-        required int numero_tel,
-        required String plazos,
-        required DateTime fecha_prestamo}) async {
-      print("codigo cliente $codigo_cliente");
-      print("nombre $nombre");
-      print("apellido_m $apellido_m");
-      print("apellido_p $apellido_p");
-      print("Curp $curp");
-      print("Calle $calle");
-      print("colonia $colonia");
-      print("municipio $municipio_delegacion");
-      print("estado $estado");
-      print("codigo postal-$codigo_postal");
-      print("fecha nacimiento $fecha_nacimiento");
-      print("mont inicial $monto_inicial");
-      print("interes $interes_asignado");
-      print("monto solicitado $monto_solicitado");
-      print("numero de tel $numero_tel");
-      print("plazos $plazos");
-      print("fecha prestamo $fecha_prestamo");
-    }*/
+    
   }
 
   Stream<QuerySnapshot> getClients() {

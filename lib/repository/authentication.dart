@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/repository/Exception/signup_email_paswword_failure.dart';
 import 'package:cobranzas/ui/onboarding_screen.dart';
 import 'package:cobranzas/ui/root_page.dart';
@@ -38,28 +39,77 @@ class authenticationRepository extends GetxController {
     //REGISTRO DE USUARIOS/////
     String email,
     String password,
+    String fullname,
+    int telRegister,
   ) async {
-    if (!(email.isEmpty || password.isEmpty)) {
-      try {
-        await _auth1.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+    try {
+      await _auth1
+          .createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      )
+          .whenComplete(() async {
+        print("insertando datos de registro...");
+        try {
+          User? currentUser = _auth1.currentUser;
+          if (currentUser != null) {
+            await FirebaseFirestore.instance
+                .collection('superusuarios')
+                .doc("insertar datos de prueba")
+                //currentUser.uid
+                .set({
+              'email': email,
+              'nombre_prestamista': fullname,
+              'tel_prestamista': telRegister,
+              'roll': 'Superusuario',
+              'privilegios': {
+                'Administrador': {
+                  'Actualizar': true,
+                  'Editar': true,
+                  'Eliminar': true,
+                  'Ver': true,
+                },
+                'Cobratario': {
+                  'Actualizar': true,
+                  'Editar': true,
+                  'Eliminar': true,
+                  'Ver': true
+                },
+                'Supervisor': {
+                  'Actualizar': true,
+                  'Editar': true,
+                  'Eliminar': true,
+                  'Ver': true
+                },
+                'Vendedor': {
+                  'Actualizar': true,
+                  'Editar': true,
+                  'Eliminar': true,
+                  'Ver': true
+                },
+              },
+            });
 
-        if (firebaseUser1.value != null) {
-          Get.offAll(() => const RootPage());
-        } else {
-          Get.to(() => SignUp());
+            Get.offAll(() => const RootPage());
+          } else {
+            Get.to(() => SignUp());
+          }
+        } catch (e) {
+          e.hashCode.toString();
         }
-      } on FirebaseAuthException catch (e) {
-        final ex = signUpWithEmailAndPasswordFailure.code(e.code);
-        // ignore: avoid_print
-        print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
-        validaciones(ex.message1.toString());
-      } catch (_) {}
-    } else {
-      validaciones("Los campos se encuentran vacíos");
-    }
+      });
+
+      if (firebaseUser1.value != null) {
+        Get.offAll(() => const RootPage());
+      } else {
+        Get.to(() => SignUp());
+      }
+    } on FirebaseAuthException catch (e) {
+      final ex = signUpWithEmailAndPasswordFailure.code(e.code);
+      // ignore: avoid_print
+      print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+      validaciones(ex.message1.toString());
+    } catch (_) {}
   }
 
   Future<void> loginWithEmailAndPassword1(
@@ -70,6 +120,7 @@ class authenticationRepository extends GetxController {
       try {
         await _auth1.signInWithEmailAndPassword(
             email: email, password: password);
+        // ignore: use_build_context_synchronously
         showDialog(
             barrierDismissible: false,
             context: context,
@@ -181,7 +232,6 @@ class authenticationRepository extends GetxController {
   // ignore: body_might_complete_normally_nullable
   static Future<User?> signInWithGoogle2(
       {required BuildContext context}) async {
-    // FirebaseAuth auth2 = FirebaseAuth.instance;
     try {
       User? user2;
       GoogleSignIn objGoogleSign = GoogleSignIn();
@@ -228,6 +278,29 @@ class authenticationRepository extends GetxController {
       print(e.hashCode.toString());
     }
   }
+
+/* Future<User?> signInWithGoogle2() async {
+  try {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Realiza la autenticación con Firebase
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      return userCredential.user;
+    }
+  } catch (error) {
+    print("Error al iniciar sesión con Google: $error");
+    return null;
+  }
+  return null;
+} */
 
   static validaciones(String mensaje) {
     Get.defaultDialog(
