@@ -17,10 +17,11 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  bool obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     final controller2 = Get.put(SingUpController());
 
     void borrarCamposlogin() {
@@ -56,27 +57,80 @@ class _SignInState extends State<SignIn> {
                   height: 30,
                 ),
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingresa un correo eléctronico';
+                    }
+                    // Utilizar una expresión regular para validar el formato del correo electrónico
+                    bool isValid = RegExp(
+                      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                    ).hasMatch(value);
+                    if (!isValid) {
+                      return 'Ingresa un correo valido';
+                    }
+                    return null; // Return null means the input is valid
+                  },
                   controller: controller2.emailLogin,
-                  decoration: const InputDecoration(
-                      label: Text("Correo Eléctronico"),
-                      prefixIcon: Icon(Icons.email)),
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    label: const Text("Correo Eléctronico"),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Constants.blueColor,
+                    ),
+                  ),
                 ),
                 TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingresa una contraseña válida';
+                    }
+
+                    if (value.length < 6) {
+                      return 'La contraseña debe tener al menos 6 caracteres';
+                    }
+                    return null; // Return null means the input is valid
+                  },
                   controller: controller2.passwordlogin,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      label: Text("Contraseña"), prefixIcon: Icon(Icons.lock)),
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: obscureText,
+                  decoration: InputDecoration(
+                    labelText: "Contraseña",
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Constants.blueColor,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.green,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                    ),
+                  ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    authenticationRepository().loginWithEmailAndPassword1(
-                        controller2.emailLogin.text.trim(),
-                        controller2.passwordlogin.text.trim(),
-                        context);
-                    borrarCamposlogin();
+                  onTap: () async {
+                    if (SignIn._formKey3.currentState!.validate()) {
+                      try {
+                        await authenticationRepository()
+                            .loginWithEmailAndPassword1(
+                                controller2.emailLogin.text.trim(),
+                                controller2.passwordlogin.text.trim(),
+                                context);
+                        borrarCamposlogin();
+                      } catch (e) {
+                        authenticationRepository.validaciones(
+                            "No se pudo registrar intente más tarde");
+                      }
+                    }
                   },
                   child: Container(
                     width: size.width,

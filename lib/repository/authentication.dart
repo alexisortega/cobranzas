@@ -36,12 +36,11 @@ class authenticationRepository extends GetxController {
   }
 
   Future<void> createUserWithEmailAndPassword1(
-    //REGISTRO DE USUARIOS/////
-    String email,
-    String password,
-    String fullname,
-    int telRegister,
-  ) async {
+      //REGISTRO DE USUARIOS/////
+      String email,
+      String password,
+      String fullname,
+      int telRegister) async {
     try {
       await _auth1
           .createUserWithEmailAndPassword(
@@ -55,7 +54,7 @@ class authenticationRepository extends GetxController {
           if (currentUser != null) {
             await FirebaseFirestore.instance
                 .collection('superusuarios')
-                .doc("insertar datos de prueba")
+                .doc(currentUser.uid)
                 //currentUser.uid
                 .set({
               'email': email,
@@ -94,22 +93,29 @@ class authenticationRepository extends GetxController {
           } else {
             Get.to(() => SignUp());
           }
+        } on FirebaseAuthException catch (e) {
+          final ex = signUpWithEmailAndPasswordFailure.code(e.code);
+
+          print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+          validaciones(ex.message1.toString());
         } catch (e) {
-          e.hashCode.toString();
+          validaciones("Error de registro");
         }
       });
 
-      if (firebaseUser1.value != null) {
+      /*  if (firebaseUser1.value != null) {
         Get.offAll(() => const RootPage());
       } else {
         Get.to(() => SignUp());
-      }
+      } */
     } on FirebaseAuthException catch (e) {
       final ex = signUpWithEmailAndPasswordFailure.code(e.code);
       // ignore: avoid_print
       print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
       validaciones(ex.message1.toString());
-    } catch (_) {}
+    } catch (e) {
+      print("${e}");
+    }
   }
 
   Future<void> loginWithEmailAndPassword1(

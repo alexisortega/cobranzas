@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:core';
-
+import 'package:cobranzas/repository/Exception/signup_email_paswword_failure.dart';
 import 'package:cobranzas/repository/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,17 +18,28 @@ class SingUpController extends GetxController {
 
   final telRegistrar = TextEditingController();
 
-  void registerUser(
+  Future registerUser(
     String email,
     String password,
     String fullname,
     int telRegister,
-  ) {
-    authenticationRepository.instance.createUserWithEmailAndPassword1(
-      email,
-      password,
-      fullname,
-      telRegister,
-    );
+  ) async {
+    try {
+      await authenticationRepository.instance.createUserWithEmailAndPassword1(
+        email,
+        password,
+        fullname,
+        telRegister,
+      );
+    } on FirebaseAuthException catch (e) {
+      final ex = signUpWithEmailAndPasswordFailure.code(e.code);
+
+      print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+      authenticationRepository.validaciones(ex.message1.toString());
+    } catch (e) {
+      authenticationRepository
+          .validaciones("Llena correctamente todos los campos");
+      print("${e}");
+    }
   }
 }

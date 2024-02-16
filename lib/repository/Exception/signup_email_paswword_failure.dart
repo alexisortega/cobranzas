@@ -29,6 +29,25 @@ class signUpWithEmailAndPasswordFailure {
       case 'too-many-requests':
         return const signUpWithEmailAndPasswordFailure(
             'Demasiados intentos fallidos intente más tarde o recuperé la contraseña');
+      case 'operation-not-allowed':
+        return const signUpWithEmailAndPasswordFailure(
+            'La operación de registro no está permitida');
+      case 'network-request-failed':
+        return const signUpWithEmailAndPasswordFailure(
+            'Ha ocurrido un error de red');
+      case 'operation-not-supported-in-this-environment':
+        return const signUpWithEmailAndPasswordFailure(
+            'La operación no es compatible en este entorno');
+      case 'user-mismatch':
+        return const signUpWithEmailAndPasswordFailure(
+            'La operación de cambio de correo electrónico o contraseña falló porque el ID de usuario proporcionado no coincide con el usuario actualmente autenticado.');
+
+      case 'requires-recent-login':
+        return const signUpWithEmailAndPasswordFailure(
+            'La operación realizada requiere que el usuario vuelva a autenticarse');
+      case 'unknown':
+        return const signUpWithEmailAndPasswordFailure(
+            'Necesitas llenar los datos correctamente');
 
       default:
         return signUpWithEmailAndPasswordFailure(code);
