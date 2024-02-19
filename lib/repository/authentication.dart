@@ -189,17 +189,15 @@ class authenticationRepository extends GetxController {
     }
   }
 
-  void enviarLinkResetContrasena(String email) async {
-    if (email.isNotEmpty) {
-      try {
-        await _auth1.sendPasswordResetEmail(email: email);
-      } on FirebaseAuthException catch (e) {
-        final ex = signUpWithEmailAndPasswordFailure.code(e.code.toString());
-        print("'''FIREBASE AUTH EXCEPTION 3'''-${ex.message1}");
-        validaciones(ex.message1.toString());
-      }
-    } else {
-      validaciones("Necesita llenar los campos de texto");
+  Future<void> enviarLinkResetContrasena(String email) async {
+    try {
+      await _auth1.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      final ex = signUpWithEmailAndPasswordFailure.code(e.code.toString());
+      print("'''FIREBASE AUTH EXCEPTION 3'''-${ex.message1}");
+      validaciones(ex.message1.toString());
+    } catch (e) {
+      validaciones("${e}");
     }
   }
 

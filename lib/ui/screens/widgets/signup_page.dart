@@ -33,323 +33,320 @@ class _SignUpState extends State<SignUp> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, sizeMax) {
-          return Padding(
-            padding:
-                const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Container(
-                  color: Colors.amber,
-                  height: ((sizeMax.maxHeight < 800)
-                      ? (size.height * 1.5)
-                      : size.height * 1.2),
-                  width: ((sizeMax.maxWidth < 900)
-                      ? (size.width * 1)
-                      : size.width * 1.5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/Registro.png',
-                        height: size.height * 0.2,
-                        width: size.width * 0.5,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        ' * REGISTRO * ',
-                        style: TextStyle(
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Ingresa un correo eléctronico';
-                          }
-                          // Utilizar una expresión regular para validar el formato del correo electrónico
-                          bool isValid = RegExp(
-                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
-                          ).hasMatch(value);
-                          if (!isValid) {
-                            return 'Ingresa un correo valido';
-                          }
-                          return null; // Return null means the input is valid
-                        },
-                        controller: controller1.emailRegistrar,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          label: const Text("Correo Eléctronico"),
-                          prefixIcon: Icon(
-                            Icons.email,
-                            color: Constants.blueColor,
-                          ),
+      body: Padding(
+        padding:
+            const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.only(left: 10, right: 10),
+                color: Colors.transparent,
+                height: size.height,
+                width: size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/Registro.png',
+                      height: size.height * 0.2,
+                      width: size.width * 0.5,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      ' * REGISTRO * ',
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingresa un correo eléctronico';
+                        }
+                        // Utilizar una expresión regular para validar el formato del correo electrónico
+                        bool isValid = RegExp(
+                          r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                        ).hasMatch(value);
+                        if (!isValid) {
+                          return 'Ingresa un correo valido';
+                        }
+                        return null; // Return null means the input is valid
+                      },
+                      controller: controller1.emailRegistrar,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        label: const Text("Correo Eléctronico"),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Constants.blueColor,
                         ),
                       ),
-                      TextFormField(
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingresa un nombre completo';
+                        }
+
+                        if (value.length < 3) {
+                          return 'El nombre debe tener al menos 3 caracteres';
+                        }
+
+                        // Expresión regular para validar el nombre completo
+                        RegExp regExp = RegExp(
+                          r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ][a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]{2,}(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+){2,}$',
+                        );
+
+                        if (!regExp.hasMatch(value)) {
+                          return 'Ingresa un nombre completo válido';
+                        }
+
+                        return null;
+                      },
+                      controller: controller1.fullnameRegistrar,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                          label: const Text("Nombre Completo"),
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Constants.blueColor,
+                          )),
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Ingresa una contraseña válida';
+                        }
+
+                        if (value.length < 6) {
+                          return 'La contraseña debe tener al menos 6 caracteres';
+                        }
+                        return null; // Return null means the input is valid
+                      },
+                      controller: controller1.passwordRegistrar,
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        labelText: "Contraseña",
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Constants.blueColor,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.green,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Ingresa un nombre completo';
+                            return 'Ingresa un número de teléfono ';
                           }
+                          //validacion  de numero con caracters  formato (###) ###-####//
+                          // RegExp regExp = RegExp(
+                          //   r'^\(\d{3}\) \d{3}-\d{4}$',
+                          // );
 
-                          if (value.length < 3) {
-                            return 'El nombre debe tener al menos 3 caracteres';
-                          }
+                          // if (!regExp.hasMatch(value)) {
+                          //   return 'formato (###) ###-####';
+                          // }
 
-                          // Expresión regular para validar el nombre completo
                           RegExp regExp = RegExp(
-                            r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ][a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]{2,}(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+){2,}$',
+                            r'^\d{10}$',
                           );
 
                           if (!regExp.hasMatch(value)) {
-                            return 'Ingresa un nombre completo válido';
+                            return 'Ingresa un número de teléfono válido con 10 dígitos';
                           }
 
                           return null;
                         },
-                        controller: controller1.fullnameRegistrar,
-                        keyboardType: TextInputType.name,
+                        controller: controller1.telRegistrar,
+                        keyboardType: TextInputType.phone,
+                        obscureText: false,
                         decoration: InputDecoration(
-                            label: const Text("Nombre Completo"),
-                            prefixIcon: Icon(
-                              Icons.person,
-                              color: Constants.blueColor,
-                            )),
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Ingresa una contraseña válida';
-                          }
-
-                          if (value.length < 6) {
-                            return 'La contraseña debe tener al menos 6 caracteres';
-                          }
-                          return null; // Return null means the input is valid
-                        },
-                        controller: controller1.passwordRegistrar,
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: _obscureText,
-                        decoration: InputDecoration(
-                          labelText: "Contraseña",
+                          label: const Text("Teléfono"),
                           prefixIcon: Icon(
-                            Icons.lock,
+                            Icons.phone_iphone_outlined,
                             color: Constants.blueColor,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.green,
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            await SingUpController.instance.registerUser(
+                              controller1.emailRegistrar.text.trim(),
+                              controller1.passwordRegistrar.text.trim(),
+                              controller1.fullnameRegistrar.text.trim(),
+                              int.parse(controller1.telRegistrar.text.trim()),
+                            );
+
+                            borrarCampos();
+                          } on FirebaseAuthException catch (e) {
+                            final ex =
+                                signUpWithEmailAndPasswordFailure.code(e.code);
+
+                            print(
+                                "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+                            authenticationRepository
+                                .validaciones(ex.message1.toString());
+                          } catch (e) {
+                            authenticationRepository.validaciones(
+                                "Llena correctamente todos los campos");
+                            print("${e}");
+                          }
+                          // } else {
+                          //   print("error de registro");
+                          // }
+                        }
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 1, right: 1),
+                        width: size.width,
+                        decoration: BoxDecoration(
+                          color: Constants.blueColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 20),
+                        child: const Center(
+                          child: Text(
+                            'Registrar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Ingresa un número de teléfono ';
-                            }
-                            //validacion  de numero con caracters  formato (###) ###-####//
-                            // RegExp regExp = RegExp(
-                            //   r'^\(\d{3}\) \d{3}-\d{4}$',
-                            // );
-
-                            // if (!regExp.hasMatch(value)) {
-                            //   return 'formato (###) ###-####';
-                            // }
-
-                            RegExp regExp = RegExp(
-                              r'^\d{10}$',
-                            );
-
-                            if (!regExp.hasMatch(value)) {
-                              return 'Ingresa un número de teléfono válido con 10 dígitos';
-                            }
-
-                            return null;
-                          },
-                          controller: controller1.telRegistrar,
-                          keyboardType: TextInputType.phone,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            label: const Text("Teléfono"),
-                            prefixIcon: Icon(
-                              Icons.phone_iphone_outlined,
-                              color: Constants.blueColor,
-                            ),
-                          )),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              await SingUpController.instance.registerUser(
-                                controller1.emailRegistrar.text.trim(),
-                                controller1.passwordRegistrar.text.trim(),
-                                controller1.fullnameRegistrar.text.trim(),
-                                int.parse(controller1.telRegistrar.text.trim()),
-                              );
-
-                              borrarCampos();
-                            } on FirebaseAuthException catch (e) {
-                              final ex = signUpWithEmailAndPasswordFailure
-                                  .code(e.code);
-
-                              print(
-                                  "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
-                              authenticationRepository
-                                  .validaciones(ex.message1.toString());
-                            } catch (e) {
-                              authenticationRepository.validaciones(
-                                  "Llena correctamente todos los campos");
-                              print("${e}");
-                            }
-                            // } else {
-                            //   print("error de registro");
-                            // }
-                          }
-                        },
-                        child: Container(
-                          width: size.width,
-                          decoration: BoxDecoration(
-                            color: Constants.blueColor,
-                            borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Row(
+                      children: [
+                        Expanded(child: Divider()),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text('OR'),
+                        ),
+                        Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 1, right: 1),
+                      width: size.width,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Constants.blueColor),
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                            child: Image.asset('assets/images/google.png'),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 20),
-                          child: const Center(
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                User? userGoogle =
+                                    await authenticationRepository
+                                        .signInWithGoogle2(context: context);
+
+                                print(userGoogle?.emailVerified);
+                                print(" EL boton google");
+                              } on FirebaseAuthException catch (e) {
+                                final ex = signUpWithEmailAndPasswordFailure
+                                    .code(e.code);
+
+                                print(
+                                    "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+                                authenticationRepository
+                                    .validaciones(ex.message1.toString());
+                              } catch (a) {
+                                authenticationRepository
+                                    .validaciones("Error de registro");
+                              }
+                            },
                             child: Text(
-                              'Registrar',
+                              'Ingresar con Google',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Constants.orangeColor,
                                 fontSize: 18.0,
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Row(
-                        children: [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text('OR'),
-                          ),
-                          Expanded(child: Divider()),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: size.width,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Constants.blueColor),
-                            borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SizedBox(
-                              height: 30,
-                              child: Image.asset('assets/images/google.png'),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                try {
-                                  User? userGoogle =
-                                      await authenticationRepository
-                                          .signInWithGoogle2(context: context);
-
-                                  print(userGoogle?.emailVerified);
-                                  print(" EL boton google");
-                                } on FirebaseAuthException catch (e) {
-                                  final ex = signUpWithEmailAndPasswordFailure
-                                      .code(e.code);
-
-                                  print(
-                                      "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
-                                  authenticationRepository
-                                      .validaciones(ex.message1.toString());
-                                } catch (a) {
-                                  authenticationRepository
-                                      .validaciones("Error de registro");
-                                }
-                              },
-                              child: Text(
-                                'Ingresar con Google',
-                                style: TextStyle(
-                                  color: Constants.orangeColor,
-                                  fontSize: 18.0,
-                                ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                                child: const SignIn(),
+                                type: PageTransitionType.bottomToTop));
+                        borrarCampos();
+                      },
+                      child: Center(
+                        child: Text.rich(
+                          TextSpan(children: [
+                            TextSpan(
+                              text: '¿Ya tienes una cuenta? ',
+                              style: TextStyle(
+                                color: Constants.orangeColor,
                               ),
                             ),
-                          ],
+                            TextSpan(
+                              text: 'Login',
+                              style: TextStyle(
+                                color: Constants.blueColor,
+                              ),
+                            ),
+                          ]),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                              context,
-                              PageTransition(
-                                  child: const SignIn(),
-                                  type: PageTransitionType.bottomToTop));
-                          borrarCampos();
-                        },
-                        child: Center(
-                          child: Text.rich(
-                            TextSpan(children: [
-                              TextSpan(
-                                text: '¿Ya tienes una cuenta? ',
-                                style: TextStyle(
-                                  color: Constants.orangeColor,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Login',
-                                style: TextStyle(
-                                  color: Constants.blueColor,
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

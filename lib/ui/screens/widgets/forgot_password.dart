@@ -11,102 +11,133 @@ import 'package:page_transition/page_transition.dart';
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({Key? key}) : super(key: key);
   final controller3 = Get.put(SingUpController());
+
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/RestContraseña.png',
-                height: 380,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                'Restablecer\nContraseña',
-                style: TextStyle(
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.blue),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              TextFormField(
-                controller: controller3.passwordRecuperar,
-                decoration: const InputDecoration(
-                    label: Text("Correo eléctronico"),
-                    prefixIcon: Icon(Icons.lock)),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  authenticationRepository().enviarLinkResetContrasena(
-                      controller3.passwordRecuperar.text.trim());
-
-                  borrarCamposResetCont();
-                },
-                child: Container(
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    color: Constants.blueColor,
-                    borderRadius: BorderRadius.circular(10),
+          child: Form(
+            key: _formKey2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/RestContraseña.png',
+                  height: size.height * 0.25,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text(
+                  'Restablecer\nContraseña',
+                  style: TextStyle(
+                      fontSize: 35.0,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blue),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingresa un correo eléctronico';
+                    }
+                    // Utilizar una expresión regular para validar el formato del correo electrónico
+                    bool isValid = RegExp(
+                      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                    ).hasMatch(value);
+                    if (!isValid) {
+                      return 'Ingresa un correo valido';
+                    }
+                    return null; // Return null means the input is valid
+                  },
+                  controller: controller3.passwordRecuperar,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    label: const Text("Correo Eléctronico"),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Constants.blueColor,
+                    ),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: const Center(
-                    child: Text(
-                      'Restablecer',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    if (_formKey2.currentState!.validate()) {
+                      try {
+                        await authenticationRepository()
+                            .enviarLinkResetContrasena(
+                                controller3.passwordRecuperar.text.trim());
+
+                        borrarCamposResetCont();
+                      } catch (e) {
+                        print("${e}");
+                      }
+                    }
+                  },
+                  child: Container(
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      color: Constants.blueColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 20),
+                    child: const Center(
+                      child: Text(
+                        'Restablecer',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const SignIn(),
-                          type: PageTransitionType.bottomToTop));
-                  borrarCamposResetCont();
-                },
-                child: Center(
-                  child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: 'Regresar? ',
-                        style: TextStyle(
-                          color: Constants.orangeColor,
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            child: const SignIn(),
+                            type: PageTransitionType.bottomToTop));
+                    borrarCamposResetCont();
+                  },
+                  child: Center(
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: '¿Regresar? ',
+                          style: TextStyle(
+                            color: Constants.orangeColor,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Login',
-                        style: TextStyle(
-                          color: Constants.blueColor,
+                        TextSpan(
+                          text: 'Login',
+                          style: TextStyle(
+                            color: Constants.blueColor,
+                          ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

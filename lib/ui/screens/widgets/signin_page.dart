@@ -10,7 +10,6 @@ import 'package:page_transition/page_transition.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
-  static final _formKey3 = GlobalKey<FormState>();
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -21,6 +20,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     final controller2 = Get.put(SingUpController());
 
@@ -34,7 +34,7 @@ class _SignInState extends State<SignIn> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
-            key: SignIn._formKey3,
+            key: _formKey3,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,7 +118,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (SignIn._formKey3.currentState!.validate()) {
+                    if (_formKey3.currentState!.validate()) {
                       try {
                         await authenticationRepository()
                             .loginWithEmailAndPassword1(

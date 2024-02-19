@@ -1,7 +1,9 @@
 // ignore_for_file: unnecessary_this, import_of_legacy_library_into_null_safe, unrelated_type_equality_checks, prefer_interpolation_to_compose_strings, non_constant_identifier_names
 
 import 'package:cobranzas/ui/root_page.dart';
+//import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
@@ -24,19 +26,64 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static var controllerClientes = Get.put(clientsController());
+
+  late AnimationController animationController;
+  late Animation<Offset> offsetAnimation;
+
+  late AnimationController animationControllerCards;
+  late Animation<double> scaleAnimationCards;
+
   final selectedIndex = 0;
+
   bool statusBottomDelete = false;
   var clients = Future(() => []);
+
   var search = "";
   List<Object> customerData = [];
+
   bool isloading = false;
 
   @override
   void initState() {
     clients = controllerClientes.showClientes();
     super.initState();
+
+    //animacion de texto
+    animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    offsetAnimation = Tween<Offset>(
+      begin: Offset(2.0, 0.0),
+      end: Offset.zero,
+    ).animate(animationController);
+
+    ///animacion del menu de cards
+    ///
+    animationControllerCards = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+
+    scaleAnimationCards = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationControllerCards,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Iniciar la animación cuando se monta el widget
+    animationControllerCards.forward();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+    animationControllerCards.dispose();
   }
 
   static final customCacheManager = CacheManager(
@@ -90,6 +137,7 @@ class _HomePageState extends State<HomePage> {
             fontSize: 15),
       )
     ];
+
     List<Icon> listIcon = [
       Icon(
         Icons.person_add_alt_rounded,
@@ -120,336 +168,698 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                      ),
-                      width: size.width * .9,
-                      decoration: BoxDecoration(
-                        color: Constants.blueColor.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              //Icons.search_outlined,
-                              Icons.search_sharp,
-                              color: Constants.blueColor,
-                              size: 30,
-                            ),
-                          ),
-                          Expanded(
-                              child: TextFormField(
-                            onChanged: (value) {
-                              setState(() {
-                                search = value;
-                              });
-                            },
-                            controller: controllerClientes.filtrar,
-                            showCursor: true,
-                            decoration: const InputDecoration(
-                              hintText: 'Buscar cliente (Código, Nombre)',
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ),
-                          )),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                controllerClientes.filtrar.text = "";
-                                search = "";
-                                controllerClientes.filtrar.text = search;
-                              });
-                              clients = controllerClientes.showClientes();
-                            },
-                            child: Icon(
-                              Icons.dangerous_rounded,
-                              size: 25,
-                              color: Constants.blueColor.withOpacity(.7),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+      backgroundColor: Colors.white,
+      body: CustomScrollView(slivers: <Widget>[
+        /*  SliverAppBar(
+          /*  backgroundColor: Colors.amber,
+          elevation: 0,
+          pinned: false,
+          centerTitle: false,
+          expandedHeight: 300,
+          stretch: true,
+          flexibleSpace: FlexibleSpaceBar(
+            stretchModes: [
+              StretchMode.blurBackground,
+            ],
+            background: Image(
+                image: AssetImage(
+                  "assets/nuevoCredito.jpg",
                 ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.only(
-                    top: 15, bottom: 15, left: 10, right: 5),
-                margin: const EdgeInsets.only(bottom: 2),
-                //altura del contenedor de los botones
-                height: 90,
-                width: size.width,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: ClientesTypes.length,
-                    itemBuilder: (buildContext, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 7.5, left: 7.5),
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                            top: 8,
-                            bottom: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.blue[300] as Color,
-                                spreadRadius: 1,
-                                blurRadius: 7,
-                                offset: const Offset(1, 3),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              selectedIndex == index;
-                              switch (index) {
-                                case 0:
-                                  //NUEVOS CLIENTES
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        duration:
-                                            const Duration(milliseconds: 850),
-                                        child: const Newcustomers(),
-                                        type: PageTransitionType.bottomToTop,
-                                      )).then((_) {
-                                    setState(() {
-                                      clients =
-                                          controllerClientes.showClientes();
-                                      statusBottomDelete = false;
-                                    });
-                                  });
-
-                                  break;
-                                case 1:
-                                  //ACTUALIZAR
-                                  setState(() {
-                                    statusBottomDelete = false;
-                                    clients = controllerClientes.showClientes();
-                                    isloading = true;
-                                    Get.to(() => const RootPage());
-                                    if (isloading == true) {
-                                      showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (context) {
-                                            return Center(
-                                                child: SpinKitRing(
-                                              color: Colors.orange
-                                                  .withOpacity(0.9),
-                                              size: 50.0,
-                                              lineWidth: 4,
-                                              duration:
-                                                  const Duration(seconds: 3),
-                                            ));
-                                          });
-
-                                      Future.delayed(
-                                          const Duration(milliseconds: 2000),
-                                          () {
-                                        setState(() {
-                                          isloading = false;
-                                          Get.back();
-                                        });
-                                      });
-                                    } else {}
-                                  });
-
-                                  break;
-                                case 2:
-                                  //Eliminar
-                                  setState(() {
-                                    statusBottomDelete = !statusBottomDelete;
-                                    if (statusBottomDelete == true) {}
-                                  });
-                                  break;
-                                case 3:
-                                  break;
-
-                                default:
-                                  break;
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                              backgroundColor: Colors
-                                  .transparent, //Colors.blue.withOpacity(0.4),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              elevation: 0.0,
-                            ),
-                            icon: isloading == false
-                                ? listIcon[index]
-                                : listIconUpdate[index],
-                            label: isloading == true
-                                ? ClientsTypesUpdate[index]
-                                : Text(
-                                    ClientesTypes[index],
-                                    style: TextStyle(
-                                        color: Colors.black.withOpacity(.9),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              Container(
-                height: 70,
-                width: size.width,
-                decoration: BoxDecoration(
+                fit: BoxFit.cover),
+          ),
+          automaticallyImplyLeading: false, */
+          forceMaterialTransparency: true,
+          backgroundColor: Colors.red,
+          pinned:
+              true, // Mantener el SliverAppBar visible al hacer scroll hacia arriba
+          expandedHeight: 300.0,
+          collapsedHeight: 80,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Image.asset(
+              "assets/NuevoCliente.png",
+              fit: BoxFit.cover,
+            ),
+          ),
+        ), */
+        SliverToBoxAdapter(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize:
+                  MainAxisSize.min, // Set mainAxisSize to MainAxisSize.min
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: cuadroBusqueda(size),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Flexible(
+                  flex: 2,
+                  child: listaBotones(
+                    size,
+                    ClientesTypes,
+                    context,
+                    listIcon,
+                    listIconUpdate,
+                    ClientsTypesUpdate,
+                  ),
+                ),
+                /*  Container(
+                  height: 70,
+                  width: size.width,
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent),
-                padding: const EdgeInsets.only(
-                  bottom: 0,
-                  top: 20,
+                    color: Colors.transparent,
+                  ),
+                  padding: const EdgeInsets.only(
+                    bottom: 0,
+                    top: 20,
+                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //  etiquetaClientes(),
+                    ],
+                  ),
+                ), */
+
+                Flexible(
+                  flex: 1,
+                  child: listaClientes(size),
                 ),
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.contain,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 10, left: 10, top: 10, right: 10),
-                        child: Material(
-                          elevation: 24.0,
-                          color: Colors.transparent,
-                          child: CustomText(
-                            font: TextStyle(
-                              fontStyle: FontStyle.normal,
-                              fontSize: 40,
-                              color: Constants.orangeColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            text: 'Todos los clientes',
-                          ),
-                        ),
-                      ),
+              ],
+            ),
+          ),
+        )
+      ]),
+    );
+  }
+
+  Container listaBotones(
+      Size size,
+      List<String> ClientesTypes,
+      BuildContext context,
+      List<Icon> listIcon,
+      List<Icon> listIconUpdate,
+      List<Widget> ClientsTypesUpdate) {
+    return Container(
+      color: Colors.transparent,
+      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 5),
+      margin: const EdgeInsets.only(bottom: 2),
+      //altura del contenedor de los botones
+      height: 90,
+      width: size.width,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: ClientesTypes.length,
+          itemBuilder: (buildContext, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 7.5, left: 7.5),
+              child: Container(
+                margin: const EdgeInsets.only(
+                  top: 8,
+                  bottom: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue[300] as Color,
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: const Offset(1, 3),
                     ),
                   ],
                 ),
-              ),
-              Container(
-                // DATOS DEL CLIENTE
-                color: Colors.transparent,
-                margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 19),
-                height: (size.height / 1.78) - 40,
-                child: FutureBuilder(
-                  future: clients,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data.toString() != '[]') {
-                      // LISTA DE CLIENTES
-                      return ListView.builder(
-                          itemCount: snapshot.data?.length, //lista en firebase
-                          scrollDirection: Axis.vertical,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (BuildContext contexto, int cont) {
-                            if ((snapshot.data?[cont]['nombre'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search) ||
-                                (snapshot.data?[cont]['codigo_cliente'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search) ||
-                                (snapshot.data?[cont]['apellido_p'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search) ||
-                                (snapshot.data?[cont]['apellido_m'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search) ||
-                                (snapshot.data?[cont]['apellido_p'] +
-                                        " " +
-                                        snapshot.data?[cont]['apellido_m'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search) ||
-                                (snapshot.data?[cont]['nombre'] +
-                                        " " +
-                                        snapshot.data?[cont]['apellido_p'] +
-                                        " " +
-                                        snapshot.data?[cont]['apellido_m'])
-                                    .toString()
-                                    .isCaseInsensitiveContains(search)) {
-                              return principalMetodo(
-                                snapshot,
-                                cont,
-                                context,
-                                size,
-                              );
-                            } else {
-                              return Container();
-                            }
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    selectedIndex == index;
+                    switch (index) {
+                      case 0:
+                        //NUEVOS CLIENTES
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                              duration: const Duration(milliseconds: 850),
+                              child: const Newcustomers(),
+                              type: PageTransitionType.bottomToTop,
+                            )).then((_) {
+                          setState(() {
+                            clients = controllerClientes.showClientes();
+                            statusBottomDelete = false;
                           });
-                    } else {
-                      return Container(
-                          width: size.width,
-                          height: size.height,
-                          color: Colors.transparent,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                height: 100,
-                              ),
-                              SpinKitThreeBounce(
-                                duration: const Duration(milliseconds: 2000),
-                                color: Colors.blue.withOpacity(0.7),
-                                size: 50,
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                "No hay datos",
-                                style: TextStyle(
-                                  color: Colors.blue.withOpacity(0.8),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  height: 2,
-                                ),
-                              ),
-                            ],
-                          ));
+                        });
+
+                        break;
+                      case 1:
+                        //ACTUALIZAR
+                        setState(() {
+                          statusBottomDelete = false;
+                          clients = controllerClientes.showClientes();
+                          isloading = true;
+                          Get.to(() => const RootPage());
+                          if (isloading == true) {
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return Center(
+                                      child: SpinKitRing(
+                                    color: Colors.orange.withOpacity(0.9),
+                                    size: 50.0,
+                                    lineWidth: 4,
+                                    duration: const Duration(seconds: 3),
+                                  ));
+                                });
+
+                            Future.delayed(const Duration(milliseconds: 2000),
+                                () {
+                              setState(() {
+                                isloading = false;
+                                Get.back();
+                              });
+                            });
+                          } else {}
+                        });
+
+                        break;
+                      case 2:
+                        //Eliminar
+                        setState(() {
+                          statusBottomDelete = !statusBottomDelete;
+                          if (statusBottomDelete == true) {}
+                        });
+                        break;
+                      case 3:
+                        break;
+
+                      default:
+                        break;
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
+                    backgroundColor:
+                        Colors.transparent, //Colors.blue.withOpacity(0.4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 0.0,
+                  ),
+                  icon: isloading == false
+                      ? listIcon[index]
+                      : listIconUpdate[index],
+                  label: isloading == true
+                      ? ClientsTypesUpdate[index]
+                      : Text(
+                          ClientesTypes[index],
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(.9),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
                 ),
               ),
-            ],
-          ),
-        ));
+            );
+          }),
+    );
   }
 
-  GestureDetector principalMetodo(
+  Widget cuadroBusqueda(Size size) {
+    return Container(
+      width: size.width,
+      height: 61,
+      padding: const EdgeInsets.only(
+        right: 10,
+        left: 10,
+        top: 10,
+      ),
+      margin: const EdgeInsets.only(left: 0, right: 0),
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+            ),
+            width: size.width * .945,
+            height: size.height,
+            decoration: BoxDecoration(
+              color: Constants.blueColor.withOpacity(.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    //Icons.search_outlined,
+                    Icons.search_sharp,
+                    color: Constants.blueColor,
+                    size: 30,
+                  ),
+                ),
+                Expanded(
+                    child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      search = value;
+                    });
+                  },
+                  controller: controllerClientes.filtrar,
+                  showCursor: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar cliente (Código, Nombre)',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                )),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      controllerClientes.filtrar.text = "";
+                      search = "";
+                      controllerClientes.filtrar.text = search;
+                    });
+                    clients = controllerClientes.showClientes();
+                  },
+                  child: Icon(
+                    Icons.dangerous_rounded,
+                    size: 25,
+                    color: Constants.blueColor.withOpacity(.7),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget etiquetaClientes() {
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: Material(
+        elevation: 0,
+        color: Colors.transparent,
+        child: CustomText(
+          font: TextStyle(
+            fontStyle: FontStyle.normal,
+            fontSize: 25,
+            color: Constants.orangeColor,
+            fontWeight: FontWeight.bold,
+          ),
+          text: 'Todos los clientes',
+        ),
+      ),
+    );
+  }
+
+  Widget listaClientes(Size size) {
+    final ScrollController _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        animationController.forward();
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        animationController.reverse();
+      }
+    });
+
+    return Container(
+      // DATOS DEL CLIENTE
+      color: Colors.transparent,
+      margin: const EdgeInsets.only(top: 0),
+      padding: const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 5),
+      height: (size.height / 1.4),
+      child: FutureBuilder(
+        future: clients,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.toString() != '[]') {
+            // LISTA DE CLIENTES
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              controller: _scrollController,
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(
+                        5,
+                        (index) {
+                          return Container(
+                            margin: EdgeInsets.all(8.0),
+                            child: Card(
+                              elevation: 4.0,
+                              child: InkWell(
+                                onTap: () {
+                                  // Acción al hacer clic en la tarjeta
+                                  print('Tapped on Item $index');
+                                },
+                                child: Container(
+                                  width: 120.0,
+                                  height: 120.0,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.restaurant_menu, size: 40.0),
+                                      SizedBox(height: 8.0),
+                                      Text('Item $index'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 10,
+                  ),
+                ),
+                SliverAppBar(
+                  pinned: false,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.red,
+                  elevation: 15.0,
+                  floating: true,
+                  collapsedHeight: 60,
+                  foregroundColor: Colors.amber,
+                  scrolledUnderElevation: 4.5,
+                  forceMaterialTransparency: true,
+                  forceElevated: true,
+                  title: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            etiquetaClientes(),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "(Mostrando ${snapshot.data?.length} clientes)",
+                              style: const TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int cont) {
+                      if ((snapshot.data?[cont]['nombre'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['codigo_cliente'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_p'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_p'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['nombre'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_p'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search)) {
+                        return principalMetodo(
+                          snapshot,
+                          cont,
+                          context,
+                          size,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                    childCount: snapshot.data?.length,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Container(
+              width: size.width,
+              height: size.height,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  SpinKitThreeBounce(
+                    duration: const Duration(milliseconds: 2000),
+                    color: Colors.blue.withOpacity(0.7),
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "No hay datos",
+                    style: TextStyle(
+                      color: Colors.blue.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      height: 2,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  /* Widget listaClientes(Size size) {
+    return Container(
+      // DATOS DEL CLIENTE
+      color: Colors.transparent,
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 19),
+      height: (size.height / 1.78) - 40,
+      child: FutureBuilder(
+        future: clients,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.toString() != '[]') {
+            // LISTA DE CLIENTES
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int cont) {
+                      if ((snapshot.data?[cont]['nombre'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['codigo_cliente'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_p'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['apellido_p'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search) ||
+                          (snapshot.data?[cont]['nombre'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_p'] +
+                                  " " +
+                                  snapshot.data?[cont]['apellido_m'])!
+                              .toString()
+                              .isCaseInsensitiveContains(search)) {
+                        return principalMetodo(
+                          snapshot,
+                          cont,
+                          context,
+                          size,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                    childCount: snapshot.data?.length,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Container(
+              width: size.width,
+              height: size.height,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  SpinKitThreeBounce(
+                    duration: const Duration(milliseconds: 2000),
+                    color: Colors.blue.withOpacity(0.7),
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "No hay datos",
+                    style: TextStyle(
+                      color: Colors.blue.withOpacity(0.8),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      height: 2,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
+    );
+  } */
+
+/* 
+  Widget listaClientes(Size size) {
+    return Container(
+      // DATOS DEL CLIENTE
+      color: Colors.transparent,
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 19),
+      height: (size.height / 1.78) - 40,
+      child: FutureBuilder(
+        future: clients,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.toString() != '[]') {
+            // LISTA DE CLIENTES
+            return ListView.builder(
+                itemCount: snapshot.data?.length, //lista en firebase
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (BuildContext contexto, int cont) {
+                  if ((snapshot.data?[cont]['nombre'])
+                          .toString()
+                          .isCaseInsensitiveContains(search) ||
+                      (snapshot.data?[cont]['codigo_cliente'])
+                          .toString()
+                          .isCaseInsensitiveContains(search) ||
+                      (snapshot.data?[cont]['apellido_p'])
+                          .toString()
+                          .isCaseInsensitiveContains(search) ||
+                      (snapshot.data?[cont]['apellido_m'])
+                          .toString()
+                          .isCaseInsensitiveContains(search) ||
+                      (snapshot.data?[cont]['apellido_p'] +
+                              " " +
+                              snapshot.data?[cont]['apellido_m'])
+                          .toString()
+                          .isCaseInsensitiveContains(search) ||
+                      (snapshot.data?[cont]['nombre'] +
+                              " " +
+                              snapshot.data?[cont]['apellido_p'] +
+                              " " +
+                              snapshot.data?[cont]['apellido_m'])
+                          .toString()
+                          .isCaseInsensitiveContains(search)) {
+                    return principalMetodo(
+                      snapshot,
+                      cont,
+                      context,
+                      size,
+                    );
+                  } else {
+                    return Container();
+                  }
+                });
+          } else {
+            return Container(
+                width: size.width,
+                height: size.height,
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    SpinKitThreeBounce(
+                      duration: const Duration(milliseconds: 2000),
+                      color: Colors.blue.withOpacity(0.7),
+                      size: 50,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "No hay datos",
+                      style: TextStyle(
+                        color: Colors.blue.withOpacity(0.8),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        height: 2,
+                      ),
+                    ),
+                  ],
+                ));
+          }
+        },
+      ),
+    );
+  } */
+
+  Widget principalMetodo(
     AsyncSnapshot<List<dynamic>> snapshot,
     int cont,
     BuildContext context,
