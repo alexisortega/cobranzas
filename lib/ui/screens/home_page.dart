@@ -513,43 +513,55 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               physics: const BouncingScrollPhysics(),
               controller: _scrollController,
               slivers: [
-                SliverList(
+                /* SliverList(
                   delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                    return ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(
-                        5,
-                        (index) {
-                          return Container(
-                            margin: EdgeInsets.all(8.0),
-                            child: Card(
-                              elevation: 4.0,
-                              child: InkWell(
-                                onTap: () {
-                                  // Acción al hacer clic en la tarjeta
-                                  print('Tapped on Item $index');
-                                },
-                                child: Container(
-                                  width: 120.0,
-                                  height: 120.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.restaurant_menu, size: 40.0),
-                                      SizedBox(height: 8.0),
-                                      Text('Item $index'),
-                                    ],
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      child: Row(
+                        children: [
+                          ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: List.generate(
+                              5,
+                              (index) {
+                                return Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  width: 100,
+                                  height: 100,
+                                  child: Card(
+                                    elevation: 4.0,
+                                    child: InkWell(
+                                      onTap: () {
+                                        // Acción al hacer clic en la tarjeta
+                                        print('Tapped on Item $index');
+                                      },
+                                      child: Container(
+                                        width: 120.0,
+                                        height: 120.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.restaurant_menu,
+                                                size: 40.0),
+                                            SizedBox(height: 8.0),
+                                            Text('Item $index'),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     );
                   }),
-                ),
+                ) */
                 const SliverToBoxAdapter(
                   child: SizedBox(
                     height: 10,
