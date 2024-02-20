@@ -469,8 +469,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget listaClientes(Size size) {
-    final ScrollController _scrollController = ScrollController();
-
     return Container(
       // DATOS DEL CLIENTE
       color: Colors.transparent,
@@ -485,7 +483,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
-              controller: _scrollController,
+              // controller: _scrollController,
               slivers: [
                 SliverAppBar(
                   pinned: false,
