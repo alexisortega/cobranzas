@@ -62,6 +62,7 @@ dependencies:
   camera: ^0.10.3+2
   google_fonts: ^6.1.0
   flutter_keyboard_visibility: ^6.0.0
+  rive: ^0.12.4
   
   
   
