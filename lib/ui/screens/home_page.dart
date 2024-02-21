@@ -615,7 +615,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          primary: Colors.blue[200],
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50.0),
