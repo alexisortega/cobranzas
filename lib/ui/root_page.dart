@@ -193,8 +193,9 @@ class _RootPageState extends State<RootPage> {
                   });
                 }
               }
-            } else if (scrollInfo.metrics.axis == Axis.horizontal) {
-              if (scrollInfo.metrics.pixels >= 300) {
+            }
+            /*  if (scrollInfo.metrics.axis == Axis.horizontal) {
+              if (scrollInfo.metrics.pixels >= 450) {
                 if (!isAppBarVisible || !isBottomNavBarVisible) {
                   setState(() {
                     isAppBarVisible = true;
@@ -214,7 +215,7 @@ class _RootPageState extends State<RootPage> {
                 }
               }
             }
-
+ */
             return true;
           },
           child: IndexedStack(

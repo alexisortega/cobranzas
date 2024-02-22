@@ -33,18 +33,19 @@ class _SignUpState extends State<SignUp> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Padding(
-        padding:
-            const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
           child: Form(
             key: _formKey,
-            child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(left: 10, right: 10),
-                color: Colors.transparent,
-                height: size.height,
-                width: size.width,
+            child: Container(
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              color: Colors.transparent,
+              height: size.height,
+              width: size.width,
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -263,7 +264,7 @@ class _SignUpState extends State<SignUp> {
                       height: 20,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 1, right: 1),
+                      margin: const EdgeInsets.only(left: 1, right: 1),
                       width: size.width,
                       decoration: BoxDecoration(
                           border: Border.all(color: Constants.blueColor),

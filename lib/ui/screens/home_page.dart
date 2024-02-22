@@ -3,7 +3,6 @@
 import 'package:cobranzas/ui/root_page.dart';
 //import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -28,12 +26,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static var controllerClientes = Get.put(clientsController());
-
-  late AnimationController animationController;
-  late Animation<Offset> offsetAnimation;
-
-  late AnimationController animationControllerCards;
-  late Animation<double> scaleAnimationCards;
 
   final selectedIndex = 0;
 
@@ -49,41 +41,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     clients = controllerClientes.showClientes();
     super.initState();
-
-    //animacion de texto
-    animationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-
-    offsetAnimation = Tween<Offset>(
-      begin: Offset(2.0, 0.0),
-      end: Offset.zero,
-    ).animate(animationController);
-
-    ///animacion del menu de cards
-    ///
-    animationControllerCards = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 500),
-    );
-
-    scaleAnimationCards = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: animationControllerCards,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    // Iniciar la animación cuando se monta el widget
-    animationControllerCards.forward();
   }
 
   @override
   void dispose() {
-    animationController.dispose();
     super.dispose();
-    animationControllerCards.dispose();
   }
 
   static final customCacheManager = CacheManager(
@@ -167,96 +129,99 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       )*/
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomScrollView(slivers: <Widget>[
-        /*  SliverAppBar(
-          /*  backgroundColor: Colors.amber,
-          elevation: 0,
-          pinned: false,
-          centerTitle: false,
-          expandedHeight: 300,
-          stretch: true,
-          flexibleSpace: FlexibleSpaceBar(
-            stretchModes: [
-              StretchMode.blurBackground,
-            ],
-            background: Image(
-                image: AssetImage(
-                  "assets/nuevoCredito.jpg",
-                ),
-                fit: BoxFit.cover),
-          ),
-          automaticallyImplyLeading: false, */
-          forceMaterialTransparency: true,
-          backgroundColor: Colors.red,
-          pinned:
-              true, // Mantener el SliverAppBar visible al hacer scroll hacia arriba
-          expandedHeight: 300.0,
-          collapsedHeight: 80,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Image.asset(
-              "assets/NuevoCliente.png",
-              fit: BoxFit.cover,
-            ),
-          ),
-        ), */
-        SliverToBoxAdapter(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize:
-                  MainAxisSize.min, // Set mainAxisSize to MainAxisSize.min
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: cuadroBusqueda(size),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Flexible(
-                  flex: 2,
-                  child: listaBotones(
-                    size,
-                    ClientesTypes,
-                    context,
-                    listIcon,
-                    listIconUpdate,
-                    ClientsTypesUpdate,
-                  ),
-                ),
-                /*  Container(
-                  height: 70,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  padding: const EdgeInsets.only(
-                    bottom: 0,
-                    top: 20,
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //  etiquetaClientes(),
-                    ],
-                  ),
-                ), */
-
-                Flexible(
-                  flex: 1,
-                  child: listaClientes(size),
-                ),
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: CustomScrollView(slivers: <Widget>[
+          /*  SliverAppBar(
+            /*  backgroundColor: Colors.amber,
+            elevation: 0,
+            pinned: false,
+            centerTitle: false,
+            expandedHeight: 300,
+            stretch: true,
+            flexibleSpace: FlexibleSpaceBar(
+              stretchModes: [
+                StretchMode.blurBackground,
               ],
+              background: Image(
+                  image: AssetImage(
+                    "assets/nuevoCredito.jpg",
+                  ),
+                  fit: BoxFit.cover),
             ),
-          ),
-        )
-      ]),
+            automaticallyImplyLeading: false, */
+            forceMaterialTransparency: true,
+            backgroundColor: Colors.red,
+            pinned:
+                true, // Mantener el SliverAppBar visible al hacer scroll hacia arriba
+            expandedHeight: 300.0,
+            collapsedHeight: 80,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Image.asset(
+                "assets/NuevoCliente.png",
+                fit: BoxFit.cover,
+              ),
+            ),
+          ), */
+          SliverToBoxAdapter(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize:
+                    MainAxisSize.min, // Set mainAxisSize to MainAxisSize.min
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: cuadroBusqueda(size),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: listaBotones(
+                      size,
+                      ClientesTypes,
+                      context,
+                      listIcon,
+                      listIconUpdate,
+                      ClientsTypesUpdate,
+                    ),
+                  ),
+                  /*  Container(
+                    height: 70,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.transparent,
+                    ),
+                    padding: const EdgeInsets.only(
+                      bottom: 0,
+                      top: 20,
+                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //  etiquetaClientes(),
+                      ],
+                    ),
+                  ), */
+
+                  Flexible(
+                    flex: 1,
+                    child: listaClientes(size),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ]),
+      ),
     );
   }
 
@@ -466,6 +431,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
+  /* final List<Color> colors = [
+    Colors.orange[200] as Color,
+    Colors.cyan,
+    Colors.amber,
+    Colors.pink[200] as Color, // Rosa
+    Colors.green[100] as Color, // Verde
+    // Púrpura intenso
+  ]; */
+
+  final List<Color> colors = [
+    Colors.orange[200] as Color,
+    Colors.orangeAccent,
+    Colors.amber,
+    Colors.deepOrange[300] as Color, // Rosa
+    Colors.orange[500] as Color, // Verde
+    // Púrpura intenso
+  ];
+
   Widget etiquetaClientes() {
     return FittedBox(
       fit: BoxFit.contain,
@@ -486,18 +469,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget listaClientes(Size size) {
-    final ScrollController _scrollController = ScrollController();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        animationController.forward();
-      } else if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        animationController.reverse();
-      }
-    });
-
     return Container(
       // DATOS DEL CLIENTE
       color: Colors.transparent,
@@ -509,59 +480,161 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data.toString() != '[]') {
             // LISTA DE CLIENTES
+
             return CustomScrollView(
               physics: const BouncingScrollPhysics(),
-              controller: _scrollController,
+              // controller: _scrollController,
               slivers: [
-                /* SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      child: Row(
-                        children: [
-                          ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: List.generate(
-                              5,
-                              (index) {
-                                return Container(
-                                  margin: EdgeInsets.all(8.0),
-                                  width: 100,
-                                  height: 100,
-                                  child: Card(
-                                    elevation: 4.0,
-                                    child: InkWell(
-                                      onTap: () {
-                                        // Acción al hacer clic en la tarjeta
-                                        print('Tapped on Item $index');
-                                      },
-                                      child: Container(
-                                        width: 120.0,
-                                        height: 120.0,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.restaurant_menu,
-                                                size: 40.0),
-                                            SizedBox(height: 8.0),
-                                            Text('Item $index'),
-                                          ],
+                SliverAppBar(
+                  pinned: false,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  floating: false,
+                  collapsedHeight: 60,
+                  foregroundColor: Colors.amber,
+                  forceMaterialTransparency: false,
+                  forceElevated: false,
+                  title: Container(
+                    color: Colors.transparent,
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nuevos Clientes",
+                              style: TextStyle(
+                                color: Colors.teal,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200, // Altura del contenedor de la lista horizontal
+                    child: ListView.builder(
+                      scrollDirection:
+                          Axis.horizontal, // Desplazamiento horizontal
+                      itemCount: (snapshot
+                          .data!.length), // Número de elementos en la lista
+                      itemBuilder: (context, index) {
+                        Color colorCard = colors[index % colors.length];
+                        final codigo_cliente =
+                            (snapshot.data?[index]["codigo_cliente"]);
+                        final nombre = (snapshot.data?[index]["nombre"]);
+                        final apellido_p =
+                            (snapshot.data?[index]["apellido_p"]);
+                        final apellido_m =
+                            (snapshot.data?[index]["apellido_m"]);
+                        final genero = (snapshot.data?[index]["genero"]);
+                        final curp = (snapshot.data?[index]["curp"]);
+                        final calle = (snapshot.data?[index]["calle"]);
+                        final colonia = (snapshot.data?[index]["colonia"]);
+                        final municipio_delegacion =
+                            (snapshot.data?[index]["municipio_delegacion"]);
+                        final estado = (snapshot.data?[index]["estado"]);
+                        final codigo_postal =
+                            (snapshot.data?[index]["codigo_postal"]);
+                        final numero_tel =
+                            (snapshot.data?[index]["numero_tel"]);
+                        final fecha_nacimiento =
+                            (snapshot.data?[index]["fecha_nacimiento"]);
+                        final urlFoto = (snapshot.data?[index]["foto_url"]);
+                        return Container(
+                            padding: const EdgeInsets.only(),
+                            width: 160, // Ancho de cada card
+                            child: Card(
+                              shadowColor: Colors.black,
+                              color: colorCard,
+                              elevation: 18,
+                              margin: const EdgeInsets.all(12.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                        maxRadius: 28,
+                                        child: ClipOval(
+                                            child: CachedNetworkImage(
+                                          width: size.width,
+                                          height: size.height,
+                                          fit: BoxFit.cover,
+                                          imageUrl: (snapshot.data?[index]
+                                              ["foto_url"]),
+                                        ))),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      '${snapshot.data?[index]['nombre']} ${snapshot.data?[index]['apellido_p']}',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      height: 35,
+                                      width: 70,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          //ultimos agregados
+                                          Get.to(
+                                            () => customerView(
+                                              cont: index,
+                                              datos: customerData,
+                                              codigo_cliente: codigo_cliente,
+                                              nombre: nombre,
+                                              apellido_p: apellido_p,
+                                              apellido_m: apellido_m,
+                                              genero: genero,
+                                              curp: curp,
+                                              calle: calle,
+                                              colonia: colonia,
+                                              municipio_delegacion:
+                                                  municipio_delegacion,
+                                              estado: estado,
+                                              codigo_postal: codigo_postal,
+                                              numero_tel: numero_tel,
+                                              fecha_nacimiento: fecha_nacimiento
+                                                  .toDate()
+                                                  .toString()
+                                                  .substring(0, 10)
+                                                  .split("-")
+                                                  .reversed
+                                                  .join("/"),
+                                              urlFoto: urlFoto,
+                                            ),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50.0),
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.arrow_forward_outlined,
+                                          size: 25,
+                                          color: Constants.blueColor,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ) */
+                                  ],
+                                ),
+                              ),
+                            ));
+                      },
+                    ),
+                  ),
+                ),
                 const SliverToBoxAdapter(
                   child: SizedBox(
                     height: 10,
@@ -1065,12 +1138,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 child: SizedBox(
                                     height: 80.0,
                                     child: Container(
-                                        decoration: const BoxDecoration(
+                                        decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          gradient: LinearGradient(colors: [
-                                            Colors.orange,
-                                            Colors.blue
-                                          ]),
                                         ),
                                         child: GestureDetector(
                                           onTap: () {
