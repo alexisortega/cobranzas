@@ -18,7 +18,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -134,37 +134,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: CustomScrollView(slivers: <Widget>[
-          /*  SliverAppBar(
-            /*  backgroundColor: Colors.amber,
-            elevation: 0,
-            pinned: false,
-            centerTitle: false,
-            expandedHeight: 300,
-            stretch: true,
-            flexibleSpace: FlexibleSpaceBar(
-              stretchModes: [
-                StretchMode.blurBackground,
-              ],
-              background: Image(
-                  image: AssetImage(
-                    "assets/nuevoCredito.jpg",
-                  ),
-                  fit: BoxFit.cover),
-            ),
-            automaticallyImplyLeading: false, */
-            forceMaterialTransparency: true,
-            backgroundColor: Colors.red,
-            pinned:
-                true, // Mantener el SliverAppBar visible al hacer scroll hacia arriba
-            expandedHeight: 300.0,
-            collapsedHeight: 80,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                "assets/NuevoCliente.png",
-                fit: BoxFit.cover,
-              ),
-            ),
-          ), */
           SliverToBoxAdapter(
             child: Container(
               child: Column(
@@ -950,6 +919,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     BuildContext context,
     Size size,
   ) {
+
     return GestureDetector(
       onTap: () {
         customerData = [
@@ -1138,7 +1108,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 child: SizedBox(
                                     height: 80.0,
                                     child: Container(
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                         ),
                                         child: GestureDetector(

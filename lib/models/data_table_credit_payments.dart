@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +47,10 @@ class _creditPaymentsState extends State<creditPayments> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final Stream<DocumentSnapshot> clienteStream = FirebaseFirestore.instance
+    /* final Stream<DocumentSnapshot> clienteStream = FirebaseFirestore.instance
         .collection('clientes')
         .doc(widget.codigo_cliente)
-        .snapshots();
+        .snapshots(); */
 
     return Scaffold(
       body: Padding(
@@ -64,8 +64,8 @@ class _creditPaymentsState extends State<creditPayments> {
                     Container(
                       height: size.height / 2,
                       width: size.width / 1.13,
-                      margin: EdgeInsets.all(10.0),
-                      padding: EdgeInsets.all(20.0),
+                      margin: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20.0),

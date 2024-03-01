@@ -1,8 +1,10 @@
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/models/class_categoryCredits.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../../constants.dart';
 
@@ -41,8 +43,8 @@ class _creditPageState extends State<creditPage>
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
               child: Column(
@@ -51,7 +53,7 @@ class _creditPageState extends State<creditPage>
                   Container(
                     height: 60,
                     width: size.width,
-                    decoration: const BoxDecoration(color: Colors.red),
+                    decoration: const BoxDecoration(color: Colors.transparent),
                     padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
                     margin: const EdgeInsets.only(
                         top: 10, left: 0, right: 0, bottom: 1),
@@ -61,7 +63,7 @@ class _creditPageState extends State<creditPage>
                       children: [
                         Card(
                             elevation: 0,
-                            color: Colors.green,
+                            color: Colors.transparent,
                             child: FittedBox(
                               fit: BoxFit.fill,
                               child: CustomText(
@@ -77,7 +79,7 @@ class _creditPageState extends State<creditPage>
                     ),
                   ),
                   Container(
-                    color: Colors.green,
+                    color: Colors.transparent,
                     padding: const EdgeInsets.only(
                       top: 5,
                       bottom: 5,
@@ -178,11 +180,20 @@ class _creditPageState extends State<creditPage>
                     height: 10.0,
                   ),
                   Container(
-                    color: Colors.amber,
+                    color: Colors.transparent,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           top: 10, bottom: 10, left: 5, right: 5),
                       child: TabBar(
+                        tabAlignment: TabAlignment.start,
+                        labelPadding:
+                            const EdgeInsets.only(right: 20, left: 20),
+                        splashFactory: InkSplash.splashFactory,
+                        enableFeedback: true,
+                        automaticIndicatorColorAdjustment: true,
+                        indicatorWeight: 3.5,
+                        dividerColor: Colors.transparent,
+                        splashBorderRadius: BorderRadius.circular(15),
                         indicatorSize: TabBarIndicatorSize.tab,
                         controller: tabController,
                         indicatorColor: Colors.orange,
@@ -228,98 +239,75 @@ class _creditPageState extends State<creditPage>
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      left: 20,
-                      bottom: 10,
-                      right: 20,
-                      top: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white.withOpacity(0.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.orange[700] as Color,
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: const Offset(1, 3),
+                  Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      /* Positioned.fill(
+                          child: Image.asset(
+                        "assets/wallpaper2.png",
+                        fit: BoxFit.cover,
+                      )), */
+                      Positioned.fill(
+                          child: Image.asset(
+                        "assets/wallpaper2.png",
+                        fit: BoxFit.cover,
+                      )),
+                      Container(
+                        height: size.height * 0.62,
+                        width: size.width,
+                        color: Colors.amber,
+                        margin: const EdgeInsets.only(
+                          left: 20,
+                          bottom: 10,
+                          right: 20,
+                          top: 10,
                         ),
-                      ],
-                    ),
-                    // Colors.orangeAccent[700]),
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                    ),
-                    height: size.height * 0.6,
-                    width: size.width,
-                    child: TabBarView(
-                      dragStartBehavior: DragStartBehavior.down,
-                      controller: tabController,
-                      children: <Widget>[
-                        categoryCredit(
-                          index: index,
+
+                        /*  decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white.withOpacity(0.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange[700] as Color,
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(1, 3),
+                            ),
+                          ],
+                        ), */
+                        // Colors.orangeAccent[700]),
+                        padding: const EdgeInsets.only(
+                          top: 10,
+                          bottom: 10,
                         ),
-                        categoryCredit(
-                          index: index + 1,
+
+                        child: TabBarView(
+                          physics: BouncingScrollPhysics(),
+                          dragStartBehavior: DragStartBehavior.down,
+                          controller: tabController,
+                          children: <Widget>[
+                            CategoryCredit(
+                              index: index,
+                            ),
+                            CategoryCredit(
+                              index: index + 1,
+                            ),
+                            CategoryCredit(
+                              index: index + 2,
+                            ),
+                            CategoryCredit(
+                              index: index + 3,
+                            ),
+                          ],
                         ),
-                        categoryCredit(
-                          index: index + 2,
-                        ),
-                        categoryCredit(
-                          index: index + 3,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   )
                 ],
               ),
             ),
           ],
         ),
-        /*  bottomNavigationBar: Material(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.yellow,
-            ),
-            height: 60.0,
-            width: size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.red,
-                          style: BorderStyle.solid,
-                          width: 1.0),
-                    ),
-                  ),
-                  child: const Text("filters"),
-                ),
-                const Icon(Icons.search),
-                const Icon(Icons.more),
-                Container(
-                  height: 45.0,
-                  width: 60.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.red,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const <Widget>[
-                      Text("12"),
-                      Icon(Icons.monetization_on),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),*/
       ),
     );
   }

@@ -177,7 +177,7 @@ class _RootPageState extends State<RootPage> {
               if (scrollInfo.metrics.pixels >= 300) {
                 if (!isAppBarVisible || !isBottomNavBarVisible) {
                   setState(() {
-                    isAppBarVisible = false;
+                    isAppBarVisible = true;
                     isBottomNavBarVisible = true;
                     print(
                         "se está haciendo scroll hacia abajo nuevo estado (vertical)");
