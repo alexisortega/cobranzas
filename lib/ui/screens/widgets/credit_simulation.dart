@@ -1,7 +1,5 @@
 import 'dart:math';
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/controllers/clients_Controller.dart';
-import 'package:cobranzas/models/data_table_credit_payments.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +28,7 @@ class creditSimulation extends StatefulWidget {
 }
 
 class _creditSimulationState extends State<creditSimulation> {
-  static var controllerClientes4 = Get.put(clientsController());
+ // static var controllerClientes4 = Get.put(clientsController());
 
   @override
   void initState() {

@@ -255,7 +255,7 @@ class _creditPageState extends State<creditPage>
                       Container(
                         height: size.height * 0.62,
                         width: size.width,
-                        color: Colors.amber,
+                        color: Colors.transparent,
                         margin: const EdgeInsets.only(
                           left: 20,
                           bottom: 10,
@@ -282,7 +282,7 @@ class _creditPageState extends State<creditPage>
                         ),
 
                         child: TabBarView(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           dragStartBehavior: DragStartBehavior.down,
                           controller: tabController,
                           children: <Widget>[

@@ -43,7 +43,7 @@ class _NewCreditState extends State<NewCredit> {
 
   @override
   Widget build(BuildContext context) {
-    var ListMenuCustomers = Future(() => []);
+   // var ListMenuCustomers = Future(() => []);
     Size size = MediaQuery.of(context).size;
 
     @override

@@ -9,9 +9,9 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   late String _selectedMethod = "PayPal";
-  late String _accountNumber = "";
-  late String _bankName = "";
-  late double _amount = 0.0;
+  late String accountNumber = "";
+  late String bankName = "";
+  late double amount = 0.0;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -109,7 +109,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _accountNumber = value!;
+                        accountNumber = value!;
                       },
                     ),
                     const SizedBox(height: 16.0),
@@ -130,7 +130,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        _bankName = value!;
+                        bankName = value!;
                       },
                     ),
                   ],
@@ -191,7 +191,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   return null;
                 },
                 onSaved: (value) {
-                  _amount = double.parse(value!);
+                  amount = double.parse(value!);
                 },
               ),
               const SizedBox(height: 16.0),

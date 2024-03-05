@@ -13,7 +13,7 @@ class ProfileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+   // Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.transparent,
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),

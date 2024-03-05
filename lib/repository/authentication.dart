@@ -233,8 +233,40 @@ class authenticationRepository extends GetxController {
     return await FirebaseAuth.instance.signInWithCredential(credential1);
   }
 
-  // ignore: body_might_complete_normally_nullable
   static Future<User?> signInWithGoogle2(
+      {required BuildContext context}) async {
+    try {
+      GoogleSignIn googleSignIn = GoogleSignIn();
+      GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
+      if (googleAccount == null) {
+        print("Error: Cuenta de Google nula");
+        return null; // Puede manejar este caso con UI feedback adecuado.
+      }
+
+      GoogleSignInAuthentication googleAuth =
+          await googleAccount.authentication;
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      // Si llegamos aquí, el inicio de sesión fue exitoso
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      print("Error en la autenticación: ${e.code}");
+      validaciones(e
+          .code); // Asegúrate de que este método maneje adecuadamente el código de error.
+      return null;
+    } catch (e) {
+      print("Error general en signInWithGoogle2: $e");
+      return null;
+    }
+  }
+
+  // ignore: body_might_complete_normally_nullable
+  /* static Future<User?> signInWithGoogle2(
       {required BuildContext context}) async {
     try {
       User? user2;
@@ -281,7 +313,7 @@ class authenticationRepository extends GetxController {
     } catch (e) {
       print(e.hashCode.toString());
     }
-  }
+  } */
 
 /* Future<User?> signInWithGoogle2() async {
   try {

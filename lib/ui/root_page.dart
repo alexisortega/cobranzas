@@ -171,60 +171,12 @@ class _RootPageState extends State<RootPage> {
                 elevation: 0.0,
               )
             : null,
-        body: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (scrollInfo.metrics.axis == Axis.vertical) {
-              if (scrollInfo.metrics.pixels >= 300) {
-                if (!isAppBarVisible || !isBottomNavBarVisible) {
-                  setState(() {
-                    isAppBarVisible = true;
-                    isBottomNavBarVisible = true;
-                    print(
-                        "se está haciendo scroll hacia abajo nuevo estado (vertical)");
-                  });
-                }
-              } else {
-                if (isAppBarVisible || isBottomNavBarVisible) {
-                  setState(() {
-                    isAppBarVisible = true;
-                    isBottomNavBarVisible = false;
-                    print(
-                        "se está haciendo scroll hacia arriba nuevo estado (vertical)");
-                  });
-                }
-              }
-            }
-            /*  if (scrollInfo.metrics.axis == Axis.horizontal) {
-              if (scrollInfo.metrics.pixels >= 450) {
-                if (!isAppBarVisible || !isBottomNavBarVisible) {
-                  setState(() {
-                    isAppBarVisible = true;
-                    isBottomNavBarVisible = false;
-                    print(
-                        "se está haciendo scroll hacia abajo nuevo estado (horizontal)");
-                  });
-                }
-              } else {
-                if (isAppBarVisible || isBottomNavBarVisible) {
-                  setState(() {
-                    isAppBarVisible = false;
-                    isBottomNavBarVisible = true;
-                    print(
-                        "se está haciendo scroll hacia arriba nuevo estado (horizontal)");
-                  });
-                }
-              }
-            }
- */
-            return true;
-          },
-          child: IndexedStack(
-            index: _bottomNavIndex,
-            children: _widgetOptions(),
-          ),
+        body: IndexedStack(
+          index: _bottomNavIndex,
+          children: _widgetOptions(),
         ),
-        floatingActionButton: isBottomNavBarVisible
-            ? FloatingActionButton(
+        floatingActionButton:
+             FloatingActionButton(
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -240,10 +192,10 @@ class _RootPageState extends State<RootPage> {
                   height: 25.0,
                 ),
               )
-            : null,
+           ,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: isBottomNavBarVisible
-            ? AnimatedBottomNavigationBar(
+        bottomNavigationBar: 
+             AnimatedBottomNavigationBar(
                 iconSize: 30,
                 gapWidth: 120,
                 blurEffect: true,
@@ -262,6 +214,6 @@ class _RootPageState extends State<RootPage> {
                     _bottomNavIndex = index;
                   });
                 })
-            : null);
+          );
   }
 }

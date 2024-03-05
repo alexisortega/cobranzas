@@ -46,10 +46,6 @@ class CategoryCreditState extends State<CategoryCredit> {
     @override
     void initState() {
       super.initState();
-      precacheImage(AssetImage(Imags[0]), context);
-      precacheImage(AssetImage(Imags[1]), context);
-      precacheImage(AssetImage(Imags[2]), context);
-      precacheImage(AssetImage(Imags[3]), context);
     }
 
     @override
@@ -58,15 +54,14 @@ class CategoryCreditState extends State<CategoryCredit> {
     }
 
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 5),
-      color: Colors.red,
+      padding: const EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 5),
+      color: Colors.transparent,
       child: shakeTransition(
         axis: Axis.vertical,
         offset: 140,
-        duration: Duration(milliseconds: 2000),
+        duration: const Duration(milliseconds: 1500),
         child: PageView.builder(
           scrollDirection: Axis.horizontal,
-          pageSnapping: false,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -97,20 +92,34 @@ Widget getcategory(
   int index,
   BuildContext context,
 ) {
+  final List<Color> colors = [
+    Colors.orange[200] as Color,
+    Colors.orangeAccent,
+    Colors.deepOrange[300] as Color, // Rosa
+    Colors.orange[500] as Color, // Verde
+    // Púrpura intenso
+  ];
+
+  Color colorMenu = colors[index % colors.length];
+
   return LayoutBuilder(
     builder: (context, MaxSize) => Container(
-      height: 100,
-      width: 100,
+      height: MaxSize.maxHeight > 1000 ? size.height * 0.45 : size.height * 0.5,
+      width: MaxSize.maxWidth > 1000 ? size.width * 0.55 : size.width * 0.5,
       decoration: BoxDecoration(
-          //contorno blancoñ
-          color: Colors.green.withOpacity(0.6),
-          borderRadius: BorderRadius.circular(10),
+          //contorno blanco
+          color: colorMenu.withOpacity(0.7),
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(5),
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
+              color: Colors.white.withOpacity(0.8),
+              spreadRadius: 7,
+              blurRadius: 17,
+              offset: const Offset(3, -5),
             ),
           ]),
       child: Container(
@@ -118,9 +127,12 @@ Widget getcategory(
         child: Column(
           children: <Widget>[
             Flexible(
+              fit: FlexFit.loose,
+              flex: 2,
               child: Stack(
                 children: [
                   Container(
+                      padding: const EdgeInsets.all(7),
                       height: (size.height / 4) - 10,
                       width: size.width,
                       decoration: const BoxDecoration(
@@ -130,7 +142,12 @@ Widget getcategory(
                           topRight: Radius.circular(5),
                         ),
                       ),
-                      child: Container(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(70),
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(0),
+                            bottomLeft: Radius.circular(0)),
                         child: Image.asset(
                           imgPath,
                           fit: BoxFit.cover,
@@ -143,6 +160,8 @@ Widget getcategory(
               height: 2,
             ),
             Flexible(
+              fit: FlexFit.loose,
+              flex: 2,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -166,43 +185,47 @@ Widget getcategory(
                                 fontWeight: FontWeight.bold)),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      height: 50,
-                      width: 90,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          switch (index) {
-                            case 0:
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    duration: const Duration(milliseconds: 780),
-                                    child: const NewCredit(),
-                                    type: PageTransitionType.bottomToTop,
-                                  ));
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        height: 50,
+                        width: 90,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            switch (index) {
+                              case 0:
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      duration:
+                                          const Duration(milliseconds: 780),
+                                      child: const NewCredit(),
+                                      type: PageTransitionType.bottomToTop,
+                                    ));
 
-                              break;
+                                break;
 
-                            case 1:
-                              Get.to(
-                                () => const AllCredits(),
-                                duration: const Duration(milliseconds: 1000),
-                                fullscreenDialog: GetPlatform.isMobile,
-                                opaque: false,
-                                popGesture: true,
-                                transition: Transition.downToUp,
-                              );
+                              case 1:
+                                Get.to(
+                                  () => const AllCredits(),
+                                  duration: const Duration(milliseconds: 1000),
+                                  fullscreenDialog: GetPlatform.isMobile,
+                                  opaque: false,
+                                  popGesture: true,
+                                  transition: Transition.downToUp,
+                                );
 
-                              break;
-                            case 2:
-                              break;
-                            case 3:
-                              break;
-                          }
-                        },
-                        child: const Icon(
-                          Icons.arrow_forward,
+                                break;
+                              case 2:
+                                break;
+                              case 3:
+                                break;
+                            }
+                          },
+                          child: const Icon(
+                            Icons.arrow_forward,
+                          ),
                         ),
                       ),
                     )
