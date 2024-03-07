@@ -4,7 +4,7 @@ import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/scan_page.dart';
 import 'package:cobranzas/ui/screens/creditPage.dart';
 import 'package:cobranzas/ui/screens/custom_drawerpage.dart';
-import 'package:cobranzas/ui/screens/othersPage.dart';
+import 'package:cobranzas/ui/screens/cajaPage.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({Key? key}) : super(key: key);
+  const RootPage({super.key});
 
   @override
   State<RootPage> createState() => _RootPageState();
@@ -25,8 +25,8 @@ class _RootPageState extends State<RootPage> {
   List<Widget> _widgetOptions() {
     return [
       const HomePage(), //HOMEPAGE
-      const creditPage(),
-      const othersPage(),
+      const CreditPage(),
+      const CajaPage(),
       const ProfilePage(),
     ];
   }
@@ -175,45 +175,41 @@ class _RootPageState extends State<RootPage> {
           index: _bottomNavIndex,
           children: _widgetOptions(),
         ),
-        floatingActionButton:
-             FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const ScanPage(),
-                          type: PageTransitionType.bottomToTop));
-                },
-                backgroundColor: Constants.blueColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
-                child: Image.asset(
-                  'assets/images/code-scan-two.png',
-                  height: 25.0,
-                ),
-              )
-           ,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: const ScanPage(),
+                    type: PageTransitionType.bottomToTop));
+          },
+          backgroundColor: Constants.blueColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          child: Image.asset(
+            'assets/images/code-scan-two.png',
+            height: 25.0,
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: 
-             AnimatedBottomNavigationBar(
-                iconSize: 30,
-                gapWidth: 120,
-                blurEffect: true,
-                splashRadius: 30,
-                backgroundColor: Colors.blue.withOpacity(.1),
-                elevation: 25.0,
-                splashColor: Colors.orange,
-                activeColor: Constants.orangeColor,
-                inactiveColor: Constants.blueColor.withOpacity(.5),
-                icons: iconList,
-                activeIndex: _bottomNavIndex,
-                gapLocation: GapLocation.center,
-                notchSmoothness: NotchSmoothness.smoothEdge,
-                onTap: (index) {
-                  setState(() {
-                    _bottomNavIndex = index;
-                  });
-                })
-          );
+        bottomNavigationBar: AnimatedBottomNavigationBar(
+            iconSize: 30,
+            gapWidth: 120,
+            blurEffect: true,
+            splashRadius: 30,
+            backgroundColor: Colors.blue.withOpacity(.1),
+            elevation: 25.0,
+            splashColor: Colors.orange,
+            activeColor: Constants.orangeColor,
+            inactiveColor: Constants.blueColor.withOpacity(.5),
+            icons: iconList,
+            activeIndex: _bottomNavIndex,
+            gapLocation: GapLocation.center,
+            notchSmoothness: NotchSmoothness.smoothEdge,
+            onTap: (index) {
+              setState(() {
+                _bottomNavIndex = index;
+              });
+            }));
   }
 }

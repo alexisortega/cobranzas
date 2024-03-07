@@ -1,11 +1,12 @@
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/models/animations_transtions.dart';
 
+
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -165,11 +166,11 @@ class createPage extends StatelessWidget {
   final String description;
 
   const createPage({
-    Key? key,
+    super.key,
     required this.image,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +191,7 @@ class createPage extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.35,
                 width: size.width * .75,
-                child: shakeTransition(
+                child: ShakeTransition(
                   duration: const Duration(milliseconds: 400),
                   offset: 140.0,
                   axis: Axis.vertical,
@@ -203,7 +204,7 @@ class createPage extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              shakeTransition(
+              ShakeTransition(
                 duration: const Duration(milliseconds: 900),
                 offset: 140.0,
                 axis: Axis.horizontal,
@@ -228,7 +229,7 @@ class createPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              shakeTransition(
+              ShakeTransition(
                 duration: const Duration(milliseconds: 900),
                 offset: 140.0,
                 axis: Axis.vertical,

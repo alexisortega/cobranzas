@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class shakeTransition extends StatelessWidget {
+class ShakeTransition extends StatelessWidget {
   final Widget child;
   final Duration duration;
   final double offset;
   final Axis axis;
 
-  const shakeTransition({
+  const ShakeTransition({
     super.key,
     required this.duration,
     required this.child,

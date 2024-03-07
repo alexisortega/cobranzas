@@ -1,7 +1,10 @@
+
+
 plugins {
-    id "com.android.application"
+    id("com.android.application")
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id("com.google.gms.google-services")
     
     
   
@@ -28,6 +31,7 @@ android {
     namespace "com.idconexion.cobranzas"
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
+   
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -70,8 +74,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
-    implementation platform('com.google.firebase:firebase-bom:31.0.0')
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation(platform("com.google.firebase:firebase-bom"))
+    
   
     
 }

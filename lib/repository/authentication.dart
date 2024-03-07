@@ -48,7 +48,7 @@ class authenticationRepository extends GetxController {
         password: password,
       )
           .whenComplete(() async {
-        print("insertando datos de registro...");
+        printInfo(info: "insertando datos de registro...");
         try {
           User? currentUser = _auth1.currentUser;
           if (currentUser != null) {
@@ -91,12 +91,12 @@ class authenticationRepository extends GetxController {
 
             Get.offAll(() => const RootPage());
           } else {
-            Get.to(() => SignUp());
+            Get.to(() => const SignUp());
           }
         } on FirebaseAuthException catch (e) {
           final ex = signUpWithEmailAndPasswordFailure.code(e.code);
 
-          print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+          printError(info: "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
           validaciones(ex.message1.toString());
         } catch (e) {
           validaciones("Error de registro");
@@ -114,7 +114,7 @@ class authenticationRepository extends GetxController {
       print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
       validaciones(ex.message1.toString());
     } catch (e) {
-      print("${e}");
+      printError(info: "$e");
     }
   }
 
@@ -127,6 +127,7 @@ class authenticationRepository extends GetxController {
         await _auth1.signInWithEmailAndPassword(
             email: email, password: password);
         // ignore: use_build_context_synchronously
+        if (!context.mounted) return;
         showDialog(
             barrierDismissible: false,
             context: context,
@@ -146,7 +147,7 @@ class authenticationRepository extends GetxController {
       } on FirebaseAuthException catch (e) {
         final ex = signUpWithEmailAndPasswordFailure.code(e.code.toString());
 
-        print("'''FIREBASE AUTH EXCEPTION 2'''-${ex.message1}");
+        printError(info: "'''FIREBASE AUTH EXCEPTION 2'''-${ex.message1}");
         validaciones(ex.message1.toString());
         // }
       }
@@ -166,6 +167,7 @@ class authenticationRepository extends GetxController {
     try {
       FirebaseAuth.instance.signOut();
       await GoogleSignIn().signOut();
+      if (!context.mounted) return;
       showDialog(
           barrierDismissible: false,
           context: context,
@@ -194,10 +196,10 @@ class authenticationRepository extends GetxController {
       await _auth1.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       final ex = signUpWithEmailAndPasswordFailure.code(e.code.toString());
-      print("'''FIREBASE AUTH EXCEPTION 3'''-${ex.message1}");
+      printError(info: "'''FIREBASE AUTH EXCEPTION 3'''-${ex.message1}");
       validaciones(ex.message1.toString());
     } catch (e) {
-      validaciones("${e}");
+      validaciones("$e");
     }
   }
 
@@ -239,7 +241,7 @@ class authenticationRepository extends GetxController {
       GoogleSignIn googleSignIn = GoogleSignIn();
       GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
       if (googleAccount == null) {
-        print("Error: Cuenta de Google nula");
+        print.printError(info: "Error: Cuenta de Google nula");
         return null; // Puede manejar este caso con UI feedback adecuado.
       }
 
@@ -255,12 +257,12 @@ class authenticationRepository extends GetxController {
       // Si llegamos aquí, el inicio de sesión fue exitoso
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print("Error en la autenticación: ${e.code}");
+      print.printError(info: "Error en la autenticación: ${e.code}");
       validaciones(e
           .code); // Asegúrate de que este método maneje adecuadamente el código de error.
       return null;
     } catch (e) {
-      print("Error general en signInWithGoogle2: $e");
+      print.printError(info: "Error general en signInWithGoogle2: $e");
       return null;
     }
   }

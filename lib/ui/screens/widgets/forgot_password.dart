@@ -9,12 +9,12 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ForgotPassword extends StatelessWidget {
-  ForgotPassword({Key? key}) : super(key: key);
+  ForgotPassword({super.key});
   final controller3 = Get.put(SingUpController());
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
 
     Size size = MediaQuery.of(context).size;
 
@@ -23,7 +23,7 @@ class ForgotPassword extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey2,
+            key: formKey2,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,7 +74,7 @@ class ForgotPassword extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (_formKey2.currentState!.validate()) {
+                    if (formKey2.currentState!.validate()) {
                       try {
                         await authenticationRepository()
                             .enviarLinkResetContrasena(
@@ -82,7 +82,7 @@ class ForgotPassword extends StatelessWidget {
 
                         borrarCamposResetCont();
                       } catch (e) {
-                        print("${e}");
+                        printError(info: "$e");
                       }
                     }
                   },

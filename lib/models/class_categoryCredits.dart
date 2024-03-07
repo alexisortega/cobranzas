@@ -1,13 +1,9 @@
 // ignore_for_file: file_names
-
 import 'package:cobranzas/controllers/creditController.dart';
-import 'package:cobranzas/models/animations_transtions.dart';
 import 'package:cobranzas/ui/screens/widgets/allCredits.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:cobranzas/ui/screens/widgets/new_credit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -29,57 +25,43 @@ class CategoryCreditState extends State<CategoryCredit> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<String> Imags = [
+    List<String> imagsMenu = [
       "assets/nuevoCredito.jpg",
       "assets/todosLosCreditos.jpg",
       "assets/fondoListCreditos.jpg",
       "assets/tarjetaCredito.jpg",
     ];
 
-    List<String> NameCategorys = [
+    List<String> nameCategorysCredits = [
       "Nuevo Crédito",
       "Todos los créditos",
-      "Pagos del día",
+      "Créditos del día",
       "Créditos con adeudo",
     ];
 
-    @override
-    void initState() {
-      super.initState();
-    }
-
-    @override
-    void dispose() {
-      super.dispose();
-    }
+    
 
     return Container(
       padding: const EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 5),
       color: Colors.transparent,
-      child: shakeTransition(
-        axis: Axis.vertical,
-        offset: 140,
-        duration: const Duration(milliseconds: 1500),
-        child: PageView.builder(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                getcategory(
-                  Imags[widget.index],
-                  NameCategorys[widget.index],
-                  size,
-                  widget.index,
-                  context,
-                ),
-              ],
-            );
-          },
-          itemCount: 1,
-        ),
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              getcategory(
+                imagsMenu[widget.index],
+                nameCategorysCredits[widget.index],
+                size,
+                widget.index,
+                context,
+              ),
+            ],
+          );
+        },
+        itemCount: 1,
       ),
     );
   }
@@ -103,9 +85,9 @@ Widget getcategory(
   Color colorMenu = colors[index % colors.length];
 
   return LayoutBuilder(
-    builder: (context, MaxSize) => Container(
-      height: MaxSize.maxHeight > 1000 ? size.height * 0.45 : size.height * 0.5,
-      width: MaxSize.maxWidth > 1000 ? size.width * 0.55 : size.width * 0.5,
+    builder: (context, maxSize) => Container(
+      height: maxSize.maxHeight > 1000 ? size.height * 0.45 : size.height * 0.5,
+      width: maxSize.maxWidth > 1000 ? size.width * 0.55 : size.width * 0.5,
       decoration: BoxDecoration(
           //contorno blanco
           color: colorMenu.withOpacity(0.7),

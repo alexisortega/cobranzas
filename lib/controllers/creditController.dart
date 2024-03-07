@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/clients_dias_semana.dart';
@@ -8,12 +8,12 @@ import 'package:get/get.dart';
 class creditController extends GetxController {
   FirebaseFirestore database = FirebaseFirestore.instance;
 
-  final codigo_credito = TextEditingController();
-  final interes_asignado = TextEditingController();
-  final monto_solicitado = TextEditingController();
-  final fecha_prestamo = TextEditingController();
+  final codigoCredito = TextEditingController();
+  final interesAsignado = TextEditingController();
+  final montoSolicitado = TextEditingController();
+  final fechaPrestamo = TextEditingController();
   final filterCategory = TextEditingController();
-  final numero_pagos = TextEditingController();
+  final numeroPagos = TextEditingController();
   final filtrarCreditos = TextEditingController();
 
   String search = "";
@@ -46,29 +46,29 @@ class creditController extends GetxController {
   }
 
   Future createCredits({
-    required String codigo_credito,
-    required String propietario_credito,
-    required double monto_solicitado,
-    required double interes_asignado,
-    required List<String> dias_semana,
-    required DateTime fecha_prestamo,
+    required String codigoCredito,
+    required String propietarioCredito,
+    required double montoSolicitado,
+    required double interesAsignado,
+    required List<String> diasSemana,
+    required DateTime fechaPrestamo,
     required String? plazos,
-    required int numero_pagos,
+    required int numeroPagos,
     required String status,
   }) async {
     try {
       //
-      await database.collection('creditos').doc(codigo_credito).set({
+      await database.collection('creditos').doc(codigoCredito).set({
         //
 
-        'codigo_credito': codigo_credito,
-        'propietario_credito': propietario_credito,
-        'monto_solicitado': monto_solicitado,
-        'interes_asignado': interes_asignado,
+        'codigo_credito': codigoCredito,
+        'propietario_credito': propietarioCredito,
+        'monto_solicitado': montoSolicitado,
+        'interes_asignado': interesAsignado,
         'plazos': plazos,
-        'dias_semana': dias_semana,
-        'fecha_prestamo': fecha_prestamo,
-        'numero_pagos': numero_pagos,
+        'dias_semana': diasSemana,
+        'fecha_prestamo': fechaPrestamo,
+        'numero_pagos': numeroPagos,
         'status': status,
 
         //

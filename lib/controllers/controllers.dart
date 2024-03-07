@@ -34,12 +34,12 @@ class SingUpController extends GetxController {
     } on FirebaseAuthException catch (e) {
       final ex = signUpWithEmailAndPasswordFailure.code(e.code);
 
-      print("'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+      printError(info: "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
       authenticationRepository.validaciones(ex.message1.toString());
     } catch (e) {
       authenticationRepository
           .validaciones("Llena correctamente todos los campos");
-      print("${e}");
+      printError(info: "$e");
     }
   }
 }

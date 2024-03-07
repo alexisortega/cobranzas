@@ -6,14 +6,14 @@ class ProfileWidget extends StatelessWidget {
   final String title;
 
   const ProfileWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-   // Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.transparent,
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),

@@ -1,42 +1,42 @@
-// ignore_for_file: library_private_types_in_public_api, camel_case_types
+// ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/constants.dart';
-import 'package:cobranzas/ui/screens/widgets/Payments.dart';
+import 'package:cobranzas/ui/screens/widgets/payments.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
-class creditDetails extends StatefulWidget {
-  final String codigo_credito;
-  final double monto_solicitado;
-  final double interes_asignado;
-  final String dias_semana;
-  final Timestamp fecha_prestamo;
-  final int numero_pagos;
+class CreditDetails extends StatefulWidget {
+  final String codigoCredito;
+  final double montoSolicitado;
+  final double interesAsignado;
+  final String diasSemana;
+  final Timestamp fechaPrestamo;
+  final int numeroPagos;
   final String plazos;
-  final String propietario_credito;
+  final String propietarioCredito;
   final String status;
 
-  const creditDetails({
+  const CreditDetails({
     super.key,
-    required this.codigo_credito,
-    required this.monto_solicitado,
-    required this.interes_asignado,
-    required this.dias_semana,
-    required this.fecha_prestamo,
-    required this.numero_pagos,
+    required this.codigoCredito,
+    required this.montoSolicitado,
+    required this.interesAsignado,
+    required this.diasSemana,
+    required this.fechaPrestamo,
+    required this.numeroPagos,
     required this.plazos,
-    required this.propietario_credito,
+    required this.propietarioCredito,
     required this.status,
   });
 
   @override
-  State<creditDetails> createState() => _creditDetailsState();
+  State<CreditDetails> createState() => _CreditDetailsState();
 }
 
-class _creditDetailsState extends State<creditDetails> {
+class _CreditDetailsState extends State<CreditDetails> {
   List<Pago> pagos = [
     Pago(
         mes: 'Enero 2022',
@@ -71,7 +71,7 @@ class _creditDetailsState extends State<creditDetails> {
   ];
   @override
   Widget build(BuildContext context) {
-   // Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
@@ -120,7 +120,7 @@ class _creditDetailsState extends State<creditDetails> {
                             width: 15,
                           ),
                           Text(
-                            widget.codigo_credito,
+                            widget.codigoCredito,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -143,7 +143,7 @@ class _creditDetailsState extends State<creditDetails> {
                                   const Text('Monto del préstamo'),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '\$ ${widget.monto_solicitado}',
+                                    '\$ ${widget.montoSolicitado}',
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -159,7 +159,7 @@ class _creditDetailsState extends State<creditDetails> {
                               children: [
                                 const Text('Tasa de interés anual'),
                                 const SizedBox(height: 5),
-                                Text('${widget.interes_asignado} %',
+                                Text('${widget.interesAsignado} %',
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _creditDetailsState extends State<creditDetails> {
                                 const Text('Duración del préstamo'),
                                 const SizedBox(height: 5),
                                 Text(
-                                    '${widget.numero_pagos} ${TipoPlazo(widget.plazos)}',
+                                    '${widget.numeroPagos} ${tipoPlazo(widget.plazos)}',
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
@@ -198,7 +198,7 @@ class _creditDetailsState extends State<creditDetails> {
                                 const Text('Monto total a pagar'),
                                 const SizedBox(height: 5),
                                 Text(
-                                    '${(widget.monto_solicitado) + (widget.interes_asignado / 100)} ',
+                                    '${(widget.montoSolicitado) + (widget.interesAsignado / 100)} ',
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold,
@@ -218,7 +218,7 @@ class _creditDetailsState extends State<creditDetails> {
                                 Text(
                                     "${interesPorPeriodo(
                                       widget.plazos,
-                                      widget.interes_asignado,
+                                      widget.interesAsignado,
                                     )} %",
                                     style: const TextStyle(
                                         color: Colors.black,
@@ -279,7 +279,7 @@ class _creditDetailsState extends State<creditDetails> {
                               const Text('Primer Pago'),
                               const SizedBox(height: 5),
                               Text(
-                                primerPago(widget.fecha_prestamo, widget.plazos)
+                                primerPago(widget.fechaPrestamo, widget.plazos)
                                     .toString(),
                                 style: const TextStyle(
                                   color: Colors.orange,
@@ -350,7 +350,7 @@ class _creditDetailsState extends State<creditDetails> {
                             children: [
                               const SizedBox(height: 5),
                               Text(
-                                widget.propietario_credito,
+                                widget.propietarioCredito,
                                 style: TextStyle(
                                     color: Constants.blueColor,
                                     fontWeight: FontWeight.bold,
@@ -383,21 +383,22 @@ class _creditDetailsState extends State<creditDetails> {
                                                 child: customerView(
                                                     cont: 1,
                                                     datos: List.empty(),
-                                                    codigo_cliente: "22",
+                                                    codigoCliente: "22",
                                                     nombre: "alex",
-                                                    apellido_p: "juares",
-                                                    apellido_m: "juarez",
+                                                    apellidoP: "juares",
+                                                    apellidoM: "juarez",
                                                     genero: "Hombre",
                                                     curp: "AOBA950530HHGRDL04",
                                                     calle: "VENUS",
                                                     colonia: "ALFREDO",
-                                                    municipio_delegacion:
+                                                    municipioDelegacion:
                                                         "TLANALAPA",
                                                     estado: "HIDALGO",
-                                                    codigo_postal: 43930,
-                                                    numero_tel: 7751208021,
-                                                    fecha_nacimiento:
-                                                        DateTime.now(),
+                                                    codigoPostal: 43930,
+                                                    numeroTel: 7751208021,
+                                                    fechaNacimiento:
+                                                        DateTime.now()
+                                                            .toString(),
                                                     urlFoto:
                                                         "https://firebasestorage.googleapis.com/v0/b/gestorcobranza-721b0.appspot.com/o/images%2F1675295357788?alt=media&token=f2d7e553-beb8-4404-bda7-f65604341fa7"),
                                                 type: PageTransitionType
@@ -571,7 +572,7 @@ class _creditDetailsState extends State<creditDetails> {
                                             ),
                                           ],
                                         );
-                                      }).toList(),
+             /* .toList()  se comento sugerencia  */ }),
                                     ],
                                   ),
                                 ],
@@ -617,7 +618,7 @@ class _creditDetailsState extends State<creditDetails> {
     }
   }
 
-  TipoPlazo(String plazo) {
+  tipoPlazo(String plazo) {
     if (plazo.isCaseInsensitiveContains("diario")) {
       return "Días";
     } else if (plazo.isCaseInsensitiveContains("semanal")) {

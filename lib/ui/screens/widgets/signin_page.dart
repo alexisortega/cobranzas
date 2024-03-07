@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     final controller2 = Get.put(SingUpController());
 
@@ -34,7 +34,7 @@ class _SignInState extends State<SignIn> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey3,
+            key: formKey3,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,7 +118,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (_formKey3.currentState!.validate()) {
+                    if (formKey3.currentState!.validate()) {
                       try {
                         await authenticationRepository()
                             .loginWithEmailAndPassword1(
@@ -217,8 +217,9 @@ class _SignInState extends State<SignIn> {
                           User? userGoogle = await authenticationRepository
                               .signInWithGoogle2(context: context);
 
-                          print(
-                              "verificación con google ['${userGoogle?.emailVerified}']");
+                          printInfo(
+                              info:
+                                  "verificación con google ['${userGoogle?.emailVerified}']");
 
                           // authenticationRepository().SignInWithGoogle();
                         },
@@ -241,7 +242,7 @@ class _SignInState extends State<SignIn> {
                     Navigator.pushReplacement(
                         context,
                         PageTransition(
-                            child: SignUp(),
+                            child: const SignUp(),
                             type: PageTransitionType.bottomToTop));
                     borrarCamposlogin();
                   },

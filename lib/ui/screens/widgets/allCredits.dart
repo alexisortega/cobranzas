@@ -1,5 +1,4 @@
-// ignore: file_name
-
+// ignore_for_file: file_names
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/ui/screens/widgets/credit_Details.dart';
@@ -203,7 +202,7 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                                                 setState(() {
                                                   controllerCredit.search =
                                                       value;
-                                                  print(value);
+                                                  printInfo(info: value);
                                                 });
                                               },
                                               controller: controllerCredit
@@ -230,8 +229,9 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                                                       controllerCredit.search;
                                                 });
 
-                                                print(
-                                                    "salio de codigo caja de texto");
+                                                printInfo(
+                                                    info:
+                                                        "salio de codigo caja de texto");
                                               },
                                               child: Icon(
                                                 iconsSearch == true
@@ -428,27 +428,25 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
-                          trailing: Container(
-                            child: const SizedBox(
-                              height: 40,
-                              child: Icon(Icons.arrow_forward_ios_outlined),
-                            ),
+                          trailing: const SizedBox(
+                            height: 40,
+                            child: Icon(Icons.arrow_forward_ios_outlined),
                           ),
                           onTap: () {
                             Navigator.push(
                               context,
                               PageTransition(
                                 duration: const Duration(milliseconds: 780),
-                                child: creditDetails(
-                                  codigo_credito: credit?["codigo_credito"],
-                                  dias_semana:
+                                child: CreditDetails(
+                                  codigoCredito: credit?["codigo_credito"],
+                                  diasSemana:
                                       (credit?["dias_semana"]).toString(),
-                                  fecha_prestamo: (credit?["fecha_prestamo"]),
-                                  interes_asignado: credit?["interes_asignado"],
-                                  monto_solicitado: credit?["monto_solicitado"],
-                                  numero_pagos: credit?["numero_pagos"],
+                                  fechaPrestamo: (credit?["fecha_prestamo"]),
+                                  interesAsignado: credit?["interes_asignado"],
+                                  montoSolicitado: credit?["monto_solicitado"],
+                                  numeroPagos: credit?["numero_pagos"],
                                   plazos: credit?["plazos"],
-                                  propietario_credito:
+                                  propietarioCredito:
                                       credit?["propietario_credito"],
                                   status: credit?["status"] ?? "SIN STATUS",
                                 ),

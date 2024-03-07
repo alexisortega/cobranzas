@@ -1,32 +1,32 @@
+// ignore_for_file: file_names
+
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/models/class_categoryCredits.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../../constants.dart';
 
-class creditPage extends StatefulWidget {
-  const creditPage({super.key});
+class CreditPage extends StatefulWidget {
+  const CreditPage({super.key});
 
   @override
-  State<creditPage> createState() => _creditPageState();
+  State<CreditPage> createState() => _CreditPageState();
 }
 
-class _creditPageState extends State<creditPage>
+class _CreditPageState extends State<CreditPage>
     with SingleTickerProviderStateMixin {
   static var controllerCredit = Get.put(creditController());
   late TabController tabController;
   int index = 0;
-  int TabsPage = 4;
+  int tabsPage = 4;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(
-      length: TabsPage,
+      length: tabsPage,
       vsync: this,
     );
   }
@@ -97,7 +97,6 @@ class _creditPageState extends State<creditPage>
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
@@ -142,7 +141,7 @@ class _creditPageState extends State<creditPage>
                                       tabController.animateTo(0);
                                     }
 
-                                    print(controllerCredit.search);
+                                    printInfo(info: controllerCredit.search);
                                   });
                                 },
                                 showCursor: true,
@@ -162,7 +161,8 @@ class _creditPageState extends State<creditPage>
                                     tabController.animateTo(0);
                                   });
 
-                                  print("salio de codigo caja de texto");
+                                  printInfo(
+                                      info: "salio de codigo caja de texto");
                                 },
                                 child: Icon(
                                   Icons.dangerous_rounded,
@@ -285,6 +285,8 @@ class _creditPageState extends State<creditPage>
                           physics: const BouncingScrollPhysics(),
                           dragStartBehavior: DragStartBehavior.down,
                           controller: tabController,
+
+                          /*           viewportFraction: 0.68, */
                           children: <Widget>[
                             CategoryCredit(
                               index: index,

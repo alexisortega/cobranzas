@@ -1,13 +1,15 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  PaymentScreenState createState() => PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class PaymentScreenState extends State<PaymentScreen> {
   late String _selectedMethod = "PayPal";
   late String accountNumber = "";
   late String bankName = "";

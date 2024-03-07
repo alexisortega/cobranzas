@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DrawerPage extends StatelessWidget {
-  const DrawerPage({Key? key}) : super(key: key);
+  const DrawerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +132,7 @@ class DrawerPage extends StatelessWidget {
                         text: 'Información de Perfil',
                         onTap: () {
                           // Lógica para la subopción de Información de Perfil
-                          print('Perfil > Información de Perfil');
+                          printInfo(info: 'Perfil > Información de Perfil');
                           Navigator.pop(context);
                         },
                       ),
@@ -141,8 +141,8 @@ class DrawerPage extends StatelessWidget {
                         text: 'Configuración de Perfil',
                         onTap: () {
                           // Lógica para la subopción de Configuración de Perfil
-                          print('Perfil > Configuración de Perfil');
-                          Navigator.pop(context);
+                          printInfo(info: 'Perfil > Configuración de Perfil');
+                          Get.back();
                         },
                       ),
                     ],

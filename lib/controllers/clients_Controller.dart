@@ -106,10 +106,8 @@ class clientsController extends GetxController {
         'dias_semana': dias_semana,*/
       });
     } catch (e) {
-      print(e.hashCode.toString());
+      printError(info: "${e.hashCode}");
     }
-
-    
   }
 
   Stream<QuerySnapshot> getClients() {
@@ -135,7 +133,7 @@ class clientsController extends GetxController {
       XFile? file = await imageCustomer.pickImage(source: ImageSource.camera);
 
       if (file == null) {
-        print("NO HAY IMAGEN");
+        printError(info: "NO HAY IMAGEN");
         return "";
       }
 
@@ -146,7 +144,8 @@ class clientsController extends GetxController {
 
       XFile? file = await imageCustomer.pickImage(source: ImageSource.gallery);
       if (file == null) {
-        print("NO HAY IMAGEN");
+        printError(info: "NO HAY IMAGEN");
+
         return "";
       }
 
@@ -166,17 +165,17 @@ class clientsController extends GetxController {
     try {
       await referenceImageToUpload
           .putFile(File(imageUrl))
-          .whenComplete(() => print("Se termino de subir"));
+          .whenComplete(() => printInfo(info: "Se termino de subir"));
       imageUrl = await referenceImageToUpload.getDownloadURL();
     } catch (e) {
-      print("$e error referenceImageToUpload ");
+      printError(info: "$e error referenceImageToUpload ");
     }
 
     if (imageUrl != "") {
-      print("SI EXISTE IMAGEN");
-      print(imageUrl);
+      printInfo(info: "SI EXISTE IMAGEN");
+      printInfo(info: imageUrl);
     } else {
-      print("NO HAY  LA IMAGEN");
+      printError(info: "NO HAY  LA IMAGEN");
     }
 
     return imageUrl;

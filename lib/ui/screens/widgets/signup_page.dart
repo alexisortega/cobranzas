@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SignUp extends StatefulWidget {
-  SignUp({Key? key}) : super(key: key);
+  const SignUp({super.key});
 
   static authenticationRepository get instance => Get.find();
 
@@ -34,7 +34,7 @@ class _SignUpState extends State<SignUp> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding:
               const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
@@ -213,14 +213,15 @@ class _SignUpState extends State<SignUp> {
                             final ex =
                                 signUpWithEmailAndPasswordFailure.code(e.code);
 
-                            print(
-                                "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+                            printError(
+                                info:
+                                    "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
                             authenticationRepository
                                 .validaciones(ex.message1.toString());
                           } catch (e) {
                             authenticationRepository.validaciones(
                                 "Llena correctamente todos los campos");
-                            print("${e}");
+                            printError(info: "$e");
                           }
                           // } else {
                           //   print("error de registro");
@@ -228,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                         }
                       },
                       child: Container(
-                        margin: EdgeInsets.only(left: 1, right: 1),
+                        margin: const EdgeInsets.only(left: 1, right: 1),
                         width: size.width,
                         decoration: BoxDecoration(
                           color: Constants.blueColor,
@@ -282,17 +283,18 @@ class _SignUpState extends State<SignUp> {
                             onTap: () async {
                               try {
                                 User? userGoogle =
-                                    await authenticationRepository
-                                        .signInWithGoogle2(context: context);
+                                    await authenticationRepository()
+                                        .signInWithGoogle(context);
 
-                                print(userGoogle?.emailVerified);
-                                print(" EL boton google");
+                                printInfo(info: "${userGoogle?.emailVerified}");
+                                printInfo(info: " EL boton google");
                               } on FirebaseAuthException catch (e) {
                                 final ex = signUpWithEmailAndPasswordFailure
                                     .code(e.code);
 
-                                print(
-                                    "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
+                                printError(
+                                    info:
+                                        "'''FIREBASE AUTH EXCEPTION'''-${ex.message1}");
                                 authenticationRepository
                                     .validaciones(ex.message1.toString());
                               } catch (a) {

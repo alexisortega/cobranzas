@@ -10,37 +10,37 @@ import 'package:google_fonts/google_fonts.dart';
 class customerView extends StatefulWidget {
   final int cont;
   final List datos;
-  final urlFoto;
-  final codigo_cliente;
-  final nombre;
-  final apellido_p;
-  final apellido_m;
-  final genero;
-  final curp;
-  final calle;
-  final colonia;
-  final municipio_delegacion;
-  final estado;
-  final codigo_postal;
-  final numero_tel;
-  final fecha_nacimiento;
+  final String urlFoto;
+  final String codigoCliente;
+  final String nombre;
+  final String apellidoP;
+  final String apellidoM;
+  final String genero;
+  final String curp;
+  final String calle;
+  final String colonia;
+  final String municipioDelegacion;
+  final String estado;
+  final int codigoPostal;
+  final int numeroTel;
+  final String fechaNacimiento;
   const customerView(
       {super.key,
       required this.cont,
       required this.datos,
-      required this.codigo_cliente,
+      required this.codigoCliente,
       required this.nombre,
-      required this.apellido_p,
-      required this.apellido_m,
+      required this.apellidoP,
+      required this.apellidoM,
       required this.genero,
       required this.curp,
       required this.calle,
       required this.colonia,
-      required this.municipio_delegacion,
+      required this.municipioDelegacion,
       required this.estado,
-      required this.codigo_postal,
-      required this.numero_tel,
-      required this.fecha_nacimiento,
+      required this.codigoPostal,
+      required this.numeroTel,
+      required this.fechaNacimiento,
       required this.urlFoto});
 
   @override
@@ -71,7 +71,7 @@ class _customerViewState extends State<customerView> {
                     child: Hero(
                       tag: widget.urlFoto,
                       child: CachedNetworkImage(
-                        imageUrl: ("${widget.urlFoto}"),
+                        imageUrl: (widget.urlFoto),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -83,19 +83,19 @@ class _customerViewState extends State<customerView> {
                   widget.datos,
                   size,
                   widget.cont,
-                  widget.codigo_cliente,
+                  widget.codigoCliente,
                   widget.nombre,
-                  widget.apellido_p,
-                  widget.apellido_m,
+                  widget.apellidoP,
+                  widget.apellidoM,
                   widget.genero,
                   widget.curp,
                   widget.calle,
                   widget.colonia,
-                  widget.municipio_delegacion,
+                  widget.municipioDelegacion,
                   widget.estado,
-                  widget.codigo_postal.toString(),
-                  widget.numero_tel.toString(),
-                  widget.fecha_nacimiento.toString(),
+                  widget.codigoPostal.toString(),
+                  widget.numeroTel.toString(),
+                  widget.fechaNacimiento.toString(),
                   widget.urlFoto),
             ],
           ),
@@ -203,27 +203,27 @@ scroll(
                   width: size.width * 0.89,
                   child: Column(
                     children: [
-                      Customerdate("Nombre:", nombre),
+                      customerdate("Nombre:", nombre),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Apellido Paterno:", apellidoP),
+                      customerdate("Apellido Paterno:", apellidoP),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Apellido Materno:", apellidoM),
+                      customerdate("Apellido Materno:", apellidoM),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Genero:", genero),
+                      customerdate("Genero:", genero),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Curp", curp),
+                      customerdate("Curp", curp),
                       const SizedBox(
                         height: 5,
                       ),
-                      Customerdate("Fecha de\nnacimiento:", fechaNacimiento),
+                      customerdate("Fecha de\nnacimiento:", fechaNacimiento),
                       const SizedBox(
                         height: 5,
                       ),
@@ -255,7 +255,7 @@ scroll(
                   width: size.width * 0.80,
                   child: Column(
                     children: [
-                      Customerdate("Teléfono: ", numeroTel),
+                      customerdate("Teléfono: ", numeroTel),
                       const SizedBox(
                         height: 5,
                       ),
@@ -291,24 +291,24 @@ scroll(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Customerdate("Calle:", calle),
+                      customerdate("Calle:", calle),
                       const SizedBox(
                         height: 10,
                       ),
-                      Customerdate("Colonia:", colonia),
+                      customerdate("Colonia:", colonia),
                       const SizedBox(
                         height: 10,
                       ),
-                      Customerdate(
+                      customerdate(
                           "Municipio\ndelegación:", municipioDelegacion),
                       const SizedBox(
                         height: 10,
                       ),
-                      Customerdate("Estado", estado),
+                      customerdate("Estado", estado),
                       const SizedBox(
                         height: 10,
                       ),
-                      Customerdate("C.P.", codigoPostal),
+                      customerdate("C.P.", codigoPostal),
                       const SizedBox(
                         height: 5,
                       ),
@@ -325,7 +325,7 @@ scroll(
       });
 }
 
-Row Customerdate(String texto, String numeroTel) {
+Row customerdate(String texto, String numeroTel) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,

@@ -300,9 +300,9 @@ class _NewcustomersState extends State<Newcustomers> {
                           .then((value) => imageUrl = value.toString());
 
                       if (imageUrl.toString().isEmpty) {
-                        print("NO HAY IMAGEN (NULL)");
+                        printError(info: "NO HAY IMAGEN (NULL)");
                       } else {
-                        print("Selecciono imagen");
+                        printError(info: "Selecciono imagen");
                       }
                     }
 
@@ -362,6 +362,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
   Container ContentStep2() {
     return Container(
+      color: Colors.amber,
       child: const Text("step 2"),
     );
   }
@@ -1021,17 +1022,19 @@ class _NewcustomersState extends State<Newcustomers> {
               }
 
               showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return Center(
-                        child: SpinKitRing(
-                      color: Colors.orange.withOpacity(0.9),
-                      size: 50.0,
-                      lineWidth: 4,
-                      duration: const Duration(seconds: 3),
-                    ));
-                  });
+                barrierDismissible: false,
+                builder: (context) {
+                  return Center(
+                      child: SpinKitRing(
+                    color: Colors.orange.withOpacity(0.9),
+                    size: 50.0,
+                    lineWidth: 4,
+                    duration: const Duration(seconds: 3),
+                  ));
+                },
+                // ignore: use_build_context_synchronously
+                context: context,
+              );
 
               try {
                 await clientsController()
@@ -1060,17 +1063,17 @@ class _NewcustomersState extends State<Newcustomers> {
                     .whenComplete(() {
                   setState(() {
                     register = true;
-                    print("Se subio la información...");
+                    printInfo(info: "Se subio la información...");
                   });
                 });
 
                 if (register == true) {
-                  Navigator.of(context).pop();
+                  Get.back();
                   Get.back();
                   authenticationRepository
                       .validaciones("Cliente registrado existosamente");
                   deletecustomerfields();
-                  print("registro temminado: $register");
+                  printInfo(info: "registro temminado: $register");
                 } else if (register == false) {
                   authenticationRepository
                       .validaciones("Cliente no se registro, intente de nuevo");
@@ -1088,7 +1091,7 @@ class _NewcustomersState extends State<Newcustomers> {
                   .validaciones("Error de registro verifique los datos");
             }
           } catch (e) {
-            print(e.hashCode.toString());
+            printError(info: "$e");
           }
         }, //TERMINACION BOTON REGISTRAR
         style: ButtonStyle(

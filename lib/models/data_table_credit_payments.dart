@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -9,41 +8,41 @@ import 'package:intl/intl.dart';
 
 // ignore: depend_on_referenced_packages
 
-class creditPayments extends StatefulWidget {
+class CreditPayments extends StatefulWidget {
   //datos del prestamo
-  final int numero_pagos;
+  final int numeroPagos;
   final String plazos;
-  final double monto_solicitado;
-  final DateTime fecha_prestamo;
-  final double interes_asignado;
+  final double montoSolicitado;
+  final DateTime fechaPrestamo;
+  final double interesAsignado;
   //datos de credito
-  final String codigo_credito;
-  final String propietario_credito;
-  final List<String>? dias_semana;
+  final String codigoCredito;
+  final String propietarioCredito;
+  final List<String>? diasSemana;
   //datos del cliente
-  final String codigo_cliente;
+  final String codigoCliente;
 
-  const creditPayments({
+  const CreditPayments({
     super.key,
     //datos de credito
-    required this.codigo_credito,
-    required this.propietario_credito,
-    required this.dias_semana,
+    required this.codigoCredito,
+    required this.propietarioCredito,
+    required this.diasSemana,
 
     //datos del prestamo
-    required this.numero_pagos,
+    required this.numeroPagos,
     required this.plazos,
-    required this.monto_solicitado,
-    required this.fecha_prestamo,
-    required this.interes_asignado,
-    required this.codigo_cliente,
+    required this.montoSolicitado,
+    required this.fechaPrestamo,
+    required this.interesAsignado,
+    required this.codigoCliente,
   });
 
   @override
-  State<creditPayments> createState() => _creditPaymentsState();
+  State<CreditPayments> createState() => _CreditPaymentsState();
 }
 
-class _creditPaymentsState extends State<creditPayments> {
+class _CreditPaymentsState extends State<CreditPayments> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -74,7 +73,7 @@ class _creditPaymentsState extends State<creditPayments> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 5,
                             blurRadius: 15,
-                            offset: Offset(10, 10),
+                            offset: const Offset(10, 10),
                           ),
                         ],
                       ),
@@ -117,13 +116,13 @@ class _creditPaymentsState extends State<creditPayments> {
           Expanded(
               flex: 6,
               child: paymentNumberList(
-                widget.numero_pagos,
-                widget.fecha_prestamo,
+                widget.numeroPagos,
+                widget.fechaPrestamo,
                 widget.plazos,
-                widget.monto_solicitado,
-                widget.interes_asignado,
+                widget.montoSolicitado,
+                widget.interesAsignado,
               )),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Expanded(
@@ -136,7 +135,7 @@ class _creditPaymentsState extends State<creditPayments> {
                         onPressed: () {
                           //Generar PDF
                         },
-                        child: Text("Generar PDF")),
+                        child: const Text("Generar PDF")),
                     const SizedBox(
                       width: 10,
                     ),
@@ -163,7 +162,7 @@ class _creditPaymentsState extends State<creditPayments> {
     double tasaInteres,
   ) {
     List<DataRow> dataRows = [];
-    double InteresperiodoPlazo = 0.0;
+    double interesPeriodoPlazo = 0.0;
     double cuotaPlazo = 0.0;
     double capitalInsoluto = montoPrestamo;
     double saldoInsoluto;
@@ -172,55 +171,56 @@ class _creditPaymentsState extends State<creditPayments> {
     double amortizacion;
     double sumaTotal = 0.0;
     double sumaInteres = 0.0;
-    double CapitalTotal = 0.0;
+    double capitalTotal = 0.0;
+
     double sumaTotal2D = 0.0;
     double sumaInteres2D = 0.0;
-    double CapitalTotal2D = 0.0;
+    double capitalTotal2D = 0.0;
 
     tasaInteres = tasaInteres / 100;
-    print("Tasa de interes anual: $tasaInteres");
+    printInfo(info: "Tasa de interes anual: $tasaInteres");
 
     if (plazos.toString().isCaseInsensitiveContains("diario")) {
-      InteresperiodoPlazo = tasaInteres / 365;
+      interesPeriodoPlazo = tasaInteres / 365;
       cuotaPlazo = montoPrestamo *
-          InteresperiodoPlazo /
-          (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
+          interesPeriodoPlazo /
+          (1 - pow(1 + interesPeriodoPlazo, -numeroPagos));
 
-      print("interes periodo diario " "$InteresperiodoPlazo");
-      print("Cuota diario $cuotaPlazo ");
+      printInfo(info: "interes periodo diario " "$interesPeriodoPlazo");
+      printInfo(info: "Cuota diario $cuotaPlazo ");
     }
     if (plazos.toString().isCaseInsensitiveContains("semanal")) {
-      InteresperiodoPlazo = tasaInteres / 52;
+      interesPeriodoPlazo = tasaInteres / 52;
       cuotaPlazo = montoPrestamo *
-          InteresperiodoPlazo /
-          (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
+          interesPeriodoPlazo /
+          (1 - pow(1 + interesPeriodoPlazo, -numeroPagos));
 
-      print("interes periodo semanal " "$InteresperiodoPlazo");
-      print("Cuota semanal $cuotaPlazo ");
+      printInfo(info: "interes periodo semanal " "$interesPeriodoPlazo");
+      printInfo(info: "Cuota semanal $cuotaPlazo ");
     } else if (plazos.toString().isCaseInsensitiveContains("catorcenal")) {
-      InteresperiodoPlazo = tasaInteres / 26;
+      interesPeriodoPlazo = tasaInteres / 26;
       cuotaPlazo = montoPrestamo *
-          InteresperiodoPlazo /
-          (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
+          interesPeriodoPlazo /
+          (1 - pow(1 + interesPeriodoPlazo, -numeroPagos));
 
-      print("interes periodo catorcenal " "$InteresperiodoPlazo");
-      print("Cuota catorcenal $cuotaPlazo ");
+      printInfo(info: "interes periodo catorcenal " "$interesPeriodoPlazo");
+      printInfo(info: "Cuota catorcenal $cuotaPlazo ");
     } else if (plazos.toString().isCaseInsensitiveContains("quincenal")) {
-      InteresperiodoPlazo = tasaInteres / 12;
+      interesPeriodoPlazo = tasaInteres / 12;
       cuotaPlazo = montoPrestamo *
-          InteresperiodoPlazo /
-          (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
+          interesPeriodoPlazo /
+          (1 - pow(1 + interesPeriodoPlazo, -numeroPagos));
 
-      print("interes periodo quincenal " "$InteresperiodoPlazo");
-      print("Cuota quincenal $cuotaPlazo ");
+      printInfo(info: "interes periodo quincenal " "$interesPeriodoPlazo");
+      printInfo(info: "Cuota quincenal $cuotaPlazo ");
     } else if (plazos.toString().isCaseInsensitiveContains("mensual")) {
-      InteresperiodoPlazo = tasaInteres / 12;
+      interesPeriodoPlazo = tasaInteres / 12;
       cuotaPlazo = montoPrestamo *
-          InteresperiodoPlazo /
-          (1 - pow(1 + InteresperiodoPlazo, -numeroPagos));
+          interesPeriodoPlazo /
+          (1 - pow(1 + interesPeriodoPlazo, -numeroPagos));
 
-      print("interes periodo mensual " "$InteresperiodoPlazo");
-      print("Cuota mensual $cuotaPlazo ");
+      printInfo(info: "interes periodo mensual " "$interesPeriodoPlazo");
+      printInfo(info: "Cuota mensual $cuotaPlazo ");
     }
     saldoInsoluto = montoPrestamo;
     amortizacion = 0.0;
@@ -234,7 +234,7 @@ class _creditPaymentsState extends State<creditPayments> {
         capitalInsoluto = montoPrestamo;
       }
 
-      interesTotal = capitalInsoluto * InteresperiodoPlazo;
+      interesTotal = capitalInsoluto * interesPeriodoPlazo;
       amortizacion = abonoTotal - interesTotal;
       saldoInsoluto = saldoInsoluto - amortizacion;
 
@@ -248,12 +248,12 @@ class _creditPaymentsState extends State<creditPayments> {
       late DateTime nuevafecha;
 //RESULTADO FIMAlES DEL PRESTAMO
       sumaTotal = abono2D * numeroPagos;
-      CapitalTotal = CapitalTotal + amortizacion2D;
-      sumaInteres = sumaTotal - CapitalTotal;
+      capitalTotal = capitalTotal + amortizacion2D;
+      sumaInteres = sumaTotal - capitalTotal;
 
       sumaTotal2D = double.parse(formatter.format(sumaTotal));
       sumaInteres2D = double.parse(formatter.format(sumaInteres));
-      CapitalTotal2D = double.parse(formatter.format(CapitalTotal));
+      capitalTotal2D = double.parse(formatter.format(capitalTotal));
 
       if (plazos.isCaseInsensitiveContains("diario")) {
         //
@@ -343,13 +343,14 @@ class _creditPaymentsState extends State<creditPayments> {
           backgroundColor: Colors.orange,
           elevation: 0.0,
           actions: [
-            Container(
+            SizedBox(
               height: 80,
               width: 70,
               child: Row(
                 children: [
                   DataTable(
                     columnSpacing: 10,
+                    // ignore: deprecated_member_use
                     dataRowHeight: 30,
                     headingRowHeight: 35,
                     headingRowColor:
@@ -377,7 +378,7 @@ class _creditPaymentsState extends State<creditPayments> {
                         label: Text('PAGO TOTAL'),
                       ),
                     ],
-                    rows: [],
+                    rows: const [],
                   ),
                 ],
               ),
@@ -401,7 +402,7 @@ class _creditPaymentsState extends State<creditPayments> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CustomText(
-                            text: "Capital \$ $CapitalTotal2D",
+                            text: "Capital \$ $capitalTotal2D",
                             font: GoogleFonts.aldrich(
                                 fontWeight: FontWeight.bold)),
                         const SizedBox(
@@ -425,9 +426,11 @@ class _creditPaymentsState extends State<creditPayments> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columnSpacing: 10,
+                  // ignore: deprecated_member_use
                   dataRowHeight: 30,
                   headingRowHeight: 35,
-                  headingRowColor: MaterialStatePropertyAll(Colors.transparent),
+                  headingRowColor:
+                      const MaterialStatePropertyAll(Colors.transparent),
                   columns: const [
                     DataColumn(
                       label: Text(''),

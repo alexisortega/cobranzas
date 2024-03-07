@@ -22,14 +22,14 @@ class _NewCreditState extends State<NewCredit> {
   static var controllerClientes = Get.put(clientsController());
   var controllerCredit = Get.put(creditController());
   String selectedCustomer = "";
-  List<String> List_dias = [];
-  List<String> List_dias2 = [];
-  bool dias_semana_error = false;
+  List<String> listDias = [];
+  List<String> listDias2 = [];
+  bool diasSemanaError = false;
   String selectedPlazos = 'Selecciona un plazo';
   late DocumentSnapshot snap;
   List<String> snapList = [];
-  List<String> ItemsCreditsnames = [];
-  String codigo_cliente = "";
+  List<String> itemsCreditsNames = [];
+  String codigoCliente = "";
 
   final formKey3 = GlobalKey<FormState>();
   List<String> itemsPlazos = [
@@ -43,13 +43,8 @@ class _NewCreditState extends State<NewCredit> {
 
   @override
   Widget build(BuildContext context) {
-   // var ListMenuCustomers = Future(() => []);
+    // var ListMenuCustomers = Future(() => []);
     Size size = MediaQuery.of(context).size;
-
-    @override
-    void initState() {
-      super.initState();
-    }
 
     return SafeArea(
       child: Scaffold(
@@ -179,7 +174,7 @@ class _NewCreditState extends State<NewCredit> {
                                         return null;
                                       },
                                       controller:
-                                          controllerCredit.codigo_credito,
+                                          controllerCredit.codigoCredito,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         label: const Text("Folío del crédito"),
@@ -189,7 +184,7 @@ class _NewCreditState extends State<NewCredit> {
                                         ),
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            controllerCredit.codigo_credito
+                                            controllerCredit.codigoCredito
                                                 .clear();
                                           },
                                           child: Icon(
@@ -231,7 +226,7 @@ class _NewCreditState extends State<NewCredit> {
                                                 i++) {
                                               snap = snapshot.data!.docs[i];
 
-                                              ItemsCreditsnames.add(
+                                              itemsCreditsNames.add(
                                                   snap["codigo_cliente"] +
                                                       " " +
                                                       snap["nombre"] +
@@ -243,241 +238,233 @@ class _NewCreditState extends State<NewCredit> {
                                             return Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 10, top: 10, left: 0),
-                                              child: Container(
-                                                child: DropdownSearch(
-                                                  validator: (value) {
-                                                    if (value
-                                                            .toString()
-                                                            .isEmpty ||
-                                                        value == "") {
-                                                      return "Necesitas llenar el campo";
-                                                    }
+                                              child: DropdownSearch(
+                                                validator: (value) {
+                                                  if (value
+                                                          .toString()
+                                                          .isEmpty ||
+                                                      value == "") {
+                                                    return "Necesitas llenar el campo";
+                                                  }
 
-                                                    return null;
-                                                  },
-                                                  dropdownDecoratorProps:
-                                                      DropDownDecoratorProps(
-                                                    dropdownSearchDecoration:
-                                                        InputDecoration(
-                                                      prefixIcon: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 1,
+                                                  return null;
+                                                },
+                                                dropdownDecoratorProps:
+                                                    DropDownDecoratorProps(
+                                                  dropdownSearchDecoration:
+                                                      InputDecoration(
+                                                    prefixIcon: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Container(
+                                                            color: Colors
+                                                                .transparent,
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 5),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .person_pin_outlined,
+                                                              color: Constants
+                                                                  .blueColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 1,
+                                                        ),
+                                                        Expanded(
+                                                          flex: 6,
+                                                          child:
+                                                              SingleChildScrollView(
                                                             child: Container(
                                                               color: Colors
                                                                   .transparent,
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      top: 10,
+                                                                      bottom:
+                                                                          10),
                                                               margin:
                                                                   const EdgeInsets
-                                                                          .only(
-                                                                      left: 5),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .person_pin_outlined,
-                                                                color: Constants
-                                                                    .blueColor,
-                                                              ),
+                                                                      .only(
+                                                                      bottom: 5,
+                                                                      top: 5,
+                                                                      left: 2,
+                                                                      right:
+                                                                          40),
+                                                              child:
+                                                                  selectedCustomer ==
+                                                                          ""
+                                                                      ? const Text(
+                                                                          "Propietario del crédito",
+                                                                          style: TextStyle(
+                                                                              color: Colors.black54,
+                                                                              fontSize: 15),
+                                                                        )
+                                                                      : Text(
+                                                                          selectedCustomer,
+                                                                          style:
+                                                                              TextStyle(color: Constants.blueColor),
+                                                                        ),
                                                             ),
                                                           ),
-                                                          const SizedBox(
-                                                            width: 1,
-                                                          ),
-                                                          Expanded(
-                                                            flex: 6,
-                                                            child:
-                                                                SingleChildScrollView(
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top: 10,
-                                                                        bottom:
-                                                                            10),
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        bottom:
-                                                                            5,
-                                                                        top: 5,
-                                                                        left: 2,
-                                                                        right:
-                                                                            40),
-                                                                child: selectedCustomer ==
-                                                                        ""
-                                                                    ? const Text(
-                                                                        "Propietario del crédito",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            fontSize: 15),
-                                                                      )
-                                                                    : Text(
-                                                                        selectedCustomer,
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Constants.blueColor),
-                                                                      ),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        borderSide: BorderSide(
-                                                            width: 3,
-                                                            color: Constants
-                                                                .orangeColor),
-                                                      ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                          width: 3,
+                                                          color: Constants
+                                                              .orangeColor),
                                                     ),
                                                   ),
-                                                  popupProps: PopupProps.menu(
-                                                    loadingBuilder:
-                                                        (context, searchEntry) {
-                                                      return const Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    },
-                                                    scrollbarProps:
-                                                        const ScrollbarProps(
-                                                            interactive: true),
-                                                    emptyBuilder: (context,
-                                                            searchEntry) =>
-                                                        Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      width: size.width,
-                                                      height: size.height,
-                                                      color: Colors.transparent,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            "No se encontrarón resultados",
+                                                ),
+                                                popupProps: PopupProps.menu(
+                                                  loadingBuilder:
+                                                      (context, searchEntry) {
+                                                    return const Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  },
+                                                  scrollbarProps:
+                                                      const ScrollbarProps(
+                                                          interactive: true),
+                                                  emptyBuilder:
+                                                      (context, searchEntry) =>
+                                                          Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    width: size.width,
+                                                    height: size.height,
+                                                    color: Colors.transparent,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          "No se encontrarón resultados",
+                                                          style: TextStyle(
+                                                              color: Constants
+                                                                  .blueColor,
+                                                              fontSize: 17,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Text(
+                                                            "(Necesitas registrar un cliente)",
                                                             style: TextStyle(
                                                                 color: Constants
-                                                                    .blueColor,
-                                                                fontSize: 17,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 15,
-                                                          ),
-                                                          Text(
-                                                              "(Necesitas registrar un cliente)",
-                                                              style: TextStyle(
-                                                                  color: Constants
-                                                                      .blueColor)),
-                                                        ],
-                                                      ),
+                                                                    .blueColor)),
+                                                      ],
                                                     ),
-                                                    showSearchBox: true,
-                                                    fit: FlexFit.loose,
-                                                    constraints: ItemsCreditsnames
-                                                            .isNotEmpty
-                                                        ? const BoxConstraints
-                                                                .tightForFinite(
-                                                            height: 400,
-                                                            width: 350)
-                                                        : const BoxConstraints
-                                                                .tightFor(
-                                                            height: 400,
-                                                            width: 350),
-                                                    title: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(Icons.search,
+                                                  ),
+                                                  showSearchBox: true,
+                                                  fit: FlexFit.loose,
+                                                  constraints: itemsCreditsNames
+                                                          .isNotEmpty
+                                                      ? const BoxConstraints
+                                                          .tightForFinite(
+                                                          height: 400,
+                                                          width: 350)
+                                                      : const BoxConstraints
+                                                          .tightFor(
+                                                          height: 400,
+                                                          width: 350),
+                                                  title: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(Icons.search,
+                                                            color: Constants
+                                                                .blueColor),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        Text(
+                                                          "Buscar nombre",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
                                                               color: Constants
                                                                   .blueColor),
-                                                          const SizedBox(
-                                                              width: 5),
-                                                          Text(
-                                                            "Buscar nombre",
-                                                            style: TextStyle(
-                                                                fontSize: 20,
-                                                                color: Constants
-                                                                    .blueColor),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    menuProps: const MenuProps(
-                                                        shadowColor:
-                                                            Colors.blue,
-                                                        elevation: 20.0,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(10),
-                                                        )),
                                                   ),
-                                                  autoValidateMode:
-                                                      AutovalidateMode.disabled,
-                                                  items: ItemsCreditsnames,
-                                                  onChanged: (value) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .hideCurrentSnackBar();
-                                                    final snackBar = SnackBar(
-                                                      duration: const Duration(
-                                                          milliseconds: 1650),
-                                                      backgroundColor: Constants
-                                                          .blueColor
-                                                          .withOpacity(0.5),
-                                                      behavior: SnackBarBehavior
-                                                          .floating,
-                                                      dismissDirection:
-                                                          DismissDirection
-                                                              .startToEnd,
-                                                      content: Text(
-                                                        "CLIENTE: $value",
-                                                        style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      snackBar,
-                                                    );
-
-                                                    setState(
-                                                      () {
-                                                        selectedCustomer =
-                                                            value;
-                                                        print(selectedCustomer);
-                                                      },
-                                                    );
-                                                  },
-                                                  selectedItem:
-                                                      selectedCustomer,
+                                                  menuProps: const MenuProps(
+                                                      shadowColor: Colors.blue,
+                                                      elevation: 20.0,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(10),
+                                                      )),
                                                 ),
+                                                autoValidateMode:
+                                                    AutovalidateMode.disabled,
+                                                items: itemsCreditsNames,
+                                                onChanged: (value) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .hideCurrentSnackBar();
+                                                  final snackBar = SnackBar(
+                                                    duration: const Duration(
+                                                        milliseconds: 1650),
+                                                    backgroundColor: Constants
+                                                        .blueColor
+                                                        .withOpacity(0.5),
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    dismissDirection:
+                                                        DismissDirection
+                                                            .startToEnd,
+                                                    content: Text(
+                                                      "CLIENTE: $value",
+                                                      style: const TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    snackBar,
+                                                  );
+
+                                                  setState(
+                                                    () {
+                                                      selectedCustomer = value;
+                                                      printInfo(
+                                                          info:
+                                                              selectedCustomer);
+                                                    },
+                                                  );
+                                                },
+                                                selectedItem: selectedCustomer,
                                               ),
                                             );
                                           }
@@ -504,7 +491,7 @@ class _NewCreditState extends State<NewCredit> {
                                         return null;
                                       },
                                       controller:
-                                          controllerCredit.monto_solicitado,
+                                          controllerCredit.montoSolicitado,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         label: const Text("Monto"),
@@ -512,7 +499,7 @@ class _NewCreditState extends State<NewCredit> {
                                             color: Constants.blueColor),
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            controllerCredit.monto_solicitado
+                                            controllerCredit.montoSolicitado
                                                 .clear();
                                           },
                                           child: Icon(
@@ -552,7 +539,7 @@ class _NewCreditState extends State<NewCredit> {
                                         return null;
                                       },
                                       controller:
-                                          controllerCredit.interes_asignado,
+                                          controllerCredit.interesAsignado,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         label: const Text(
@@ -561,7 +548,7 @@ class _NewCreditState extends State<NewCredit> {
                                             color: Constants.blueColor),
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            controllerCredit.interes_asignado
+                                            controllerCredit.interesAsignado
                                                 .clear();
                                           },
                                           child: Icon(
@@ -651,7 +638,7 @@ class _NewCreditState extends State<NewCredit> {
 
                                         return null;
                                       },
-                                      controller: controllerCredit.numero_pagos,
+                                      controller: controllerCredit.numeroPagos,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         label: const Text("Número de pagos"),
@@ -659,7 +646,7 @@ class _NewCreditState extends State<NewCredit> {
                                             color: Constants.blueColor),
                                         suffixIcon: GestureDetector(
                                           onTap: () {
-                                            controllerCredit.numero_pagos
+                                            controllerCredit.numeroPagos
                                                 .clear();
                                           },
                                           child: Icon(
@@ -683,13 +670,13 @@ class _NewCreditState extends State<NewCredit> {
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         setState(() {
-                                          dias_semana_error = true;
+                                          diasSemanaError = true;
                                         });
 
                                         return 'Necesita llenar el campo';
                                       } else {
                                         setState(() {
-                                          dias_semana_error = false;
+                                          diasSemanaError = false;
                                         });
                                       }
                                       return null;
@@ -698,13 +685,13 @@ class _NewCreditState extends State<NewCredit> {
                                     checkColor: Colors.white,
                                     decoration: BoxDecoration(
                                       color: Colors.transparent,
-                                      borderRadius: dias_semana_error == false
+                                      borderRadius: diasSemanaError == false
                                           ? const BorderRadius.all(
                                               Radius.circular(10))
                                           : const BorderRadius.all(
                                               Radius.circular(0)),
                                       border: Border.all(
-                                        color: dias_semana_error ==
+                                        color: diasSemanaError ==
                                                 // ignore: dead_code
                                                 true
                                             ? Colors.red.withOpacity(0.65)
@@ -748,13 +735,13 @@ class _NewCreditState extends State<NewCredit> {
                                             "${controllerCredit.selectedDiasSemanaValue.value} " +
                                                 element.nombre;
                                       }
-                                      List_dias = controllerCredit
+                                      listDias = controllerCredit
                                           .selectedDiasSemanaValue.value
                                           .split(" ");
-                                      List_dias2 = List_dias.sublist(
-                                          1, List_dias.length);
+                                      listDias2 = listDias.sublist(
+                                          1, listDias.length);
 
-                                      print(List_dias2);
+                                      printInfo(info: "$listDias2");
                                     },
                                     dialogHeight: size.height * 0.5,
                                     dialogWidth: size.width * 0.4,
@@ -773,7 +760,7 @@ class _NewCreditState extends State<NewCredit> {
                                       }
                                       return null;
                                     },
-                                    controller: controllerCredit.fecha_prestamo,
+                                    controller: controllerCredit.fechaPrestamo,
                                     keyboardType: TextInputType.none,
                                     decoration: InputDecoration(
                                       label: const Text("Fecha del prestamo"),
@@ -797,7 +784,7 @@ class _NewCreditState extends State<NewCredit> {
 
                                       if (pickeddated != null) {
                                         setState(() {
-                                          controllerCredit.fecha_prestamo.text =
+                                          controllerCredit.fechaPrestamo.text =
                                               pickeddated
                                                   .toString()
                                                   .substring(0, 10);
@@ -1022,39 +1009,38 @@ class _NewCreditState extends State<NewCredit> {
 
                                                     await controllerCredit
                                                         .createCredits(
-                                                      codigo_credito:
+                                                      codigoCredito:
                                                           controllerCredit
-                                                              .codigo_credito
+                                                              .codigoCredito
                                                               .text,
-                                                      propietario_credito:
+                                                      propietarioCredito:
                                                           selectedCustomer
                                                               .toString(),
-                                                      monto_solicitado:
+                                                      montoSolicitado:
                                                           double.parse(
                                                         controllerCredit
-                                                            .monto_solicitado
+                                                            .montoSolicitado
                                                             .text,
                                                       ),
-                                                      interes_asignado:
+                                                      interesAsignado:
                                                           double.parse(
                                                         controllerCredit
-                                                            .interes_asignado
+                                                            .interesAsignado
                                                             .text,
                                                       ),
                                                       plazos: selectedPlazos
                                                           .toString()
                                                           .trim()
                                                           .toUpperCase(),
-                                                      dias_semana: List_dias2,
-                                                      fecha_prestamo:
+                                                      diasSemana: listDias2,
+                                                      fechaPrestamo:
                                                           DateTime.parse(
                                                         controllerCredit
-                                                            .fecha_prestamo
-                                                            .text,
+                                                            .fechaPrestamo.text,
                                                       ),
-                                                      numero_pagos: int.parse(
+                                                      numeroPagos: int.parse(
                                                           controllerCredit
-                                                              .numero_pagos
+                                                              .numeroPagos
                                                               .text),
                                                       status: "vigente"
                                                           .trim()
@@ -1067,15 +1053,15 @@ class _NewCreditState extends State<NewCredit> {
                                                     });
 
                                                     if (register == true) {
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Get.back();
                                                       Get.back();
                                                       authenticationRepository
                                                           .validaciones(
                                                               "Crédito se registro existosamente");
                                                       deletecustomerfields();
-                                                      print(
-                                                          "registro temminado: $register");
+                                                      printInfo(
+                                                          info:
+                                                              "registro temminado: $register");
                                                     } else if (register ==
                                                         false) {
                                                       authenticationRepository
@@ -1099,30 +1085,28 @@ class _NewCreditState extends State<NewCredit> {
 
                                                 //Termino condición de formularios
                                               },
-                                              child: Row(
+                                              child: const Row(
                                                 children: [
                                                   Expanded(
-                                                    child: Container(
-                                                      child: const Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Icons.save,
-                                                            color: Colors.black,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            "Registrar",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.save,
+                                                          color: Colors.black,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          "Registrar",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ],
