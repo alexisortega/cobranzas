@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static var controllerClientes = Get.put(clientsController());
 
   final selectedIndex = 0;
-
+  
   bool statusBottomDelete = false;
   var clients = Future(() => []);
 

@@ -283,8 +283,8 @@ class _SignUpState extends State<SignUp> {
                             onTap: () async {
                               try {
                                 User? userGoogle =
-                                    await authenticationRepository()
-                                        .signInWithGoogle(context);
+                                    await authenticationRepository
+                                        .signInWithGoogle2(context: context);
 
                                 printInfo(info: "${userGoogle?.emailVerified}");
                                 printInfo(info: " EL boton google");

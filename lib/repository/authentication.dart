@@ -53,14 +53,15 @@ class authenticationRepository extends GetxController {
           User? currentUser = _auth1.currentUser;
           if (currentUser != null) {
             await FirebaseFirestore.instance
-                .collection('superusuarios')
+                .collection('SuperUsuarios')
                 .doc(currentUser.uid)
+
                 //currentUser.uid
                 .set({
-              'email': email,
-              'nombre_prestamista': fullname,
-              'tel_prestamista': telRegister,
-              'roll': 'Superusuario',
+              'contraseña_SuperUsuario': password,
+              'correo_SuperUsuario': email,
+              'nombre_c_SuperUsuario': fullname,
+              'telefono_SuperUsuario': telRegister,
               'privilegios': {
                 'Administrador': {
                   'Actualizar': true,
@@ -219,8 +220,8 @@ class authenticationRepository extends GetxController {
       validaciones("ERROR  HandleAuthState");
     }
   }
-
-  signInWithGoogle(
+  //todo: metodo de google//
+  /* signInWithGoogle(
     BuildContext context,
   ) async {
     final GoogleSignInAccount? googleUser1 =
@@ -233,7 +234,7 @@ class authenticationRepository extends GetxController {
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
     return await FirebaseAuth.instance.signInWithCredential(credential1);
-  }
+  } */
 
   static Future<User?> signInWithGoogle2(
       {required BuildContext context}) async {
@@ -242,7 +243,7 @@ class authenticationRepository extends GetxController {
       GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
       if (googleAccount == null) {
         print.printError(info: "Error: Cuenta de Google nula");
-        return null; // Puede manejar este caso con UI feedback adecuado.
+        return null;
       }
 
       GoogleSignInAuthentication googleAuth =
@@ -254,12 +255,58 @@ class authenticationRepository extends GetxController {
 
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      // Si llegamos aquí, el inicio de sesión fue exitoso
+
+      final usuario = userCredential.user;
+      final usuarioUID = usuario?.uid;
+      print.printInfo(info: "${usuario?.providerData}");
+
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('SuperUsuarios')
+          .doc(usuarioUID)
+          .get();
+
+      if (usuario != null && !documentSnapshot.exists) {
+        await FirebaseFirestore.instance
+            .collection('SuperUsuarios')
+            .doc(usuario.uid)
+            .set({
+          'contraseña_SuperUsuario': null,
+          'correo_SuperUsuario': usuario.email,
+          'nombre_c_SuperUsuario': usuario.displayName,
+          'telefono_SuperUsuario': usuario.phoneNumber,
+          'privilegios': {
+            'Administrador': {
+              'Actualizar': true,
+              'Editar': true,
+              'Eliminar': true,
+              'Ver': true,
+            },
+            'Cobratario': {
+              'Actualizar': true,
+              'Editar': true,
+              'Eliminar': true,
+              'Ver': true
+            },
+            'Supervisor': {
+              'Actualizar': true,
+              'Editar': true,
+              'Eliminar': true,
+              'Ver': true
+            },
+            'Vendedor': {
+              'Actualizar': true,
+              'Editar': true,
+              'Eliminar': true,
+              'Ver': true
+            },
+          },
+        });
+      }
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       print.printError(info: "Error en la autenticación: ${e.code}");
-      validaciones(e
-          .code); // Asegúrate de que este método maneje adecuadamente el código de error.
+      validaciones(e.code);
       return null;
     } catch (e) {
       print.printError(info: "Error general en signInWithGoogle2: $e");
