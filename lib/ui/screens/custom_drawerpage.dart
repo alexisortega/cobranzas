@@ -1,6 +1,7 @@
 import 'package:cobranzas/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
+import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -124,25 +125,21 @@ class DrawerPage extends StatelessWidget {
                   ),
                   createDrawerItem(
                     icon: Icons.person,
-                    text: 'Perfil',
+                    text: 'Usuarios',
                     onTap: () {},
                     subOptions: [
                       createDrawerItem(
-                        icon: Icons.info,
-                        text: 'Información de Perfil',
+                        icon: Icons.person_add,
+                        text: 'Nuevo usuario',
                         onTap: () {
-                          // Lógica para la subopción de Información de Perfil
-                          printInfo(info: 'Perfil > Información de Perfil');
                           Navigator.pop(context);
                         },
                       ),
                       createDrawerItem(
-                        icon: Icons.settings,
-                        text: 'Configuración de Perfil',
+                        icon: Icons.lock_person_rounded,
+                        text: 'privilegios de usuario',
                         onTap: () {
-                          // Lógica para la subopción de Configuración de Perfil
-                          printInfo(info: 'Perfil > Configuración de Perfil');
-                          Get.back();
+                          Get.to(() => const PrivilegiosScreen());
                         },
                       ),
                     ],
