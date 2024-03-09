@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/controllers/clients_dias_semana.dart';
 import 'package:cobranzas/controllers/creditController.dart';

@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';

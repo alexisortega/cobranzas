@@ -1,5 +1,5 @@
 // ignore_for_file: file_names
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/ui/screens/widgets/credit_Details.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
@@ -25,12 +25,11 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
 
-  String fondo = "assets/fondoTodosCreditos.jpg";
-
+  String fondo = "assets/fondoTodosCreditos.png";
   @override
   void initState() {
     super.initState();
-    fondo = "assets/fondoTodosCreditos.jpg";
+    fondo = "assets/fondoTodosCreditos.png";
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -71,17 +70,17 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
               slivers: <Widget>[
                 KeyboardVisibilityBuilder(
                   builder: (p0, isKeyboardVisible) => SliverAppBar(
+                    forceMaterialTransparency: true,
                     stretch: true,
                     floating: true,
                     forceElevated: false,
                     elevation: 0.0,
-                    backgroundColor: Constants.blueColor,
+                    backgroundColor: Colors.white,
                     expandedHeight:
                         sizeMax.maxWidth > 400 && isKeyboardVisible ? 100 : 175,
                     collapsedHeight: 60,
                     pinned: true,
                     snap: true,
-                    shadowColor: Colors.orange,
                     actions: <Widget>[
                       SingleChildScrollView(
                         child: Container(
@@ -313,11 +312,11 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                               ),
                         background: Image.asset(
                           fondo,
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.fill,
                         ),
                         centerTitle: true,
                         titlePadding: iconsSearch == true
-                            ? const EdgeInsets.only(bottom: 60, left: 205)
+                            ? const EdgeInsets.only(bottom: 50, left: 205)
                             : const EdgeInsets.only(bottom: 5)),
                   ),
                 ),
@@ -465,29 +464,35 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
             );
           } else {
             return SliverFillRemaining(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 200,
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  height: 400,
+                  width: 500,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 200,
+                      ),
+                      SpinKitThreeBounce(
+                        duration: const Duration(milliseconds: 2000),
+                        color: Colors.blue.withOpacity(0.9),
+                        size: 50,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "No hay datos",
+                        style: TextStyle(
+                          color: Colors.blue.withOpacity(0.9),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          height: 2,
+                        ),
+                      ),
+                    ],
                   ),
-                  SpinKitThreeBounce(
-                    duration: const Duration(milliseconds: 2000),
-                    color: Colors.blue.withOpacity(0.9),
-                    size: 50,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    "No hay datos",
-                    style: TextStyle(
-                      color: Colors.blue.withOpacity(0.9),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      height: 2,
-                    ),
-                  ),
-                ],
+                ),
               ),
             );
           }

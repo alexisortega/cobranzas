@@ -5,7 +5,7 @@ import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:cobranzas/ui/screens/widgets/new_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
+
 
 class CategoryCredit extends StatefulWidget {
   final int index;
@@ -38,8 +38,6 @@ class CategoryCreditState extends State<CategoryCredit> {
       "Créditos del día",
       "Créditos con adeudo",
     ];
-
-    
 
     return Container(
       padding: const EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 5),
@@ -177,14 +175,14 @@ Widget getcategory(
                           onPressed: () async {
                             switch (index) {
                               case 0:
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      duration:
-                                          const Duration(milliseconds: 780),
-                                      child: const NewCredit(),
-                                      type: PageTransitionType.bottomToTop,
-                                    ));
+                                Get.to(
+                                  () => const NewCredit(),
+                                  duration: const Duration(milliseconds: 1000),
+                                  fullscreenDialog: GetPlatform.isMobile,
+                                  opaque: false,
+                                  popGesture: true,
+                                  transition: Transition.downToUp,
+                                );
 
                                 break;
 

@@ -1,4 +1,4 @@
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
@@ -139,7 +139,14 @@ class DrawerPage extends StatelessWidget {
                         icon: Icons.lock_person_rounded,
                         text: 'privilegios de usuario',
                         onTap: () {
-                          Get.to(() => const PrivilegiosScreen());
+                          Get.to(
+                            () => const PrivilegiosScreen(),
+                            duration: const Duration(milliseconds: 1000),
+                            fullscreenDialog: GetPlatform.isMobile,
+                            opaque: false,
+                            popGesture: true,
+                            transition: Transition.circularReveal,
+                          );
                         },
                       ),
                     ],

@@ -1,5 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/scan_page.dart';
 import 'package:cobranzas/ui/screens/creditPage.dart';

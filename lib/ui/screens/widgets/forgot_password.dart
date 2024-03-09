@@ -1,4 +1,4 @@
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/controllers.dart';
 import 'package:cobranzas/repository/authentication.dart';
 

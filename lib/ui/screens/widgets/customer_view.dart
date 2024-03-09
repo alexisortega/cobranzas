@@ -2,7 +2,7 @@
 
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

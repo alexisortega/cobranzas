@@ -6,7 +6,7 @@ import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants.dart';
+import '../../models/constants.dart';
 
 class CreditPage extends StatefulWidget {
   const CreditPage({super.key});
@@ -43,7 +43,7 @@ class _CreditPageState extends State<CreditPage>
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

@@ -1,4 +1,4 @@
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/screens/widgets/profile_widget.dart';
 import 'package:flutter/material.dart';

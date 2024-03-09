@@ -6,7 +6,7 @@ import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
 import 'package:cobranzas/ui/screens/widgets/new_customers.dart';
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   static var controllerClientes = Get.put(clientsController());
 
   final selectedIndex = 0;
-  
+
   bool statusBottomDelete = false;
   var clients = Future(() => []);
 
@@ -688,7 +688,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             return SingleChildScrollView(
               child: Container(
                 width: size.width,
-                height: size.height,
+                height: size.height * 0.7,
                 color: Colors.transparent,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -698,7 +698,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       height: 100,
                     ),
                     SpinKitThreeBounce(
-                      duration: const Duration(milliseconds: 2000),
+                      duration: const Duration(milliseconds: 3000),
                       color: Colors.blue.withOpacity(0.7),
                       size: 50,
                     ),

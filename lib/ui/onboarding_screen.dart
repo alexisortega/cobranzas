@@ -1,4 +1,4 @@
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/animations_transtions.dart';
 
 

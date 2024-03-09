@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

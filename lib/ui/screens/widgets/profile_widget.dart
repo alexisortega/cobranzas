@@ -1,4 +1,4 @@
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {

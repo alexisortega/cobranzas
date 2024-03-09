@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cobranzas/constants.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/payments.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
 import 'package:flutter/material.dart';
