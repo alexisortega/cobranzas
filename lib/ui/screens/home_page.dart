@@ -8,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
-import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
+import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:cobranzas/ui/screens/widgets/new_customers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -549,7 +549,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         onPressed: () {
                                           //ultimos agregados
                                           Get.to(
-                                            () => customerView(
+                                            () => customerDetails(
                                               cont: index,
                                               datos: customerData,
                                               codigoCliente: codigo_cliente,
@@ -976,7 +976,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             context,
             PageTransition(
                 duration: const Duration(milliseconds: 600),
-                child: customerView(
+                child: customerDetails(
                   cont: cont,
                   datos: customerData,
                   codigoCliente: codigo_cliente,

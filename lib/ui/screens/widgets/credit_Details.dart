@@ -2,8 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:cobranzas/ui/screens/widgets/payments.dart';
-import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
@@ -380,7 +381,7 @@ class _CreditDetailsState extends State<CreditDetails> {
                                               PageTransition(
                                                 duration: const Duration(
                                                     milliseconds: 780),
-                                                child: customerView(
+                                                child: customerDetails(
                                                     cont: 1,
                                                     datos: List.empty(),
                                                     codigoCliente: "22",

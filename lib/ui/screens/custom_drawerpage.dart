@@ -140,7 +140,7 @@ class DrawerPage extends StatelessWidget {
                         text: 'privilegios de usuario',
                         onTap: () {
                           Get.to(
-                            () => const PrivilegiosScreen(),
+                            () => const PrivilegiosPage(),
                             duration: const Duration(milliseconds: 1000),
                             fullscreenDialog: GetPlatform.isMobile,
                             opaque: false,

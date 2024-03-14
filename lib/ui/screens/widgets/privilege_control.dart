@@ -1,18 +1,18 @@
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/user_controller.dart';
-import 'package:cobranzas/ui/screens/widgets/customer_view.dart';
+import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PrivilegiosScreen extends StatefulWidget {
-  const PrivilegiosScreen({super.key});
+class PrivilegiosPage extends StatefulWidget {
+  const PrivilegiosPage({super.key});
 
   @override
   PrivilegiosScreenState createState() => PrivilegiosScreenState();
 }
 
-class PrivilegiosScreenState extends State<PrivilegiosScreen> {
+class PrivilegiosScreenState extends State<PrivilegiosPage> {
   late Map<dynamic, dynamic> privilegios = {};
   final userController = Get.put(UserController());
   @override
@@ -49,8 +49,8 @@ class PrivilegiosScreenState extends State<PrivilegiosScreen> {
     return Theme(
       data: ThemeData().copyWith(
           dividerColor: Colors.transparent,
-          listTileTheme: ListTileThemeData(
-            titleTextStyle: TextStyle(color: Constants.orangeColor),
+          listTileTheme: const ListTileThemeData(
+            titleTextStyle: TextStyle(color: Colors.black),
           )),
       child: ExpansionTile(
         childrenPadding: const EdgeInsets.all(10),
@@ -71,7 +71,7 @@ class PrivilegiosScreenState extends State<PrivilegiosScreen> {
               isThreeLine: false,
               title: Text(key),
               trailing: Checkbox(
-                checkColor: Colors.black,
+                checkColor: Colors.white,
                 splashRadius: 20,
                 activeColor: Colors.blue[600],
                 value: value,
@@ -101,7 +101,7 @@ class PrivilegiosScreenState extends State<PrivilegiosScreen> {
 
   @override
   Widget build(BuildContext context) {
-   // Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -188,7 +188,38 @@ class PrivilegiosScreenState extends State<PrivilegiosScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTree(privilegios, 'Privilegios'),
+                    buildTree(privilegios, 'Tipo de usuarios'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          bottom: 20, left: 20, right: 20),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await UserController()
+                              .guardarCambios(privilegios, context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constants.blueColor,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 30), // Padding interno del botón
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                10), // Borde redondeado del botón
+                          ),
+                          elevation: 3, // Elevación del botón
+                        ),
+                        child: const Text(
+                          'Guardar Cambios',
+                          style: TextStyle(
+                            color: Colors.white, // Color del texto del botón
+                            fontSize: 16, // Tamaño del texto del botón
+                          ),
+                        ),
+                      ),
+                    ),
                   ]),
                 ),
                 /* SliverToBoxAdapter(

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class customerView extends StatefulWidget {
+class customerDetails extends StatefulWidget {
   final int cont;
   final List datos;
   final String urlFoto;
@@ -24,7 +24,7 @@ class customerView extends StatefulWidget {
   final int codigoPostal;
   final int numeroTel;
   final String fechaNacimiento;
-  const customerView(
+  const customerDetails(
       {super.key,
       required this.cont,
       required this.datos,
@@ -44,10 +44,10 @@ class customerView extends StatefulWidget {
       required this.urlFoto});
 
   @override
-  State<customerView> createState() => _customerViewState();
+  State<customerDetails> createState() => _customerViewState();
 }
 
-class _customerViewState extends State<customerView> {
+class _customerViewState extends State<customerDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
