@@ -1,8 +1,9 @@
 import 'package:cobranzas/firebase_options.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'ui/onboarding_screen.dart';
+import 'ui/screens/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {

@@ -1,14 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
-import 'package:cobranzas/ui/scan_page.dart';
-import 'package:cobranzas/ui/screens/creditPage.dart';
+import 'package:cobranzas/ui/screens/payments_view_page.dart';
+import 'package:cobranzas/ui/screens/scan_page.dart';
+import 'package:cobranzas/ui/screens/credit_view_page.dart';
 import 'package:cobranzas/ui/screens/custom_drawerpage.dart';
-import 'package:cobranzas/ui/screens/cajaPage.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/profile_page.dart';
 import 'package:flutter/material.dart';
-
 import 'package:page_transition/page_transition.dart';
 
 class RootPage extends StatefulWidget {
@@ -25,8 +24,8 @@ class _RootPageState extends State<RootPage> {
   List<Widget> _widgetOptions() {
     return [
       const HomePage(), //HOMEPAGE
-      const CreditPage(),
-      const CajaPage(),
+      const CreditViewPage(),
+      const PaymentsViewPage(),
       const ProfilePage(),
     ];
   }
@@ -42,10 +41,10 @@ class _RootPageState extends State<RootPage> {
 
   //List of the pages titles
   List<String> titleList = [
-    'Clientes',
-    'Pagos',
-    'Otros',
-    'Perfil',
+    'CLIENTES',
+    'CRÉDITOS',
+    'PAGOS',
+    'PERFIL',
   ];
   bool isBottomNavBarVisible = true;
   bool isAppBarVisible = true;
@@ -86,6 +85,7 @@ class _RootPageState extends State<RootPage> {
                 ),
                 automaticallyImplyLeading: true,
                 title: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,7 +126,7 @@ class _RootPageState extends State<RootPage> {
                       Container(
                         color: Colors.transparent,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             ElevatedButton.icon(
                               onPressed: () {

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
-import 'package:cobranzas/controllers/clients_dias_semana.dart';
+import 'package:cobranzas/models/clients_dias_semana.dart';
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/ui/screens/credit_view_page.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,7 +13,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class NewCredit extends StatefulWidget {
-  const NewCredit({super.key});
+  const NewCredit({
+    super.key,
+    required this.listaData,
+  });
+  final List<Credits> listaData;
 
   @override
   State<NewCredit> createState() => _NewCreditState();
@@ -112,12 +117,16 @@ class _NewCreditState extends State<NewCredit> {
                         ),
                         Container(
                           color: Colors.transparent,
-                          child: Image(
-                              width: size.width / 4,
-                              height: 80,
-                              alignment: Alignment.topCenter,
-                              image: const AssetImage(
-                                  "assets/credit-card-machine.png")),
+                          child: Hero(
+                            transitionOnUserGestures: true,
+                            tag: widget.listaData[0].name,
+                            child: Image(
+                                width: size.width / 4,
+                                height: 80,
+                                alignment: Alignment.topCenter,
+                                image: AssetImage(
+                                    widget.listaData[0].listImage[0].image)),
+                          ),
                         ),
                       ]),
                 )),
@@ -738,8 +747,8 @@ class _NewCreditState extends State<NewCredit> {
                                       listDias = controllerCredit
                                           .selectedDiasSemanaValue.value
                                           .split(" ");
-                                      listDias2 = listDias.sublist(
-                                          1, listDias.length);
+                                      listDias2 =
+                                          listDias.sublist(1, listDias.length);
 
                                       printInfo(info: "$listDias2");
                                     },

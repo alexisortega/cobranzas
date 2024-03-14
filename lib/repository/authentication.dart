@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/repository/Exception/signup_email_paswword_failure.dart';
-import 'package:cobranzas/ui/onboarding_screen.dart';
+import 'package:cobranzas/ui/screens/onboarding_screen.dart';
 import 'package:cobranzas/ui/root_page.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';

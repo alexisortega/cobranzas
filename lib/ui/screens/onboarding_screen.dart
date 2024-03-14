@@ -1,9 +1,10 @@
 import 'package:cobranzas/models/constants.dart';
-import 'package:cobranzas/models/animations_transtions.dart';
-
+import 'package:cobranzas/models/animations_shake_transtions.dart';
 
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -22,9 +23,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    pres1 = "assets/imagenPres2.png";
-    pres2 = 'assets/imagenPres.png';
-    pres3 = 'assets/imagenPres3.png';
+    pres1 = "assets/tarjetasItem2.png";
+    pres2 = 'assets/tarjetaMenu1.png';
+    pres3 = 'assets/tarjetasItem3.png';
   }
 
   @override
@@ -109,16 +110,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               curve: Curves.easeIn);
                         }
                       } else {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const SignIn())); //LOGIN
+                        Get.offAll(
+                            duration: const Duration(milliseconds: 2000),
+                            transition: Transition.circularReveal,
+                            () => const SignIn()); //LOGIN
                       }
                     });
                   },
                   icon: const Icon(
                     Icons.arrow_forward_ios_rounded,
-                    color: Colors.orange,
+                    color: Colors.white,
                   )),
             ),
           ),
@@ -192,8 +193,8 @@ class createPage extends StatelessWidget {
                 height: size.height * 0.35,
                 width: size.width * .75,
                 child: ShakeTransition(
-                  duration: const Duration(milliseconds: 400),
-                  offset: 140.0,
+                  duration: const Duration(milliseconds: 2000),
+                  offset: 150.0,
                   axis: Axis.vertical,
                   child: Container(
                     color: Colors.transparent,
@@ -205,8 +206,8 @@ class createPage extends StatelessWidget {
                 height: 5,
               ),
               ShakeTransition(
-                duration: const Duration(milliseconds: 900),
-                offset: 140.0,
+                duration: const Duration(milliseconds: 2000),
+                offset: 150.0,
                 axis: Axis.horizontal,
                 child: Container(
                   color: Colors.transparent,
@@ -230,9 +231,9 @@ class createPage extends StatelessWidget {
                 height: 10,
               ),
               ShakeTransition(
-                duration: const Duration(milliseconds: 900),
-                offset: 140.0,
-                axis: Axis.vertical,
+                duration: const Duration(milliseconds: 2000),
+                offset: 150.0,
+                axis: Axis.horizontal,
                 child: Container(
                   height: 40,
                   color: Colors.transparent,

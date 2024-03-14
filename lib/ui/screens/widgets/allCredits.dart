@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/creditController.dart';
+import 'package:cobranzas/ui/screens/credit_view_page.dart';
 import 'package:cobranzas/ui/screens/widgets/credit_Details.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class AllCredits extends StatefulWidget {
-  const AllCredits({super.key});
-
+  const AllCredits({
+    super.key,
+    required this.listaData,
+  });
+  final List<Credits> listaData;
   @override
   State<AllCredits> createState() => _AllCreditsState();
 }
@@ -25,11 +29,11 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
 
-  String fondo = "assets/fondoTodosCreditos.png";
+  late String fondo;
   @override
   void initState() {
     super.initState();
-    fondo = "assets/fondoTodosCreditos.png";
+    fondo = widget.listaData[1].listImage[0].image;
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -63,6 +67,7 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
 
     return KeyboardDismissOnTap(
       child: SafeArea(
+        top: false,
         child: Scaffold(
           backgroundColor: Colors.white,
           body: LayoutBuilder(builder: (BuildContext context, sizeMax) {
@@ -304,15 +309,39 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                                     color: Constants.blueColor,
                                     fontWeight: FontWeight.bold),
                               )
-                            : Text(
-                                'Todos los Créditos',
-                                style: TextStyle(
-                                    color: Constants.blueColor,
-                                    fontWeight: FontWeight.bold),
+                            : Opacity(
+                                opacity: 0.0,
+                                child: Text(
+                                  'Todos los Créditos',
+                                  style: TextStyle(
+                                      color: Constants.blueColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                        background: Image.asset(
-                          fondo,
-                          fit: BoxFit.fill,
+                        background: Stack(
+                          children: [
+                            Positioned(
+                              top: size.height * -0.02,
+                              bottom: size.height * 0.02,
+                              left: size.width < 800
+                                  ? (size.width * -0.3)
+                                  : (size.width * -0.5),
+                              right: size.width * 0.1,
+                              child: Hero(
+                                key: UniqueKey(),
+                                tag: widget.listaData[1].name,
+                                transitionOnUserGestures: true,
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.rotationZ(-0.6),
+                                  child: Image.asset(
+                                    fondo,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         centerTitle: true,
                         titlePadding: iconsSearch == true

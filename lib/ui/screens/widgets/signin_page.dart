@@ -1,5 +1,5 @@
 import 'package:cobranzas/models/constants.dart';
-import 'package:cobranzas/controllers/controllers.dart';
+import 'package:cobranzas/controllers/auth_controllers.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
 import 'package:cobranzas/ui/screens/widgets/forgot_password.dart';
