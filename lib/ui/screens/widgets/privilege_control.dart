@@ -104,7 +104,6 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     var orientation = MediaQuery.of(context).orientation;
 
     return Scaffold(
@@ -206,7 +205,7 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                       child: ElevatedButton(
                         onPressed: () async {
                           await UserController()
-                              .guardarCambios(privilegios, context);
+                              .savePrivilegeChanges(privilegios, context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Constants.blueColor,

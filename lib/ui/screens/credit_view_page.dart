@@ -11,10 +11,10 @@ class CreditViewPage extends StatefulWidget {
   const CreditViewPage({super.key});
 
   @override
-  State<CreditViewPage> createState() => CajaPageState();
+  State<CreditViewPage> createState() => CreditViewPageState();
 }
 
-class CajaPageState extends State<CreditViewPage> {
+class CreditViewPageState extends State<CreditViewPage> {
   static var controllerCredit = Get.put(creditController());
 
   double currentPage = 0.0;
@@ -387,10 +387,16 @@ class CajaPageState extends State<CreditViewPage> {
                             offset: Offset(index == indexPage ? 0 : 20, 0),
                             child: LayoutBuilder(builder: (context, sizeMax) {
                               return AnimatedContainer(
-                                duration: const Duration(microseconds: 2000),
-                                margin: EdgeInsets.only(
-                                    top: index == indexPage ? 20 : 40,
-                                    bottom: 20),
+                                curve: Curves.bounceInOut,
+                                duration: const Duration(microseconds: 1000),
+                                margin: orientation == Orientation.portrait
+                                    ? EdgeInsets.only(
+                                        top: index == indexPage ? 20 : 40,
+                                        bottom: 20)
+                                    : EdgeInsets.only(
+                                        top: index == indexPage ? 20 : 40,
+                                        bottom: 20,
+                                        right: 25),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.75),
                                   borderRadius: BorderRadius.circular(35),
@@ -472,69 +478,62 @@ class CajaPageState extends State<CreditViewPage> {
                                                   ),
                                                 ],
                                               )
-                                            //Telefono en vertical se ajusta el menu
-                                            : Flexible(
-                                                child: Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.35,
-                                                  height: size.height,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          listData.category,
-                                                          style: const TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 10,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Flexible(
-                                                        flex: 2,
-                                                        child: Text(
-                                                          listData.name,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 20,
+                                            //telefono en horizontal
+                                            : Container(
+                                                color: Colors.transparent,
+                                                width: size.width * 0.35,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        listData.category,
+                                                        style: const TextStyle(
                                                             color: Colors.black,
+                                                            fontSize: 10,
                                                             fontWeight:
-                                                                FontWeight.w900,
-                                                          ),
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Flexible(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        listData.name,
+                                                        style: const TextStyle(
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w900,
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                        width: 4,
-                                                      ),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          listData.caption,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            color: Colors.black,
-                                                          ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 4,
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        listData.caption,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          color: Colors.black,
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                        width: 1,
-                                                      ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 1,
+                                                    ),
+                                                  ],
                                                 ),
                                               )),
                                     Positioned(

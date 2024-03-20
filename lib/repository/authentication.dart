@@ -7,9 +7,7 @@ import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -376,76 +374,115 @@ class authenticationRepository extends GetxController {
     );
   }
 
-  static showMessage(String title, String mensaje) {
+  static showMessage(String title, String mensaje, BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    var orientation = MediaQuery.of(context).orientation;
     Get.dialog(
-      AlertDialog(
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            title == "Aviso"
-                ? const Icon(
-                    Icons.notification_important,
-                    color: Colors.blue,
-                    size: 50,
-                  )
-                : const Icon(
-                    Icons.warning,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-            /*      const SizedBox(width: 30.0), */
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(30), // Más redondeado, estilo iPhone
         ),
-        content: Flexible(
+        backgroundColor: Colors.white.withOpacity(0.8),
+        child: SizedBox(
+          width: orientation == Orientation.portrait
+              ? size.width * 0.7
+              : size.width * 0.45,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Divider(
-                color: Colors.grey,
-                thickness: 1,
-                height: 20,
-                indent: 20,
-                endIndent: 20,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: Row(
+                  children: [
+                    Icon(
+                      title != "Advertencia"
+                          ? Icons.notification_important_sharp
+                          : Icons.warning,
+                      color: Constants.blueColor,
+                      size: 40,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                            color: title == "Advertencia"
+                                ? Colors.red
+                                : Colors.green[700],
+                          ),
+                          overflow: TextOverflow
+                              .ellipsis, // Asegura que el texto no sobrepase el espacio disponible
+                        ),
+                      ),
+                    ),
+                    const IconButton(
+                      icon: Icon(
+                        size: 35,
+                        Icons.close_outlined,
+                        color: Colors.transparent,
+                      ),
+                      onPressed: null,
+                      autofocus: false,
+                      enableFeedback: false,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    size: 40,
-                    color: Colors.blue,
+              const Divider(
+                color: Colors.blueGrey,
+                thickness: 1.5,
+                height: 30.0,
+                indent: 0.0,
+                endIndent: 0.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 10, bottom: 10),
+                child: Text(
+                  mensaje,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black87,
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    mensaje,
-                    style: TextStyle(
-                      fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(right: 50, left: 50, bottom: 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Constants.blueColor, // Color del texto/icono del botón
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(20), // Bordes redondeados
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8), // Espaciado interno
+                    textStyle: const TextStyle(
+                      fontSize:
+                          14, // Tamaño de texto reducido para un botón pequeño
+                      fontWeight: FontWeight
+                          .bold, // Texto en negrita para hacerlo más llamativo
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 10),
+                  child: const Text('Aceptar'),
+                ),
+              )
+              // Ajustado para mantener el espacio al final sin el botón
             ],
           ),
         ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text('Cerrar'),
-          ),
-        ],
       ),
     );
   }

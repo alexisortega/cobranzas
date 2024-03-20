@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/repository/authentication.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
+  final nuevoTipoUsuario = TextEditingController();
+
   Future<Map<String, dynamic>> getPrivilegiosFromFirestore(
       String userId) async {
     try {
@@ -26,7 +26,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> guardarCambios(privilegios, context) async {
+  Future<void> savePrivilegeChanges(privilegios, context) async {
     try {
       //regresa el usuario que esta activo
       final auth = FirebaseAuth.instance;
@@ -41,13 +41,48 @@ class UserController extends GetxController {
         });
 
         // Muestra un mensaje de éxito
-        // authenticationRepository.showMessage("Aviso", "Se guardo con éxito");
+        authenticationRepository.showMessage(
+            "Aviso", "! Guardado exitosamente !", context);
       }
     } catch (e) {
       print.printInfo(info: "Error al guardar los cambios en Firestore: $e");
       // Muestra un mensaje de error si ocurre un problema
-      /* authenticationRepository.showMessage(
-          "Advertencia", "No se pudo guardar los cambios $e"); */
+      authenticationRepository.showMessage(
+          "Advertencia", "No se pudo guardar los cambios", context);
+    }
+  }
+
+// Método para actualizar el campo de privilegios en Firestore
+  Future<void> registerNewTypeUser(bool actualizar, bool editar, bool eliminar,
+      bool ver, String userType) async {
+    try {
+      // Acceder a la instancia de Firestore
+      FirebaseFirestore db = FirebaseFirestore.instance;
+
+      final auth1 = FirebaseAuth.instance;
+      User? currentUser = auth1.currentUser;
+      final uid = currentUser!.uid;
+
+      // Obtener los datos actuales del campo "privilegios" en Firestore
+      DocumentSnapshot documentSnapshot =
+          await db.collection('SuperUsuarios').doc(uid).get();
+      Map<String, dynamic> existingPrivileges =
+          documentSnapshot.get('privilegios') ?? {};
+
+      // Agregar el nuevo registro al mapa de privilegios
+      existingPrivileges[userType] = {
+        'Actualizar': actualizar,
+        'Editar': editar,
+        'Eliminar': eliminar,
+        'Ver': ver,
+      };
+
+      // Actualizar el campo "privilegios" en Firestore con los datos actualizados
+      await db.collection('SuperUsuarios').doc(uid).update({
+        'privilegios': existingPrivileges,
+      });
+    } catch (error) {
+      print.printError(info: 'Error al actualizar datos en Firestore: $error');
     }
   }
 }

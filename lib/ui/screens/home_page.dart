@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    //var orientation = MediaQuery.of(context).orientation;
 
     List<String> ClientesTypes = [
       'Nuevo Cliente',
@@ -685,39 +686,76 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ],
             );
           } else {
-            return SingleChildScrollView(
-              child: Container(
-                width: size.width,
-                height: size.height * 0.7,
-                color: Colors.transparent,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    SpinKitThreeBounce(
-                      duration: const Duration(milliseconds: 3000),
-                      color: Colors.blue.withOpacity(0.7),
-                      size: 50,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      "No hay datos",
-                      style: TextStyle(
-                        color: Colors.blue.withOpacity(0.8),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        height: 2,
+            var orientation = MediaQuery.of(context).orientation;
+            return orientation == Orientation.portrait
+                ? SingleChildScrollView(
+                    child: Container(
+                      width: size.width,
+                      height: size.height * 0.7,
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          SpinKitThreeBounce(
+                            duration: const Duration(milliseconds: 3000),
+                            color: Colors.blue.withOpacity(0.7),
+                            size: 50,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "No hay datos",
+                            style: TextStyle(
+                              color: Colors.blue.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              height: 2,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
+                  )
+                :
+                //todo: no hay data cuando el telefono esta horizontal
+                Container(
+                    width: size.width,
+                    height: size.height * 0.4,
+                    color: Colors.transparent,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          SpinKitThreeBounce(
+                            duration: const Duration(milliseconds: 3000),
+                            color: Colors.blue.withOpacity(0.7),
+                            size: 50,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "No hay datos",
+                            style: TextStyle(
+                              color: Colors.blue.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              height: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
           }
         },
       ),

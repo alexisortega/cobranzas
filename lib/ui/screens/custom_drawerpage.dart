@@ -1,6 +1,7 @@
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
+import 'package:cobranzas/ui/screens/widgets/new_type_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -282,7 +283,14 @@ class _DrawerPageState extends State<DrawerPage> {
               icon: Icons.admin_panel_settings,
               text: 'Nuevo tipo de usuario',
               onTap: () {
-                Get.back();
+                Get.to(
+                  () => const NewTypeUser(),
+                  duration: const Duration(milliseconds: 1000),
+                  fullscreenDialog: GetPlatform.isMobile,
+                  opaque: false,
+                  popGesture: true,
+                  transition: Transition.circularReveal,
+                );
               },
             ),
           ],
