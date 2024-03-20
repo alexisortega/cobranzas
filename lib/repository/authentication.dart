@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/Exception/signup_email_paswword_failure.dart';
 import 'package:cobranzas/ui/screens/onboarding_screen.dart';
 import 'package:cobranzas/ui/root_page.dart';
@@ -6,7 +7,9 @@ import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:cobranzas/ui/screens/widgets/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -68,25 +71,7 @@ class authenticationRepository extends GetxController {
                   'Editar': true,
                   'Eliminar': true,
                   'Ver': true,
-                },
-                'Cobratario': {
-                  'Actualizar': true,
-                  'Editar': true,
-                  'Eliminar': true,
-                  'Ver': true
-                },
-                'Supervisor': {
-                  'Actualizar': true,
-                  'Editar': true,
-                  'Eliminar': true,
-                  'Ver': true
-                },
-                'Vendedor': {
-                  'Actualizar': true,
-                  'Editar': true,
-                  'Eliminar': true,
-                  'Ver': true
-                },
+                }
               },
             });
 
@@ -281,24 +266,6 @@ class authenticationRepository extends GetxController {
               'Eliminar': true,
               'Ver': true,
             },
-            'Cobratario': {
-              'Actualizar': true,
-              'Editar': true,
-              'Eliminar': true,
-              'Ver': true
-            },
-            'Supervisor': {
-              'Actualizar': true,
-              'Editar': true,
-              'Eliminar': true,
-              'Ver': true
-            },
-            'Vendedor': {
-              'Actualizar': true,
-              'Editar': true,
-              'Eliminar': true,
-              'Ver': true
-            },
           },
         });
       }
@@ -406,6 +373,80 @@ class authenticationRepository extends GetxController {
       },
       barrierDismissible: true,
       //
+    );
+  }
+
+  static showMessage(String title, String mensaje) {
+    Get.dialog(
+      AlertDialog(
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            title == "Aviso"
+                ? const Icon(
+                    Icons.notification_important,
+                    color: Colors.blue,
+                    size: 50,
+                  )
+                : const Icon(
+                    Icons.warning,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+            /*      const SizedBox(width: 30.0), */
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: Flexible(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Divider(
+                color: Colors.grey,
+                thickness: 1,
+                height: 20,
+                indent: 20,
+                endIndent: 20,
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    size: 40,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    mensaje,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text('Cerrar'),
+          ),
+        ],
+      ),
     );
   }
 

@@ -35,6 +35,7 @@ class CajaPageState extends State<CreditViewPage> {
   void dispose() {
     _pageController.dispose();
     _pageController.removeListener(scrollListenerMenu);
+
     super.dispose();
   }
 
@@ -541,13 +542,10 @@ class CajaPageState extends State<CreditViewPage> {
                                       left: sizeMax.maxWidth * 0.16,
                                       right: sizeMax.maxWidth * -0.2,
                                       bottom: sizeMax.maxHeight * -0.1,
-                                      child: Hero(
-                                        tag: listData.name,
-                                        child: Image(
-                                          fit: BoxFit.contain,
-                                          image: AssetImage(
-                                              listData.listImage[0].image),
-                                        ),
+                                      child: Image(
+                                        fit: BoxFit.contain,
+                                        image: AssetImage(
+                                            listData.listImage[0].image),
                                       ),
                                     ),
                                     Positioned(
@@ -611,7 +609,6 @@ class CajaPageState extends State<CreditViewPage> {
         ));
   }
 }
-
 
 class Imagecredits {
   Imagecredits(

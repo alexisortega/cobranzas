@@ -1,5 +1,4 @@
 import 'package:cobranzas/firebase_options.dart';
-import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

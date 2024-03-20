@@ -12,7 +12,8 @@ class _PaymentsViewPageState extends State<PaymentsViewPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
+      color: Colors.transparent,
+      child: const Center(
         child: CustomText(text: "pagina pagos", font: TextStyle()),
       ),
     );

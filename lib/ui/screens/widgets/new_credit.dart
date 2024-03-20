@@ -117,16 +117,12 @@ class _NewCreditState extends State<NewCredit> {
                         ),
                         Container(
                           color: Colors.transparent,
-                          child: Hero(
-                            transitionOnUserGestures: true,
-                            tag: widget.listaData[0].name,
-                            child: Image(
-                                width: size.width / 4,
-                                height: 80,
-                                alignment: Alignment.topCenter,
-                                image: AssetImage(
-                                    widget.listaData[0].listImage[0].image)),
-                          ),
+                          child: Image(
+                              width: size.width / 4,
+                              height: 80,
+                              alignment: Alignment.topCenter,
+                              image: AssetImage(
+                                  widget.listaData[0].listImage[0].image)),
                         ),
                       ]),
                 )),

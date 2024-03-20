@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/repository/authentication.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,40 +41,13 @@ class UserController extends GetxController {
         });
 
         // Muestra un mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            dismissDirection: DismissDirection.up,
-            behavior: SnackBarBehavior.floating,
-            closeIconColor: Colors.red,
-            showCloseIcon: false,
-            elevation: 20.5,
-            backgroundColor: Constants.blueColor.withOpacity(0.8),
-            content: Row(children: [
-              const Center(
-                child: Text(
-                  'Cambios guardados con éxito',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Icon(
-                Icons.check,
-                color: Colors.green[500] as Color,
-              )
-            ]),
-          ),
-        );
+        // authenticationRepository.showMessage("Aviso", "Se guardo con éxito");
       }
     } catch (e) {
       print.printInfo(info: "Error al guardar los cambios en Firestore: $e");
       // Muestra un mensaje de error si ocurre un problema
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            backgroundColor: Colors.orange,
-            content: Text('Error al guardar los cambios')),
-      );
+      /* authenticationRepository.showMessage(
+          "Advertencia", "No se pudo guardar los cambios $e"); */
     }
   }
 }

@@ -29,7 +29,7 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
 
-  late String fondo;
+  late String fondo = "";
   @override
   void initState() {
     super.initState();
@@ -327,17 +327,12 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                                   ? (size.width * -0.3)
                                   : (size.width * -0.5),
                               right: size.width * 0.1,
-                              child: Hero(
-                                key: UniqueKey(),
-                                tag: widget.listaData[1].name,
-                                transitionOnUserGestures: true,
-                                child: Transform(
-                                  alignment: Alignment.center,
-                                  transform: Matrix4.rotationZ(-0.6),
-                                  child: Image.asset(
-                                    fondo,
-                                    fit: BoxFit.contain,
-                                  ),
+                              child: Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.rotationZ(-0.6),
+                                child: Image.asset(
+                                  fondo,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),

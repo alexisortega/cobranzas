@@ -13,12 +13,14 @@ class PrivilegiosPage extends StatefulWidget {
 }
 
 class PrivilegiosScreenState extends State<PrivilegiosPage> {
+  var fondoPrivilegios = "";
   late Map<dynamic, dynamic> privilegios = {};
   final userController = Get.put(UserController());
   @override
   void initState() {
     super.initState();
     loadPrivilegiosFirestore();
+    fondoPrivilegios = "assets/fondoPrivilegios.png";
   }
 
   Future<void> loadPrivilegiosFirestore() async {
@@ -101,7 +103,9 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
+
+    var orientation = MediaQuery.of(context).orientation;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,11 +114,13 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
           : CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  scrolledUnderElevation: 10,
                   forceMaterialTransparency: true,
                   backgroundColor: Colors
                       .transparent, // Un fondo transparente puede ser más atractivo
-                  expandedHeight:
-                      250.0, // Un poco más de altura para dar espacio al contenido
+                  expandedHeight: orientation == Orientation.portrait
+                      ? 300.0
+                      : 200, // Un poco más de altura para dar espacio al contenido
                   floating:
                       false, // Cambiado a false para un comportamiento más coherente al desplazarse
                   pinned: false, // Mantiene la barra visible al hacer scroll
@@ -122,46 +128,46 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                   automaticallyImplyLeading:
                       true, // Dejar Flutter decidir automáticamente sobre el leading widget basado en el contexto de navegación
                   iconTheme: const IconThemeData(
-                    size: 30, // Ajuste del tamaño de los iconos
+                    size: 35, // Ajuste del tamaño de los iconos
                     color: Colors.orange,
+
                     // Un color llamativo para los iconos
                   ),
+                  elevation: 10,
                   flexibleSpace: LayoutBuilder(
                     builder:
                         (BuildContext context, BoxConstraints constraints) {
                       return FlexibleSpaceBar(
-                        title: constraints.maxWidth < 800
+                        title: orientation == Orientation.portrait
                             ? Text(
                                 'Privilegios de usuario',
                                 style: TextStyle(
-                                  color: Constants
-                                      .blueColor, // Usa el color que mejor se ajuste a tu paleta
                                   fontWeight: FontWeight.bold,
+                                  color: Constants
+                                      .orangeColor, //                                        fontWeight: FontWeight.bold,
                                   fontSize: 17,
                                 ),
                               )
-                            : Center(
+                            : Padding(
+                                padding:
+                                    EdgeInsets.only(left: size.width * 0.2),
                                 child: Text(
                                   'Privilegios de usuario',
                                   style: TextStyle(
                                     color: Constants
-                                        .blueColor, // Usa el color que mejor se ajuste a tu paleta
+                                        .orangeColor, // Usa el color que mejor se ajuste a tu paleta
                                     fontWeight: FontWeight.bold,
                                     fontSize: 17,
                                   ),
                                 ),
                               ),
                         background: Stack(
-                          fit: StackFit.expand,
+                          fit: StackFit.loose,
                           children: [
-                            Positioned(
-                              top: -125,
-                              left: 50,
-                              child: Image.asset(
-                                'assets/pantallaPrivilegios.png', // Asegúrate de que esta ruta es correcta
-                                fit: BoxFit
-                                    .fill, // Cubrir para que la imagen se expanda bien
-                              ),
+                            Image.asset(
+                              fondoPrivilegios, // Asegúrate de que esta ruta es correcta
+                              fit: BoxFit
+                                  .contain, // Cubrir para que la imagen se expanda bien
                             ),
                             // Este overlay oscurece ligeramente la imagen para que el texto resalte más
                             const DecoratedBox(
@@ -170,7 +176,6 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                                   begin: Alignment(0.0, 0.5),
                                   end: Alignment(0.0, 0.0),
                                   colors: <Color>[
-                                    Colors.black38,
                                     Colors.black12,
                                     Colors.transparent,
                                   ],
@@ -190,11 +195,14 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                     ),
                     buildTree(privilegios, 'Tipo de usuarios'),
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     Container(
-                      margin: const EdgeInsets.only(
-                          bottom: 20, left: 20, right: 20),
+                      margin: orientation == Orientation.portrait
+                          ? const EdgeInsets.only(
+                              bottom: 20, left: 20, right: 20)
+                          : const EdgeInsets.only(
+                              bottom: 20, left: 150, right: 150),
                       child: ElevatedButton(
                         onPressed: () async {
                           await UserController()
