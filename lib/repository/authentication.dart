@@ -374,6 +374,154 @@ class authenticationRepository extends GetxController {
     );
   }
 
+  static showMessageValidator(
+      String title, String mensaje, Function function, BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    var orientation = MediaQuery.of(context).orientation;
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(30), // Más redondeado, estilo iPhone
+        ),
+        backgroundColor: Colors.white.withOpacity(0.8),
+        child: SizedBox(
+          width: orientation == Orientation.portrait
+              ? size.width * 0.7
+              : size.width * 0.45,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: Row(
+                  children: [
+                    Icon(
+                      title != "Advertencia"
+                          ? Icons.notification_important_sharp
+                          : Icons.warning,
+                      color: Constants.blueColor,
+                      size: 40,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                            color: title == "Advertencia"
+                                ? Colors.red
+                                : Colors.green[700],
+                          ),
+                          overflow: TextOverflow
+                              .ellipsis, // Asegura que el texto no sobrepase el espacio disponible
+                        ),
+                      ),
+                    ),
+                    const IconButton(
+                      icon: Icon(
+                        size: 35,
+                        Icons.close_outlined,
+                        color: Colors.transparent,
+                      ),
+                      onPressed: null,
+                      autofocus: false,
+                      enableFeedback: false,
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(
+                color: Colors.blueGrey,
+                thickness: 1.5,
+                height: 30.0,
+                indent: 0.0,
+                endIndent: 0.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 10, bottom: 10),
+                child: Text(
+                  mensaje,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(right: 50, left: 50, bottom: 10),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Constants
+                            .blueColor, // Color del texto/icono del botón
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20), // Bordes redondeados
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Espaciado interno
+                        textStyle: const TextStyle(
+                          fontSize:
+                              14, // Tamaño de texto reducido para un botón pequeño
+                          fontWeight: FontWeight
+                              .bold, // Texto en negrita para hacerlo más llamativo
+                        ),
+                      ),
+                      child: const Text('cancelar'),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        //todo:funcion
+                        function();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Constants
+                            .blueColor, // Color del texto/icono del botón
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20), // Bordes redondeados
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8), // Espaciado interno
+                        textStyle: const TextStyle(
+                          fontSize:
+                              14, // Tamaño de texto reducido para un botón pequeño
+                          fontWeight: FontWeight
+                              .bold, // Texto en negrita para hacerlo más llamativo
+                        ),
+                      ),
+                      child: const Text('Aceptar'),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                  ],
+                ),
+              )
+              // Ajustado para mantener el espacio al final sin el botón
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   static showMessage(String title, String mensaje, BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var orientation = MediaQuery.of(context).orientation;

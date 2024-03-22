@@ -3,6 +3,7 @@ import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 class PrivilegiosPage extends StatefulWidget {
@@ -30,8 +31,7 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
 // verifica si el usario no es nulo
     if (userId != null) {
       try {
-        final privilegeFirebase =
-            userController.getPrivilegiosFromFirestore(userId);
+        final privilegeFirebase = userController.getPrivilegiosFromFirestore();
         privilegios = await privilegeFirebase;
       } catch (e) {
         printInfo(info: "Error al cargar privilegios desde Firestore: $e");
@@ -109,7 +109,114 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: privilegios.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? orientation == Orientation.portrait
+              ? Container(
+                  width: size.width,
+                  height: size.height * 0.7,
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              color: Colors.transparent,
+                              margin: const EdgeInsets.only(left: 20, top: 20),
+                              child: TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Icon(
+                                  Icons.arrow_back_outlined,
+                                  color: Constants.orangeColor,
+                                  size: 35,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.2,
+                      ),
+                      SpinKitThreeBounce(
+                        duration: const Duration(milliseconds: 3000),
+                        color: Colors.blue.withOpacity(0.7),
+                        size: 50,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "No hay datos",
+                        style: TextStyle(
+                          color: Colors.blue.withOpacity(0.8),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          height: 2,
+                        ),
+                      ),
+                    ],
+                  ))
+              //todo: modo horizontal
+              : Container(
+                  width: size.width,
+                  height: size.height,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              color: Colors.transparent,
+                              margin: const EdgeInsets.only(left: 20, top: 20),
+                              child: TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Icon(
+                                  Icons.arrow_back_outlined,
+                                  color: Constants.orangeColor,
+                                  size: 35,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.2,
+                      ),
+                      SpinKitThreeBounce(
+                        duration: const Duration(milliseconds: 3000),
+                        color: Colors.blue.withOpacity(0.7),
+                        size: 50,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "No hay datos",
+                        style: TextStyle(
+                          color: Colors.blue.withOpacity(0.8),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          height: 2,
+                        ),
+                      ),
+                    ],
+                  ))
           : CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -192,7 +299,7 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTree(privilegios, 'Tipo de usuarios'),
+                    buildTree(privilegios, 'Perfil de usuarios'),
                     const SizedBox(
                       height: 30,
                     ),

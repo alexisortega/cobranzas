@@ -1,6 +1,7 @@
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
+import 'package:cobranzas/ui/screens/widgets/delate_user_type.dart';
 import 'package:cobranzas/ui/screens/widgets/new_type_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
 import 'package:flutter/material.dart';
@@ -280,11 +281,25 @@ class _DrawerPageState extends State<DrawerPage> {
               },
             ),
             createDrawerItem(
-              icon: Icons.admin_panel_settings,
-              text: 'Nuevo tipo de usuario',
+              icon: Icons.account_circle,
+              text: 'Nuevo perfil de usuario',
               onTap: () {
                 Get.to(
                   () => const NewTypeUser(),
+                  duration: const Duration(milliseconds: 1000),
+                  fullscreenDialog: GetPlatform.isMobile,
+                  opaque: false,
+                  popGesture: true,
+                  transition: Transition.circularReveal,
+                );
+              },
+            ),
+            createDrawerItem(
+              icon: Icons.delete_forever,
+              text: 'Eliminar perfil de usuario',
+              onTap: () {
+                Get.to(
+                  () => const DeleteUserType(),
                   duration: const Duration(milliseconds: 1000),
                   fullscreenDialog: GetPlatform.isMobile,
                   opaque: false,
@@ -335,16 +350,23 @@ class _DrawerPageState extends State<DrawerPage> {
                 color: textColor,
               ),
               title: Text(text,
-                  style:
-                      TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )),
               children: subOptions,
             ),
           )
         : ListTile(
             leading: Icon(icon, color: textColor),
-            title: Text(text,
-                style:
-                    TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+            title: Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Text(text,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
             onTap: onTap,
           );
   }

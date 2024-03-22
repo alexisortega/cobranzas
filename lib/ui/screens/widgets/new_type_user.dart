@@ -3,7 +3,6 @@ import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +25,8 @@ class _NewTypeUserState extends State<NewTypeUser> {
   late bool resultSwitchEl;
   late bool resultSwitchVe;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     switchValues = [
@@ -46,6 +47,10 @@ class _NewTypeUserState extends State<NewTypeUser> {
     resultSwitchEl = true;
     resultSwitchVe = true;
     super.initState();
+  }
+
+  cleanFields() {
+    userController.nuevoTipoUsuario.clear();
   }
 
   @override
@@ -105,12 +110,12 @@ class _NewTypeUserState extends State<NewTypeUser> {
                           child: Container(
                             color: Colors.transparent,
                             child: FittedBox(
-                                fit: BoxFit.scaleDown,
+                                fit: BoxFit.cover,
                                 child: Text(
-                                  'NUEVO TIPO DE USUARIO',
+                                  'NUEVO PERFIL DE USUARIO',
                                   style: GoogleFonts.aldrich(
                                     textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w900,
                                         fontSize: 30.0,
                                         color: Constants.blueColor),
                                   ),
@@ -123,7 +128,8 @@ class _NewTypeUserState extends State<NewTypeUser> {
                               width: size.width / 4,
                               height: 80,
                               alignment: Alignment.topCenter,
-                              image: const AssetImage("assets/wallpaper4.png")),
+                              image: const AssetImage(
+                                  "assets/NuevoTipoUsuario.png")),
                         ),
                       ]),
                 )),
@@ -167,12 +173,15 @@ class _NewTypeUserState extends State<NewTypeUser> {
                                       maxLength: 20,
                                       validator: (value) {
                                         if (value!.isEmpty) {
-                                          return 'Ingresa un texto';
+                                          return 'Ingresa un perfil de usuario';
                                         }
                                         final RegExp wordRegex = RegExp(
                                             r'^[a-zA-Z]+$'); // Expresión regular para una sola palabra
                                         if (!wordRegex.hasMatch(value)) {
                                           return 'Palabra sin espacios ni caracteres especiales';
+                                        }
+                                        if (value.length <= 3) {
+                                          return 'Palabra mayor a 3 caracteres';
                                         }
                                         return null;
                                       },
@@ -180,7 +189,7 @@ class _NewTypeUserState extends State<NewTypeUser> {
                                           userController.nuevoTipoUsuario,
                                       keyboardType: TextInputType.name,
                                       decoration: InputDecoration(
-                                        label: const Text("Tipo de usuario"),
+                                        label: const Text("Perfil de usuario"),
                                         prefixIcon: Icon(
                                           Icons.person,
                                           color: Constants.blueColor,
@@ -257,68 +266,69 @@ class _NewTypeUserState extends State<NewTypeUser> {
                                             autofocus: true,
 
                                             onPressed: () async {
-                                              bool register = true;
+                                              isLoading = false;
                                               try {
-                                                /*Empiza  condicion de forms*/
+                                                //todo Empiza  condicion de forms//
                                                 if (formKey3.currentState!
                                                     .validate()) {
-                                                  //cargando
-                                                  showDialog(
-                                                      barrierDismissible: false,
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return Center(
-                                                            child: SpinKitRing(
-                                                          color: Colors.orange
-                                                              .withOpacity(0.9),
-                                                          size: 50.0,
-                                                          lineWidth: 4,
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 3),
-                                                        ));
+                                                  setState(() {
+                                                    isLoading = true;
+                                                    if (isLoading == true) {
+                                                      showDialog(
+                                                          barrierDismissible:
+                                                              false,
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Center(
+                                                                child:
+                                                                    SpinKitRing(
+                                                              color: Colors
+                                                                  .orange
+                                                                  .withOpacity(
+                                                                      0.9),
+                                                              size: 50.0,
+                                                              lineWidth: 4,
+                                                            ));
+                                                          });
+
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  2000), () {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                          Get.back();
+                                                        });
+                                                      }).whenComplete(() {
+                                                        userController.registerNewTypeUser(
+                                                            resultSwitchAc,
+                                                            resultSwitchEd,
+                                                            resultSwitchEl,
+                                                            resultSwitchVe,
+                                                            ((userController
+                                                                        .nuevoTipoUsuario
+                                                                        .text[0]
+                                                                        .toUpperCase()
+                                                                        .trim()) +
+                                                                    (userController
+                                                                            .nuevoTipoUsuario
+                                                                            .text
+                                                                            .substring(1)
+                                                                            .trim())
+                                                                        .toLowerCase())
+                                                                .split(" ")
+                                                                .join(""));
+
+                                                        authenticationRepository
+                                                            .showMessage(
+                                                                "Aviso",
+                                                                "Se registro correctamente",
+                                                                context);
+
+                                                        cleanFields();
                                                       });
-
-                                                  if (register == true) {
-                                                    await userController.registerNewTypeUser(
-                                                        resultSwitchAc,
-                                                        resultSwitchEd,
-                                                        resultSwitchEl,
-                                                        resultSwitchVe,
-                                                        ((userController
-                                                                    .nuevoTipoUsuario
-                                                                    .text[0]
-                                                                    .toUpperCase()
-                                                                    .trim()) +
-                                                                (userController
-                                                                    .nuevoTipoUsuario
-                                                                    .text
-                                                                    .substring(
-                                                                        1)
-                                                                    .trim()))
-                                                            .split(" ")
-                                                            .join(""));
-
-                                                    authenticationRepository
-                                                        .showMessage(
-                                                            "Aviso",
-                                                            "Nuevo tipo de usuario se registro existosamente",
-                                                            context);
-
-                                                    //eliminar datos
-                                                    printInfo(
-                                                        info:
-                                                            "registro temminado: $register");
-                                                  } else if (register ==
-                                                      false) {
-                                                    Get.back;
-                                                    Get.back();
-                                                    authenticationRepository
-                                                        .showMessage(
-                                                            "Advertencia",
-                                                            "Tipo de usuario no registrado, intente de nuevo",
-                                                            context);
-                                                  }
+                                                    }
+                                                  });
                                                 } else {
                                                   authenticationRepository
                                                       .showMessage(

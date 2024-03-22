@@ -7,12 +7,14 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final nuevoTipoUsuario = TextEditingController();
 
-  Future<Map<String, dynamic>> getPrivilegiosFromFirestore(
-      String userId) async {
+  Future<Map<String, dynamic>> getPrivilegiosFromFirestore() async {
+    final auth1 = FirebaseAuth.instance;
+    User? currentUser = auth1.currentUser;
+    final uid = currentUser!.uid;
     try {
       final FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentSnapshot docSnapshot =
-          await db.collection('SuperUsuarios').doc(userId).get();
+          await db.collection('SuperUsuarios').doc(uid).get();
 
       if (docSnapshot.exists) {
         final dynamic privilegiosData = docSnapshot.data();
@@ -83,6 +85,23 @@ class UserController extends GetxController {
       });
     } catch (error) {
       print.printError(info: 'Error al actualizar datos en Firestore: $error');
+    }
+  }
+
+  Future<void> eliminarPerfilUsuario(String perfil) async {
+    final auth1 = FirebaseAuth.instance;
+    User? currentUser = auth1.currentUser;
+    final uid = currentUser!.uid;
+    try {
+      final FirebaseFirestore db = FirebaseFirestore.instance;
+      await db.collection('SuperUsuarios').doc(uid).update({
+        'privilegios.$perfil': FieldValue.delete(),
+      });
+      print.printInfo(
+          info: 'Perfil de usuario $perfil eliminado correctamente.');
+    } catch (e) {
+      print.printError(
+          info: 'Error al eliminar el perfil de usuario $perfil: $e');
     }
   }
 }
