@@ -559,7 +559,7 @@ class _NewcustomersState extends State<Newcustomers> {
                         fontSize: 17, color: Colors.black.withOpacity(.7)))))
             .toList(),
         onChanged: (item) => setState(() {
-          item = selectedGenero;
+          selectedGenero = item!;
         }),
       ),
       const SizedBox(height: 10),

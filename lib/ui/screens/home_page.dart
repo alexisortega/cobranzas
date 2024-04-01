@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    //var orientation = MediaQuery.of(context).orientation;
+    var orientation = MediaQuery.of(context).orientation;
 
     List<String> ClientesTypes = [
       'Nuevo Cliente',
@@ -131,22 +131,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroundColor: Colors.white,
         body: CustomScrollView(slivers: <Widget>[
           SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize:
-                  MainAxisSize.min, // Set mainAxisSize to MainAxisSize.min
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: cuadroBusqueda(size),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Flexible(
-                  flex: 2,
-                  child: listaBotones(
+            child: Container(
+              color: Colors.transparent,
+              height: size.height * 0.83,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                // Set mainAxisSize to MainAxisSize.min
+                children: [
+                  cuadroBusqueda(size),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  listaBotones(
                     size,
                     ClientesTypes,
                     context,
@@ -154,33 +151,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     listIconUpdate,
                     ClientsTypesUpdate,
                   ),
-                ),
-                /*  Container(
-                  height: 70,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  padding: const EdgeInsets.only(
-                    bottom: 0,
-                    top: 20,
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //  etiquetaClientes(),
-                    ],
-                  ),
-                ), */
 
-                Flexible(
-                  flex: 1,
-                  child: listaClientes(size),
-                ),
-              ],
+                  /*  Container(
+                    height: 70,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.transparent,
+                    ),
+                    padding: const EdgeInsets.only(
+                      bottom: 0,
+                      top: 20,
+                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //  etiquetaClientes(),
+                      ],
+                    ),
+                  ), */
+
+                  listaClientes(size),
+                ],
+              ),
             ),
           )
         ]),
@@ -320,15 +315,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget cuadroBusqueda(Size size) {
+    var orientation = MediaQuery.of(context).orientation;
     return Container(
       width: size.width,
-      height: 61,
-      padding: const EdgeInsets.only(
-        right: 10,
-        left: 10,
-        top: 10,
-      ),
-      margin: const EdgeInsets.only(left: 0, right: 0),
+      height: 55,
+      padding: const EdgeInsets.only(right: 0, left: 10, top: 10, bottom: 0),
+      margin: const EdgeInsets.only(left: 0, right: 10),
       color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -337,7 +329,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
             ),
-            width: size.width * .945,
+            width: orientation == Orientation.portrait
+                ? (size.width < 600 ? size.width * 0.89 : size.width * 0.945)
+                : (size.width < 600 ? size.width * 0.89 : size.width * 0.945),
             height: size.height,
             decoration: BoxDecoration(
               color: Constants.blueColor.withOpacity(.1),
@@ -432,332 +426,337 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget listaClientes(Size size) {
-    return Container(
-      // DATOS DEL CLIENTE
-      color: Colors.transparent,
-      margin: const EdgeInsets.only(top: 0),
-      padding: const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 5),
-      height: (size.height / 1.4),
-      child: FutureBuilder(
-        future: clients,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data.toString() != '[]') {
-            // LISTA DE CLIENTES
+    return Expanded(
+      child: Container(
+        // DATOS DEL CLIENTE
 
-            return CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              // controller: _scrollController,
-              slivers: [
-                SliverAppBar(
-                  pinned: false,
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
-                  floating: false,
-                  collapsedHeight: 60,
-                  foregroundColor: Colors.amber,
-                  forceMaterialTransparency: false,
-                  forceElevated: false,
-                  title: Container(
-                    color: Colors.transparent,
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Nuevos Clientes",
-                              style: TextStyle(
-                                color: Colors.teal,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 200, // Altura del contenedor de la lista horizontal
-                    child: ListView.builder(
-                      scrollDirection:
-                          Axis.horizontal, // Desplazamiento horizontal
-                      itemCount: (snapshot
-                          .data!.length), // Número de elementos en la lista
-                      itemBuilder: (context, index) {
-                        Color colorCard = colors[index % colors.length];
-                        final codigo_cliente =
-                            (snapshot.data?[index]["codigo_cliente"]);
-                        final nombre = (snapshot.data?[index]["nombre"]);
-                        final apellido_p =
-                            (snapshot.data?[index]["apellido_p"]);
-                        final apellido_m =
-                            (snapshot.data?[index]["apellido_m"]);
-                        final genero = (snapshot.data?[index]["genero"]);
-                        final curp = (snapshot.data?[index]["curp"]);
-                        final calle = (snapshot.data?[index]["calle"]);
-                        final colonia = (snapshot.data?[index]["colonia"]);
-                        final municipio_delegacion =
-                            (snapshot.data?[index]["municipio_delegacion"]);
-                        final estado = (snapshot.data?[index]["estado"]);
-                        final codigo_postal =
-                            (snapshot.data?[index]["codigo_postal"]);
-                        final numero_tel =
-                            (snapshot.data?[index]["numero_tel"]);
-                        final fecha_nacimiento =
-                            (snapshot.data?[index]["fecha_nacimiento"]);
-                        final urlFoto = (snapshot.data?[index]["foto_url"]);
-                        return Container(
-                            padding: const EdgeInsets.only(),
-                            width: 160, // Ancho de cada card
-                            child: Card(
-                              shadowColor: Colors.transparent,
-                              color: colorCard,
-                              elevation: 18,
-                              margin: const EdgeInsets.all(12.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                        maxRadius: 28,
-                                        child: ClipOval(
-                                            child: CachedNetworkImage(
-                                          width: size.width,
-                                          height: size.height,
-                                          fit: BoxFit.cover,
-                                          imageUrl: (snapshot.data?[index]
-                                              ["foto_url"]),
-                                        ))),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      '${snapshot.data?[index]['nombre']} ${snapshot.data?[index]['apellido_p']}',
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 35,
-                                      width: 70,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          //ultimos agregados
-                                          Get.to(
-                                            () => customerDetails(
-                                              cont: index,
-                                              datos: customerData,
-                                              codigoCliente: codigo_cliente,
-                                              nombre: nombre,
-                                              apellidoP: apellido_p,
-                                              apellidoM: apellido_m,
-                                              genero: genero,
-                                              curp: curp,
-                                              calle: calle,
-                                              colonia: colonia,
-                                              municipioDelegacion:
-                                                  municipio_delegacion,
-                                              estado: estado,
-                                              codigoPostal: codigo_postal,
-                                              numeroTel: numero_tel,
-                                              fechaNacimiento: fecha_nacimiento
-                                                  .toDate()
-                                                  .toString()
-                                                  .substring(0, 10)
-                                                  .split("-")
-                                                  .reversed
-                                                  .join("/"),
-                                              urlFoto: urlFoto,
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                          ),
-                                        ),
-                                        child: Icon(
-                                          Icons.arrow_forward_outlined,
-                                          size: 25,
-                                          color: Constants.blueColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+        color: Colors.transparent,
+
+        padding: const EdgeInsets.only(right: 20, left: 20, top: 20, bottom: 5),
+
+        child: FutureBuilder(
+          future: clients,
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data.toString() != '[]') {
+              // LISTA DE CLIENTES
+
+              return CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                // controller: _scrollController,
+                slivers: [
+                  SliverAppBar(
+                    pinned: false,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                    floating: false,
+                    collapsedHeight: 60,
+                    foregroundColor: Colors.amber,
+                    forceMaterialTransparency: false,
+                    forceElevated: false,
+                    title: Container(
+                      color: Colors.transparent,
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Nuevos Clientes",
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
-                            ));
-                      },
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 10,
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height:
+                          200, // Altura del contenedor de la lista horizontal
+                      child: ListView.builder(
+                        scrollDirection:
+                            Axis.horizontal, // Desplazamiento horizontal
+                        itemCount: (snapshot
+                            .data!.length), // Número de elementos en la lista
+                        itemBuilder: (context, index) {
+                          Color colorCard = colors[index % colors.length];
+                          final codigo_cliente =
+                              (snapshot.data?[index]["codigo_cliente"]);
+                          final nombre = (snapshot.data?[index]["nombre"]);
+                          final apellido_p =
+                              (snapshot.data?[index]["apellido_p"]);
+                          final apellido_m =
+                              (snapshot.data?[index]["apellido_m"]);
+                          final genero = (snapshot.data?[index]["genero"]);
+                          final curp = (snapshot.data?[index]["curp"]);
+                          final calle = (snapshot.data?[index]["calle"]);
+                          final colonia = (snapshot.data?[index]["colonia"]);
+                          final municipio_delegacion =
+                              (snapshot.data?[index]["municipio_delegacion"]);
+                          final estado = (snapshot.data?[index]["estado"]);
+                          final codigo_postal =
+                              (snapshot.data?[index]["codigo_postal"]);
+                          final numero_tel =
+                              (snapshot.data?[index]["numero_tel"]);
+                          final fecha_nacimiento =
+                              (snapshot.data?[index]["fecha_nacimiento"]);
+                          final urlFoto = (snapshot.data?[index]["foto_url"]);
+                          return Container(
+                              padding: const EdgeInsets.only(),
+                              width: 160, // Ancho de cada card
+                              child: Card(
+                                shadowColor: Colors.transparent,
+                                color: colorCard,
+                                elevation: 18,
+                                margin: const EdgeInsets.all(12.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                          maxRadius: 28,
+                                          child: ClipOval(
+                                              child: CachedNetworkImage(
+                                            width: size.width,
+                                            height: size.height,
+                                            fit: BoxFit.cover,
+                                            imageUrl: (snapshot.data?[index]
+                                                ["foto_url"]),
+                                          ))),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        '${snapshot.data?[index]['nombre']} ${snapshot.data?[index]['apellido_p']}',
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      SizedBox(
+                                        height: 35,
+                                        width: 70,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            //ultimos agregados
+                                            Get.to(
+                                              () => customerDetails(
+                                                cont: index,
+                                                datos: customerData,
+                                                codigoCliente: codigo_cliente,
+                                                nombre: nombre,
+                                                apellidoP: apellido_p,
+                                                apellidoM: apellido_m,
+                                                genero: genero,
+                                                curp: curp,
+                                                calle: calle,
+                                                colonia: colonia,
+                                                municipioDelegacion:
+                                                    municipio_delegacion,
+                                                estado: estado,
+                                                codigoPostal: codigo_postal,
+                                                numeroTel: numero_tel,
+                                                fechaNacimiento:
+                                                    fecha_nacimiento
+                                                        .toDate()
+                                                        .toString()
+                                                        .substring(0, 10)
+                                                        .split("-")
+                                                        .reversed
+                                                        .join("/"),
+                                                urlFoto: urlFoto,
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.arrow_forward_outlined,
+                                            size: 25,
+                                            color: Constants.blueColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                        },
+                      ),
+                    ),
                   ),
-                ),
-                SliverAppBar(
-                  pinned: false,
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.red,
-                  elevation: 15.0,
-                  floating: true,
-                  collapsedHeight: 60,
-                  foregroundColor: Colors.amber,
-                  scrolledUnderElevation: 4.5,
-                  forceMaterialTransparency: true,
-                  forceElevated: true,
-                  title: Container(
-                    color: Colors.transparent,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
+                  ),
+                  SliverAppBar(
+                    pinned: false,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.red,
+                    elevation: 15.0,
+                    floating: true,
+                    collapsedHeight: 60,
+                    foregroundColor: Colors.amber,
+                    scrolledUnderElevation: 4.5,
+                    forceMaterialTransparency: true,
+                    forceElevated: true,
+                    title: Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              etiquetaClientes(),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "(Mostrando ${snapshot.data?.length} clientes)",
+                                style: const TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int cont) {
+                        if ((snapshot.data?[cont]['nombre'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['codigo_cliente'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['apellido_p'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['apellido_m'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['apellido_p'] +
+                                    " " +
+                                    snapshot.data?[cont]['apellido_m'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['nombre'] +
+                                    " " +
+                                    snapshot.data?[cont]['apellido_p'] +
+                                    " " +
+                                    snapshot.data?[cont]['apellido_m'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search)) {
+                          return principalMetodo(
+                            snapshot,
+                            cont,
+                            context,
+                            size,
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                      childCount: snapshot.data?.length,
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              var orientation = MediaQuery.of(context).orientation;
+              return orientation == Orientation.portrait
+                  ? SingleChildScrollView(
+                      child: Container(
+                        width: size.width,
+                        height: size.height * 0.7,
+                        color: Colors.transparent,
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            etiquetaClientes(),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                            const SizedBox(
+                              height: 100,
+                            ),
+                            SpinKitThreeBounce(
+                              duration: const Duration(milliseconds: 3000),
+                              color: Colors.blue.withOpacity(0.7),
+                              size: 50,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
                             Text(
-                              "(Mostrando ${snapshot.data?.length} clientes)",
-                              style: const TextStyle(
-                                color: Colors.blueGrey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
+                              "No hay datos",
+                              style: TextStyle(
+                                color: Colors.blue.withOpacity(0.8),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                height: 2,
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int cont) {
-                      if ((snapshot.data?[cont]['nombre'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search) ||
-                          (snapshot.data?[cont]['codigo_cliente'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search) ||
-                          (snapshot.data?[cont]['apellido_p'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search) ||
-                          (snapshot.data?[cont]['apellido_m'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search) ||
-                          (snapshot.data?[cont]['apellido_p'] +
-                                  " " +
-                                  snapshot.data?[cont]['apellido_m'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search) ||
-                          (snapshot.data?[cont]['nombre'] +
-                                  " " +
-                                  snapshot.data?[cont]['apellido_p'] +
-                                  " " +
-                                  snapshot.data?[cont]['apellido_m'])!
-                              .toString()
-                              .isCaseInsensitiveContains(search)) {
-                        return principalMetodo(
-                          snapshot,
-                          cont,
-                          context,
-                          size,
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                    childCount: snapshot.data?.length,
-                  ),
-                ),
-              ],
-            );
-          } else {
-            var orientation = MediaQuery.of(context).orientation;
-            return orientation == Orientation.portrait
-                ? SingleChildScrollView(
-                    child: Container(
+                      ),
+                    )
+                  :
+                  //todo: no hay data cuando el telefono esta horizontal
+                  Container(
                       width: size.width,
-                      height: size.height * 0.7,
+                      height: size.height * 0.4,
                       color: Colors.transparent,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            height: 100,
-                          ),
-                          SpinKitThreeBounce(
-                            duration: const Duration(milliseconds: 3000),
-                            color: Colors.blue.withOpacity(0.7),
-                            size: 50,
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "No hay datos",
-                            style: TextStyle(
-                              color: Colors.blue.withOpacity(0.8),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              height: 2,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 50,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                :
-                //todo: no hay data cuando el telefono esta horizontal
-                Container(
-                    width: size.width,
-                    height: size.height * 0.4,
-                    color: Colors.transparent,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          SpinKitThreeBounce(
-                            duration: const Duration(milliseconds: 3000),
-                            color: Colors.blue.withOpacity(0.7),
-                            size: 50,
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "No hay datos",
-                            style: TextStyle(
-                              color: Colors.blue.withOpacity(0.8),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              height: 2,
+                            SpinKitThreeBounce(
+                              duration: const Duration(milliseconds: 3000),
+                              color: Colors.blue.withOpacity(0.7),
+                              size: 50,
                             ),
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "No hay datos",
+                              style: TextStyle(
+                                color: Colors.blue.withOpacity(0.8),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                height: 2,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-          }
-        },
+                    );
+            }
+          },
+        ),
       ),
     );
   }
@@ -1112,7 +1111,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   // el margen de altura del contenedor
                   margin: const EdgeInsets.only(
-                      bottom: 1, top: 0, right: 10, left: 0),
+                      bottom: 1, top: 0, right: 10, left: 10),
                   width: size.width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

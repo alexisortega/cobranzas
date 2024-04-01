@@ -131,6 +131,8 @@ class CreditViewPageState extends State<CreditViewPage> {
             height: size.height * 0.8,
             width: size.width * 1,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   height: 60,
@@ -143,134 +145,146 @@ class CreditViewPageState extends State<CreditViewPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Card(
-                          elevation: 0,
-                          color: Colors.transparent,
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: CustomText(
-                              font: TextStyle(
-                                fontSize: 50,
-                                color: Constants.blueColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              text: '¿Necesitas un crédito?',
-                            ),
-                          )),
+                      orientation == Orientation.landscape && size.width < 600
+                          ? Container(
+                              child: null,
+                            )
+                          : Card(
+                              elevation: 0,
+                              color: Colors.transparent,
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: CustomText(
+                                  font: TextStyle(
+                                    fontSize: size.width < 600 ? 22 : 35,
+                                    color: Constants.blueColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  text: '¿Necesitas un crédito?',
+                                ),
+                              )),
                     ],
                   ),
                 ),
-                Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.only(
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0,
-                        ),
-                        width: size.width * 0.95,
-                        decoration: BoxDecoration(
-                          color: Constants.blueColor.withOpacity(.1),
-                          borderRadius: BorderRadius.circular(8),
+                orientation == Orientation.landscape && size.width < 600
+                    ? Container(
+                        child: null,
+                      )
+                    : Container(
+                        color: Colors.transparent,
+                        padding: const EdgeInsets.only(
+                          top: 5,
+                          bottom: 5,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Icon(
-                                //Icons.search_outlined,
-                                Icons.search_sharp,
-                                color: Constants.blueColor,
-                                size: 30,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0,
                               ),
-                            ),
-                            Expanded(
-                                child: TextFormField(
-                              controller: controllerCredit.filterCategory,
-                              onChanged: (value) {
-                                setState(() {
-                                  controllerCredit.search = value;
-
-                                  if (listCreditsCategory[0]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search) ||
-                                      listCreditsCategoryAcento[0]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search)) {
-                                    _pageController.jumpToPage(0);
-                                  }
-                                  if (listCreditsCategory[1]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search) ||
-                                      listCreditsCategoryAcento[1]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search)) {
-                                    _pageController.jumpToPage(1);
-                                  }
-
-                                  if (listCreditsCategory[2]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search) ||
-                                      listCreditsCategoryAcento[2]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search)) {
-                                    _pageController.jumpToPage(2);
-                                  }
-                                  if (listCreditsCategory[3]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search) ||
-                                      listCreditsCategoryAcento[3]
-                                          .isCaseInsensitiveContains(
-                                              controllerCredit.search)) {
-                                    _pageController.jumpToPage(3);
-                                  }
-                                  if ("".isCaseInsensitiveContains(
-                                      controllerCredit.search)) {
-                                    _pageController.jumpToPage(0);
-                                  }
-
-                                  printInfo(info: controllerCredit.search);
-                                });
-                              },
-                              showCursor: true,
-                              decoration: const InputDecoration(
-                                hintText: '¿Qué necesitas?',
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
+                              width: size.width * 0.95,
+                              decoration: BoxDecoration(
+                                color: Constants.blueColor.withOpacity(.1),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            )),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  controllerCredit.filterCategory.text = "";
-                                  controllerCredit.search = "";
-                                  controllerCredit.filterCategory.text =
-                                      controllerCredit.search;
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Icon(
+                                      //Icons.search_outlined,
+                                      Icons.search_sharp,
+                                      color: Constants.blueColor,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: TextFormField(
+                                    controller: controllerCredit.filterCategory,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        controllerCredit.search = value;
 
-                                  _pageController.jumpToPage(0);
-                                });
+                                        if (listCreditsCategory[0]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search) ||
+                                            listCreditsCategoryAcento[0]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search)) {
+                                          _pageController.jumpToPage(0);
+                                        }
+                                        if (listCreditsCategory[1]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search) ||
+                                            listCreditsCategoryAcento[1]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search)) {
+                                          _pageController.jumpToPage(1);
+                                        }
 
-                                printInfo(
-                                    info: "salio de codigo caja de texto");
-                              },
-                              child: Icon(
-                                Icons.dangerous_rounded,
-                                size: 25,
-                                color: Constants.blueColor.withOpacity(.7),
+                                        if (listCreditsCategory[2]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search) ||
+                                            listCreditsCategoryAcento[2]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search)) {
+                                          _pageController.jumpToPage(2);
+                                        }
+                                        if (listCreditsCategory[3]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search) ||
+                                            listCreditsCategoryAcento[3]
+                                                .isCaseInsensitiveContains(
+                                                    controllerCredit.search)) {
+                                          _pageController.jumpToPage(3);
+                                        }
+                                        if ("".isCaseInsensitiveContains(
+                                            controllerCredit.search)) {
+                                          _pageController.jumpToPage(0);
+                                        }
+
+                                        printInfo(
+                                            info: controllerCredit.search);
+                                      });
+                                    },
+                                    showCursor: true,
+                                    decoration: const InputDecoration(
+                                      hintText: '¿Qué necesitas?',
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
+                                  )),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        controllerCredit.filterCategory.text =
+                                            "";
+                                        controllerCredit.search = "";
+                                        controllerCredit.filterCategory.text =
+                                            controllerCredit.search;
+
+                                        _pageController.jumpToPage(0);
+                                      });
+
+                                      printInfo(
+                                          info:
+                                              "salio de codigo caja de texto");
+                                    },
+                                    child: Icon(
+                                      Icons.dangerous_rounded,
+                                      size: 25,
+                                      color:
+                                          Constants.blueColor.withOpacity(.7),
+                                    ),
+                                  )
+                                ],
                               ),
                             )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
+                      ),
 
                 const SizedBox(
                   height: 5,

@@ -1,5 +1,6 @@
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/user_controller.dart';
+import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,20 +51,25 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
 
     return Theme(
       data: ThemeData().copyWith(
-          dividerColor: Colors.transparent,
-          listTileTheme: const ListTileThemeData(
-            titleTextStyle: TextStyle(color: Colors.black),
-          )),
+        dividerColor: Colors.transparent,
+        listTileTheme: const ListTileThemeData(
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w800,
+            fontSize: 17,
+          ),
+        ),
+      ),
       child: ExpansionTile(
-        childrenPadding: const EdgeInsets.all(10),
+        childrenPadding: const EdgeInsets.only(left: 20, right: 15),
         initiallyExpanded: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         title: Text(
           title,
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Constants.blueColor,
+            fontWeight: FontWeight.w900,
+            color: Constants.orangeColor,
           ),
         ),
         children: sortedKeys.map<Widget>((key) {
@@ -71,7 +77,9 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
           if (value is bool) {
             return ListTile(
               isThreeLine: false,
-              title: Text(key),
+              title: Text(
+                key,
+              ),
               trailing: Checkbox(
                 checkColor: Colors.white,
                 splashRadius: 20,
@@ -233,11 +241,23 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                   snap: false, // Desactivado para evitar saltos repentinos
                   automaticallyImplyLeading:
                       true, // Dejar Flutter decidir automáticamente sobre el leading widget basado en el contexto de navegación
-                  iconTheme: const IconThemeData(
-                    size: 35, // Ajuste del tamaño de los iconos
-                    color: Colors.orange,
+                  leading: Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: IconButton(
+                      iconSize: 40,
+                      splashColor: Colors.blue,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent),
 
-                    // Un color llamativo para los iconos
+                      autofocus: true,
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Constants.orangeColor,
+                      ), // Cambia 'Icons.menu' por el icono que desees
+                      onPressed: () {
+                        Get.back();
+                      },
+                    ),
                   ),
                   elevation: 10,
                   flexibleSpace: LayoutBuilder(
@@ -245,36 +265,51 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                         (BuildContext context, BoxConstraints constraints) {
                       return FlexibleSpaceBar(
                         title: orientation == Orientation.portrait
-                            ? Text(
-                                'Privilegios de usuario',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Constants
-                                      .orangeColor, //                                        fontWeight: FontWeight.bold,
-                                  fontSize: 17,
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                  left: 0,
+                                  right: size.width * 0.0,
+                                ),
+                                child: const CustomTextTitle(
+                                  title: 'PRIVILEGIOS DE USUARIO',
+                                  size: 15.0,
                                 ),
                               )
                             : Padding(
-                                padding:
-                                    EdgeInsets.only(left: size.width * 0.2),
-                                child: Text(
-                                  'Privilegios de usuario',
-                                  style: TextStyle(
-                                    color: Constants
-                                        .orangeColor, // Usa el color que mejor se ajuste a tu paleta
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                  ),
+                                padding: EdgeInsets.only(
+                                  left: size.width * 0.15,
+                                ),
+                                child: const CustomTextTitle(
+                                  title: 'PRIVILEGIOS DE USUARIO',
+                                  size: 15.0,
                                 ),
                               ),
                         background: Stack(
-                          fit: StackFit.loose,
+                          fit: StackFit.expand,
                           children: [
-                            Image.asset(
-                              fondoPrivilegios, // Asegúrate de que esta ruta es correcta
-                              fit: BoxFit
-                                  .contain, // Cubrir para que la imagen se expanda bien
-                            ),
+                            orientation == Orientation.portrait
+                                ? Positioned(
+                                    top: size.width * 0.0,
+                                    bottom: size.width * 0.12,
+                                    right: size.width * 0.0,
+                                    left: size.width * 0.0,
+                                    child: Image.asset(
+                                      fondoPrivilegios, // Asegúrate de que esta ruta es correcta
+                                      fit: BoxFit
+                                          .contain, // Cubrir para que la imagen se expanda bien
+                                    ),
+                                  )
+                                : Positioned(
+                                    top: size.width * 0.0,
+                                    bottom: size.width * 0.0,
+                                    right: size.width * 0.5,
+                                    left: size.width * 0.0,
+                                    child: Image.asset(
+                                      fondoPrivilegios, // Asegúrate de que esta ruta es correcta
+                                      fit: BoxFit
+                                          .contain, // Cubrir para que la imagen se expanda bien
+                                    ),
+                                  ),
                             // Este overlay oscurece ligeramente la imagen para que el texto resalte más
                             const DecoratedBox(
                               decoration: BoxDecoration(
@@ -299,11 +334,12 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    buildTree(privilegios, 'Perfil de usuarios'),
+                    buildTree(privilegios, 'TODOS LOS PERFILES :'),
                     const SizedBox(
                       height: 30,
                     ),
                     Container(
+                      height: 40,
                       margin: orientation == Orientation.portrait
                           ? const EdgeInsets.only(
                               bottom: 20, left: 20, right: 20)
@@ -315,13 +351,13 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                               .savePrivilegeChanges(privilegios, context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Constants.blueColor,
+                          backgroundColor: Colors.cyan,
                           padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 30), // Padding interno del botón
+                              vertical: 5,
+                              horizontal: 10), // Padding interno del botón
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
-                                10), // Borde redondeado del botón
+                                35), // Borde redondeado del botón
                           ),
                           elevation: 3, // Elevación del botón
                         ),
@@ -329,7 +365,7 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
                           'Guardar Cambios',
                           style: TextStyle(
                             color: Colors.white, // Color del texto del botón
-                            fontSize: 16, // Tamaño del texto del botón
+                            fontSize: 14, // Tamaño del texto del botón
                           ),
                         ),
                       ),

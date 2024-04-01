@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
- final TextStyle font;
+  final TextStyle font;
 
   const CustomText({
     super.key,
@@ -16,3 +16,4 @@ class CustomText extends StatelessWidget {
     return Text(text, style: font);
   }
 }
+

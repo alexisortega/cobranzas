@@ -71,6 +71,7 @@ class authenticationRepository extends GetxController {
                   'Ver': true,
                 }
               },
+              'roll': "Superusuario",
             });
 
             Get.offAll(() => const RootPage());
@@ -90,7 +91,7 @@ class authenticationRepository extends GetxController {
       /*  if (firebaseUser1.value != null) {
         Get.offAll(() => const RootPage());
       } else {
-        Get.to(() => SignUp());
+        Get.to(() => const SignUp());
       } */
     } on FirebaseAuthException catch (e) {
       final ex = signUpWithEmailAndPasswordFailure.code(e.code);
@@ -223,9 +224,12 @@ class authenticationRepository extends GetxController {
       {required BuildContext context}) async {
     try {
       GoogleSignIn googleSignIn = GoogleSignIn();
+
       GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
+
       if (googleAccount == null) {
         print.printError(info: "Error: Cuenta de Google nula");
+
         return null;
       }
 
@@ -265,6 +269,7 @@ class authenticationRepository extends GetxController {
               'Ver': true,
             },
           },
+          'roll': "Superusuario"
         });
       }
 

@@ -1,9 +1,8 @@
 import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:cobranzas/repository/authentication.dart';
-import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
@@ -49,6 +48,24 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
+                    leading: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: IconButton(
+                        iconSize: 40,
+                        splashColor: Colors.blue,
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent),
+
+                        autofocus: true,
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Constants.orangeColor,
+                        ), // Cambia 'Icons.menu' por el icono que desees
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    ),
                     scrolledUnderElevation: 10,
                     forceMaterialTransparency: true,
                     backgroundColor: Colors
@@ -74,30 +91,31 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                           (BuildContext context, BoxConstraints constraints) {
                         return FlexibleSpaceBar(
                           title: orientation == Orientation.portrait
-                              ? Text(
-                                  'Eliminar perfil de usuario',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Constants
-                                        .orangeColor, //                                        fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                  ),
+                              ? Stack(
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      color: Colors.transparent,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: size.height * 0.038),
+                                        child: const CustomTextTitle(
+                                          title: "ELIMINAR PERFIL DE USUARIO",
+                                          size: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               : Padding(
                                   padding:
-                                      EdgeInsets.only(left: size.width * 0.2),
-                                  child: Text(
-                                    'Eliminar perfil de usuario',
-                                    style: TextStyle(
-                                      color: Constants
-                                          .orangeColor, // Usa el color que mejor se ajuste a tu paleta
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
+                                      EdgeInsets.only(left: size.width * 0.17),
+                                  child: const CustomTextTitle(
+                                    title: "ELIMINAR PERFIL DE USUARIO",
+                                    size: 14,
+                                  )),
                           background: Stack(
-                            fit: StackFit.loose,
+                            fit: StackFit.expand,
                             children: [
                               orientation == Orientation.portrait
                                   ? Positioned(
@@ -112,8 +130,8 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                                       ),
                                     )
                                   : Positioned(
-                                      top: size.height * -0.01,
-                                      bottom: size.height * 0.02,
+                                      top: size.height * -0.001,
+                                      bottom: size.height * -0.05,
                                       left: size.width * 0.0,
                                       right: size.width * 0.6,
                                       child: Image.asset(
@@ -126,12 +144,11 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                               const DecoratedBox(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    begin: Alignment(0.0, 1.0),
-                                    end: Alignment(0.0, 1.0),
+                                    begin: Alignment(0.0, 0.6),
+                                    end: Alignment(0.0, 0.0),
                                     colors: <Color>[
+                                      Colors.black12,
                                       Colors.transparent,
-                                      Colors.blue,
-                                      Colors.black87,
                                     ],
                                   ),
                                 ),
@@ -142,6 +159,11 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                       },
                     ),
                   ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 30,
+                    ),
+                  ),
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -149,53 +171,65 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                         final value = privilegios[key];
                         final bool isChecked =
                             value == 'true'; // Convertir cadena a booleano
-                        return ListTile(
-                          contentPadding:
-                              const EdgeInsets.only(right: 20, left: 20),
-                          title: Text(
-                            key,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 22,
-                              color: Constants.blueColor,
-                            ),
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange[300],
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          trailing: Checkbox(
-                            activeColor: Colors.blue,
-                            checkColor: Colors.white,
-                            autofocus: true,
-                            focusColor: Colors.amber,
-                            value: isChecked,
-                            onChanged: (newValue) {
-                              setState(() {
-                                privilegios[key] = newValue.toString();
-                                // Si el Checkbox se deselecciona, agrega o elimina el perfil de usuario de la lista a eliminar
+                          margin: orientation == Orientation.portrait
+                              ? const EdgeInsets.only(
+                                  top: 10, left: 20, right: 20)
+                              : const EdgeInsets.only(
+                                  top: 10, left: 50, right: 50),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.only(
+                                right: 10, left: 20, top: 0),
+                            title: Text(
+                              key,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 22,
+                                color: Colors.black,
+                              ),
+                            ),
+                            trailing: Checkbox(
+                              activeColor: Colors.blue,
+                              checkColor: Colors.white,
+                              autofocus: true,
+                              focusColor: Colors.amber,
+                              value: isChecked,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  privilegios[key] = newValue.toString();
+                                  // Si el Checkbox se deselecciona, agrega o elimina el perfil de usuario de la lista a eliminar
 
-                                if (newValue!) {
-                                  // Si el checkbox se marca
-                                  setState(() {
-                                    // Agregar el perfil a la lista de perfiles a eliminar
-                                    perfilesAEliminar.add(key);
-                                  });
-                                } else {
-                                  setState(() {
-                                    // elimina el perfil que no se va a eliminar ya selecionados y se deselecciono
-                                    perfilesAEliminar.remove(key);
-                                  });
-                                }
-
-                                /* if (newValue!) {
-                                  if (perfilesAEliminar.contains(key)) {
-                                    perfilesAEliminar.remove(key);
+                                  if (newValue!) {
+                                    // Si el checkbox se marca
+                                    setState(() {
+                                      // Agregar el perfil a la lista de perfiles a eliminar
+                                      perfilesAEliminar.add(key);
+                                    });
                                   } else {
-                                    perfilesAEliminar.add(key);
+                                    setState(() {
+                                      // elimina el perfil que no se va a eliminar ya selecionados y se deselecciono
+                                      perfilesAEliminar.remove(key);
+                                    });
                                   }
-                                } else {
 
-
-                                } */
-                              });
-                            },
+                                  /* if (newValue!) {
+                                    if (perfilesAEliminar.contains(key)) {
+                                      perfilesAEliminar.remove(key);
+                                    } else {
+                                      perfilesAEliminar.add(key);
+                                    }
+                                  } else {
+                          
+                          
+                                  } */
+                                });
+                              },
+                            ),
                           ),
                         );
                       },
@@ -213,7 +247,7 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                       child: ElevatedButton(
                         autofocus: true,
                         style: TextButton.styleFrom(
-                          backgroundColor: Constants.blueColor,
+                          backgroundColor: Colors.cyan,
                         ),
                         onPressed: () async {
                           try {

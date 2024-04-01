@@ -344,6 +344,9 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),

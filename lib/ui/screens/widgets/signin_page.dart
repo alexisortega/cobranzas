@@ -15,12 +15,13 @@ class SignIn extends StatefulWidget {
   State<SignIn> createState() => _SignInState();
 }
 
+final GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
+
 class _SignInState extends State<SignIn> {
   bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey3 = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     final controller2 = Get.put(SingUpController());
 
