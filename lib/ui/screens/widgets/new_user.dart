@@ -505,22 +505,17 @@ class _NewUserState extends State<NewUser> {
                                                 width: 3,
                                                 color: Colors.orange))),
                                     value: _selectedPrivilege,
-                                    items: privilegios != null
-                                        ? (privilegios
-                                            .map(
-                                              (item) =>
-                                                  DropdownMenuItem<String>(
-                                                      value: item,
-                                                      child: Text(item,
-                                                          style: TextStyle(
-                                                              fontSize: 17,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      .7)))),
-                                            )
-                                            .toList())
-                                        : [],
+                                    items: (privilegios
+                                        .map(
+                                          (item) => DropdownMenuItem<String>(
+                                              value: item,
+                                              child: Text(item,
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.black
+                                                          .withOpacity(.7)))),
+                                        )
+                                        .toList()),
                                     onChanged: (item) => setState(() {
                                       _selectedPrivilege = item!;
                                       selectedmenu = true;
@@ -547,102 +542,110 @@ class _NewUserState extends State<NewUser> {
                                             autofocus: true,
 
                                             onPressed: () async {
-                                              isLoading = false;
+                                              
+                                                isLoading = false;
 
-                                              try {
-                                                final esSuperUsuario =
-                                                    await userController
-                                                        .esSuperUsuario();
-                                                await userController
-                                                    .obtenerPrivilegiosUsuarioActivo();
+                                                try {
+                                                  final esSuperUsuario =
+                                                      await userController
+                                                          .esSuperUsuario();
+                                                  await userController
+                                                      .obtenerPrivilegiosUsuarioActivo();
 
-                                                printInfo(
-                                                    info:
-                                                        " es superusuario: $esSuperUsuario");
-                                                if (esSuperUsuario == true) {
-                                                  //todo Empiza  condicion de forms//
-                                                  if (formKey.currentState!
-                                                      .validate()) {
-                                                    setState(() {
-                                                      isLoading = true;
-                                                      if (isLoading == true) {
-                                                        showDialog(
-                                                            barrierDismissible:
-                                                                false,
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return Center(
-                                                                  child:
-                                                                      SpinKitRing(
-                                                                color: Colors
-                                                                    .orange
-                                                                    .withOpacity(
-                                                                        0.9),
-                                                                size: 50.0,
-                                                                lineWidth: 4,
-                                                              ));
+                                                  printInfo(
+                                                      info:
+                                                          " es superusuario: $esSuperUsuario");
+                                                  if (esSuperUsuario == true) {
+                                                    //todo Empiza  condicion de forms//
+                                                    if (formKey.currentState!
+                                                        .validate()) {
+                                                      setState(() {
+                                                        isLoading = true;
+                                                        if (isLoading == true) {
+                                                          showDialog(
+                                                              barrierDismissible:
+                                                                  false,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return Center(
+                                                                    child:
+                                                                        SpinKitRing(
+                                                                  color: Colors
+                                                                      .orange
+                                                                      .withOpacity(
+                                                                          0.9),
+                                                                  size: 50.0,
+                                                                  lineWidth: 4,
+                                                                ));
+                                                              });
+
+                                                          Future.delayed(
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      2000),
+                                                              () {
+                                                            setState(() {
+                                                              isLoading = false;
+                                                              Get.back();
                                                             });
+                                                          }).whenComplete(
+                                                              () async {
+                                                            await userController.registrarNuevoUsuario2(
+                                                                userController
+                                                                    .emailUser
+                                                                    .text
+                                                                    .trim(),
+                                                                userController
+                                                                    .passwordUser
+                                                                    .text
+                                                                    .trim(),
+                                                                userController
+                                                                    .fullName
+                                                                    .text
+                                                                    .trim(),
+                                                                userController
+                                                                    .addressUser
+                                                                    .text
+                                                                    .trim(),
+                                                                userController
+                                                                    .telUser
+                                                                    .text
+                                                                    .trim(),
+                                                                _selectedPrivilege);
 
-                                                        Future.delayed(
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    2000), () {
-                                                          setState(() {
-                                                            isLoading = false;
-                                                            Get.back();
+                                                            cleanFields();
                                                           });
-                                                        }).whenComplete(
-                                                            () async {
-                                                          await userController.registrarNuevoUsuario2(
-                                                              userController
-                                                                  .emailUser
-                                                                  .text
-                                                                  .trim(),
-                                                              userController
-                                                                  .passwordUser
-                                                                  .text
-                                                                  .trim(),
-                                                              userController
-                                                                  .fullName.text
-                                                                  .trim(),
-                                                              userController
-                                                                  .addressUser
-                                                                  .text
-                                                                  .trim(),
-                                                              userController
-                                                                  .telUser.text
-                                                                  .trim(),
-                                                              _selectedPrivilege);
-
-                                                          cleanFields();
-                                                        });
-                                                      }
-                                                    });
+                                                        }
+                                                      });
+                                                    } else {
+                                                      authenticationRepository
+                                                          .showMessage(
+                                                              "Advertencia",
+                                                              "Error de registro verifique los datos",
+                                                              context);
+                                                    }
                                                   } else {
                                                     authenticationRepository
                                                         .showMessage(
                                                             "Advertencia",
-                                                            "Error de registro verifique los datos",
+                                                            "No es superusuario",
                                                             context);
                                                   }
-                                                } else {
+                                                } on FirebaseFirestore catch (_) {
                                                   authenticationRepository
                                                       .showMessage(
                                                           "Advertencia",
-                                                          "No es superusuario",
+                                                          "Error de base de datos Firebase",
+                                                          context);
+                                                } catch (e) {
+                                                  authenticationRepository
+                                                      .showMessage(
+                                                          "Advertencia",
+                                                          "Error $e ",
                                                           context);
                                                 }
-                                              } on FirebaseFirestore catch (_) {
-                                                authenticationRepository
-                                                    .showMessage(
-                                                        "Advertencia",
-                                                        "Error de base de datos Firebase",
-                                                        context);
-                                              } catch (e) {
-                                                authenticationRepository
-                                                    .showMessage("Advertencia",
-                                                        "Error $e ", context);
-                                              }
+                                              
                                             },
                                             child: const Row(
                                               children: [

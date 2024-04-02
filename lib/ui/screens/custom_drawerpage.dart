@@ -6,7 +6,9 @@ import 'package:cobranzas/ui/screens/widgets/delate_user_type.dart';
 import 'package:cobranzas/ui/screens/widgets/new_profile_user.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -22,11 +24,16 @@ class _DrawerPageState extends State<DrawerPage> {
   @override
   void initState() {
     drawerController.esSuperUsuario().then((val) {
-      setState(() {
-        isSuperUser = val;
-      });
+      isSuperUser = val;
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Elimina el temporizador en dispose
+
+    super.dispose();
   }
 
   @override
@@ -136,30 +143,68 @@ class _DrawerPageState extends State<DrawerPage> {
                                         Positioned(
                                           top: size.height * 0.1,
                                           left: size.width * 0.03,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                isSuperUser == true
-                                                    ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" "))}!'
-                                                    : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" "))}!',
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                isSuperUser == true
-                                                    ? (userData[
-                                                        "correo_SuperUsuario"])
-                                                    : (userData["correo"]),
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
+                                          child: Stack(children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  color: Colors.blueGrey,
+                                                  height: 50,
+                                                  width: size.width * 0.55,
+                                                  child: Row(
+                                                    children: [
+                                                      FittedBox(
+                                                        fit: BoxFit.fitWidth,
+                                                        child: Text(
+                                                          softWrap: true,
+                                                          maxLines: null,
+                                                          isSuperUser == true
+                                                              ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                              : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                                  .toUpperCase(),
+                                                          style: const TextStyle(
+                                                              fontSize: 22,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                  color: Colors.amber,
+                                                  height: 40,
+                                                  child: Row(
+                                                    children: [
+                                                      FittedBox(
+                                                        fit: BoxFit.fitWidth,
+                                                        child: Text(
+                                                          isSuperUser == true
+                                                              ? (userData[
+                                                                  "correo_SuperUsuario"])
+                                                              : (userData[
+                                                                  "correo"]),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ]),
                                         ),
                                         Positioned(
                                           top: 10,

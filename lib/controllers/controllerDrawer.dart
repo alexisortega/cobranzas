@@ -42,7 +42,7 @@ class Drawercontroller extends GetxController {
       return {};
     } catch (e) {
       // Manejar cualquier error
-      print('Error al obtener datos del usuario: $e');
+      printError(info: 'Error al obtener datos del usuario: $e');
       return {};
     }
   }
@@ -85,7 +85,7 @@ class Drawercontroller extends GetxController {
         return {};
       } catch (e) {
         // Manejar cualquier error
-        print('Error en obtenerDatosUsuarioStream: $e');
+        printError(info: 'Error en obtenerDatosUsuarioStream: $e');
         return {}; // Devuelve un mapa vacío en caso de error
       }
     }));

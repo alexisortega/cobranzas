@@ -18,10 +18,12 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
   late Future<Map<String, dynamic>> privilegiosFuture;
   List<String> perfilesAEliminar = [];
   late String fondoEliminarPerfilUsuario = "";
+
+  int indexProfile = 0;
   @override
   void initState() {
-    privilegiosFuture = userController.getPrivilegiosFromFirestore();
     fondoEliminarPerfilUsuario = "assets/fondoEliminarPerfilUsuario.png";
+    privilegiosFuture = userController.getPrivilegiosFromFirestore();
 
     super.initState();
   }
@@ -171,6 +173,7 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                         final value = privilegios[key];
                         final bool isChecked =
                             value == 'true'; // Convertir cadena a booleano
+                        indexProfile = privilegios.keys.length;
 
                         return Container(
                           decoration: BoxDecoration(
@@ -208,6 +211,7 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                                     // Si el checkbox se marca
                                     setState(() {
                                       // Agregar el perfil a la lista de perfiles a eliminar
+
                                       perfilesAEliminar.add(key);
                                     });
                                   } else {
@@ -254,57 +258,68 @@ class _DeleteUserTypeState extends State<DeleteUserType> {
                             bool isLoading = false;
                             //verificar si los checkbox no estan vacios
                             if (perfilesAEliminar.isNotEmpty) {
-                              // Eliminar todos los perfiles seleccionados
-                              setState(() {
-                                isLoading = true;
-                              });
+                              printInfo(
+                                  info:
+                                      "cuantos perfiles existen: $indexProfile");
+                              if (indexProfile > 1) {
+                                // Eliminar todos los perfiles seleccionados
 
-                              if (isLoading == true) {
-                                showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return SpinKitRing(
-                                      duration:
-                                          const Duration(milliseconds: 1000),
-                                      color: Constants.orangeColor,
-                                      size: 50.0,
-                                      lineWidth: 4,
-                                    );
-                                  },
-                                );
-
-                                Future.delayed(
-                                    const Duration(milliseconds: 1000), () {
-                                  setState(() {
-                                    isLoading = false;
-                                    Get.back();
-                                  });
-                                }).whenComplete(() async {
-                                  await Future.wait(perfilesAEliminar.map(
-                                      (perfil) => userController
-                                          .eliminarPerfilUsuario(perfil)));
-
-                                  // Limpiar la lista de perfiles a eliminar después de la eliminación
-                                  setState(() {
-                                    perfilesAEliminar.clear();
-                                  });
-                                  // Actualizar la interfaz de usuario después de eliminar todos los perfiles
-                                  privilegiosFuture = userController
-                                      .getPrivilegiosFromFirestore()
-                                      .whenComplete(() => setState(() {
-                                            authenticationRepository
-                                                .showMessage(
-                                              "Aviso",
-                                              "El perfil de usuario se elimino correctamente",
-                                              context,
-                                            );
-                                          }));
+                                setState(() {
+                                  isLoading = true;
                                 });
+
+                                if (isLoading == true) {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return SpinKitRing(
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        color: Constants.orangeColor,
+                                        size: 50.0,
+                                        lineWidth: 4,
+                                      );
+                                    },
+                                  );
+
+                                  Future.delayed(
+                                      const Duration(milliseconds: 1000), () {
+                                    setState(() {
+                                      isLoading = false;
+                                      Get.back();
+                                    });
+                                  }).whenComplete(() async {
+                                    await Future.wait(perfilesAEliminar.map(
+                                        (perfil) => userController
+                                            .eliminarPerfilUsuario(perfil)));
+
+                                    // Limpiar la lista de perfiles a eliminar después de la eliminación
+                                    setState(() {
+                                      perfilesAEliminar.clear();
+                                    });
+                                    // Actualizar la interfaz de usuario después de eliminar todos los perfiles
+                                    privilegiosFuture = userController
+                                        .getPrivilegiosFromFirestore()
+                                        .whenComplete(() => setState(() {
+                                              authenticationRepository
+                                                  .showMessage(
+                                                "Aviso",
+                                                "El perfil de usuario se elimino correctamente",
+                                                context,
+                                              );
+                                            }));
+                                  });
+                                } else {
+                                  authenticationRepository.showMessage(
+                                      "Advertencia",
+                                      "Algo salio mal, intente más tarde",
+                                      context);
+                                }
                               } else {
                                 authenticationRepository.showMessage(
                                     "Advertencia",
-                                    "Algo salio mal, intente más tarde",
+                                    "Necesitas tener por lo menos un perfil de usuario",
                                     context);
                               }
                             } else {
