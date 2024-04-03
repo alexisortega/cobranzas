@@ -1,14 +1,15 @@
 import 'package:cobranzas/controllers/controllerDrawer.dart';
 import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
 import 'package:cobranzas/ui/screens/widgets/delate_user_type.dart';
 import 'package:cobranzas/ui/screens/widgets/new_profile_user.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class DrawerPage extends StatefulWidget {
 
 class _DrawerPageState extends State<DrawerPage> {
   static var drawerController = Get.put(Drawercontroller());
-  late bool isSuperUser;
+  late bool isSuperUser = true;
   @override
   void initState() {
     drawerController.esSuperUsuario().then((val) {
@@ -31,9 +32,25 @@ class _DrawerPageState extends State<DrawerPage> {
 
   @override
   void dispose() {
-    // Elimina el temporizador en dispose
-
     super.dispose();
+  }
+
+  String obtenerIniciales(String nombreCompleto) {
+    List<String> palabras = nombreCompleto.split(' ');
+    String iniciales = '';
+
+    for (var i = 0; i < palabras.length; i++) {
+      var palabra = palabras[i];
+      iniciales += palabra[0].toUpperCase();
+
+      // Si las iniciales superan los 3 caracteres, detener el bucle
+      if (iniciales.length >= 3) {
+        break;
+      }
+    }
+
+    // Devolver solo las primeras 3 iniciales
+    return iniciales.substring(0, 3);
   }
 
   @override
@@ -58,8 +75,8 @@ class _DrawerPageState extends State<DrawerPage> {
                 color: Colors.white,
                 child: const Text('No se encontraron datos del usuario'));
           }
-
           var userData = snapshot.data!;
+
           return Column(
             children: [
               orientation == Orientation.portrait
@@ -89,7 +106,7 @@ class _DrawerPageState extends State<DrawerPage> {
                                     top: 12, left: 15, bottom: 15, right: 10),
                                 child: Card(
                                   margin: EdgeInsets.zero,
-                                  elevation: 0,
+                                  elevation: 40,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
@@ -114,29 +131,59 @@ class _DrawerPageState extends State<DrawerPage> {
                                           top: size.height * 0.02,
                                           left: size.width * 0.05,
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
-                                              CircleAvatar(
-                                                radius: 30,
-                                                backgroundColor:
-                                                    Constants.blueColor,
-                                                child: const Icon(
-                                                    Icons.person_outline,
-                                                    size: 45.0,
-                                                    color: Colors.white70),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: Colors.blue[800]
+                                                            as Color),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    gradient: LinearGradient(
+                                                        colors: [
+                                                          Constants.blueColor,
+                                                          Constants.orangeColor
+                                                        ])),
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  child: Text(
+                                                    isSuperUser == true
+                                                        ? obtenerIniciales(userData[
+                                                            'nombre_SuperUsuario'])
+                                                        : obtenerIniciales(
+                                                            userData['nombre']),
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      fontSize: 25,
+                                                      color: Colors.black,
+                                                      fontStyle:
+                                                          FontStyle.normal,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
                                               Text(
-                                                  isSuperUser == true
-                                                      ? "(${userData["roll_SuperUsuario"]})"
-                                                      : "(${userData["roll"]})",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 15,
-                                                      color:
-                                                          Constants.blueColor)),
+                                                isSuperUser == true
+                                                    ? "(${userData["roll_SuperUsuario"]})"
+                                                    : "(${userData["roll"]})",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w900,
+                                                  fontSize: 17,
+                                                  color: Colors.cyan[700],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -148,58 +195,40 @@ class _DrawerPageState extends State<DrawerPage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Container(
-                                                  color: Colors.blueGrey,
-                                                  height: 50,
+                                                  color: Colors.transparent,
                                                   width: size.width * 0.55,
-                                                  child: Row(
-                                                    children: [
-                                                      FittedBox(
-                                                        fit: BoxFit.fitWidth,
-                                                        child: Text(
-                                                          softWrap: true,
-                                                          maxLines: null,
-                                                          isSuperUser == true
-                                                              ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
-                                                              : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
-                                                                  .toUpperCase(),
-                                                          style: const TextStyle(
-                                                              fontSize: 22,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  child: FittedBox(
+                                                    fit: BoxFit.fitWidth,
+                                                    child: CustomTextTitle(
+                                                      title: isSuperUser == true
+                                                          ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                          : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                              .toUpperCase(),
+                                                      size: 15,
+                                                    ),
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
                                                 Container(
-                                                  color: Colors.amber,
-                                                  height: 40,
-                                                  child: Row(
-                                                    children: [
-                                                      FittedBox(
-                                                        fit: BoxFit.fitWidth,
-                                                        child: Text(
-                                                          isSuperUser == true
-                                                              ? (userData[
-                                                                  "correo_SuperUsuario"])
-                                                              : (userData[
-                                                                  "correo"]),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 14),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  width: size.width * 0.55,
+                                                  color: Colors.transparent,
+                                                  child: FittedBox(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      isSuperUser == true
+                                                          ? (userData[
+                                                              "correo_SuperUsuario"])
+                                                          : (userData[
+                                                              "correo"]),
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -238,7 +267,7 @@ class _DrawerPageState extends State<DrawerPage> {
                   Container(
                       color: Colors.transparent,
                       height: size.height,
-                      width: size.width * 0.4,
+                      width: size.width / 2.5,
                       child: Drawer(
                         backgroundColor: Colors.blue.withOpacity(0.4),
                         child: Container(
@@ -261,12 +290,12 @@ class _DrawerPageState extends State<DrawerPage> {
                                     top: 12, left: 15, bottom: 15, right: 10),
                                 child: Card(
                                   margin: EdgeInsets.zero,
-                                  elevation: 0,
+                                  elevation: 40,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Container(
-                                    height: (size.height * 0.32),
+                                    height: (size.height * 0.4),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.5),
@@ -283,62 +312,114 @@ class _DrawerPageState extends State<DrawerPage> {
                                     child: Stack(
                                       children: [
                                         Positioned(
-                                          top: size.height * 0.02,
-                                          left: size.width * 0.025,
+                                          top: size.height * 0.04,
+                                          left: size.width * 0.020,
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
-                                              CircleAvatar(
-                                                radius: 30,
-                                                backgroundColor:
-                                                    Constants.blueColor,
-                                                child: const Icon(
-                                                    Icons.person_outline,
-                                                    size: 45.0,
-                                                    color: Colors.white70),
+                                              Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: Colors.blue[800]
+                                                            as Color),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    gradient: LinearGradient(
+                                                        colors: [
+                                                          Constants.blueColor,
+                                                          Constants.orangeColor
+                                                        ])),
+                                                child: CircleAvatar(
+                                                  maxRadius: 28,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  child: Text(
+                                                    isSuperUser == true
+                                                        ? obtenerIniciales(userData[
+                                                            'nombre_SuperUsuario'])
+                                                        : obtenerIniciales(
+                                                            userData['nombre']),
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        overflow: TextOverflow
+                                                            .ellipsis),
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
                                               Text(
-                                                  isSuperUser == true
-                                                      ? "(${userData["roll_SuperUsuario"]})"
-                                                      : "(${userData["roll"]})",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 15,
-                                                      color:
-                                                          Constants.blueColor)),
+                                                isSuperUser == true
+                                                    ? "(${userData["roll_SuperUsuario"]})"
+                                                    : "(${userData["roll"]})",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w900,
+                                                  fontSize: 17,
+                                                  color: Colors.cyan[700],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
                                         Positioned(
-                                          top: size.height * 0.16,
+                                          top: size.height * 0.19,
                                           left: size.width * 0.03,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                isSuperUser == true
-                                                    ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" "))}!'
-                                                    : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" "))}!',
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                isSuperUser == true
-                                                    ? (userData[
-                                                        "correo_SuperUsuario"])
-                                                    : (userData["correo"]),
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
+                                          child: Stack(children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.33,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.fitWidth,
+                                                    child: CustomTextTitle(
+                                                      title: isSuperUser == true
+                                                          ? '¡Hola, ${((userData["nombre_SuperUsuario"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                          : '¡Hola, ${((userData["nombre"]).toString().split(" ").sublist(0, 2).join(" ")).toUpperCase()}!'
+                                                              .toUpperCase(),
+                                                      size: 15,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: size.width * 0.33,
+                                                  color: Colors.transparent,
+                                                  child: FittedBox(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      isSuperUser == true
+                                                          ? (userData[
+                                                              "correo_SuperUsuario"])
+                                                          : (userData[
+                                                              "correo"]),
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 20),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ]),
                                         ),
                                         Positioned(
                                           top: 10,
@@ -361,13 +442,12 @@ class _DrawerPageState extends State<DrawerPage> {
                                 ),
                               ),
                               Expanded(
-                                child: getListItemsDrawer(context, size),
-                              ),
+                                  child: getListItemsDrawer(context, size)),
                             ],
                           ),
                         ),
                       ),
-                    ),
+                    )
             ],
           );
         });
