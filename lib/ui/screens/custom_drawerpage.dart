@@ -7,6 +7,7 @@ import 'package:cobranzas/ui/screens/widgets/delate_user_type.dart';
 import 'package:cobranzas/ui/screens/widgets/new_profile_user.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
+import 'package:cobranzas/ui/screens/widgets/show_users.dart';
 
 import 'package:flutter/material.dart';
 
@@ -458,17 +459,25 @@ class _DrawerPageState extends State<DrawerPage> {
       padding: EdgeInsets.zero,
       children: <Widget>[
         createDrawerItem(
+            textColorsubTitle: Constants.blueColor,
+            iconColor: Colors.blue[800] as Color,
             icon: Icons.home,
             text: 'Inicio',
             onTap: () {
               Get.offAll(() => const RootPage());
             }),
         createDrawerItem(
+          textColorTitle: Constants.blueColor,
+          iconColor: Colors.blue[800] as Color,
+          subOptionsColor: Colors.white12,
           icon: Icons.person,
           text: 'Usuarios',
           onTap: () {},
           subOptions: [
+            //todo: opciones de menu desplegable usuarios//
             createDrawerItem(
+              iconColor: Colors.tealAccent[700] as Color,
+              textColorsubTitle: Colors.black.withOpacity(0.7),
               icon: Icons.person_add,
               text: 'Nuevo usuario',
               onTap: () {
@@ -483,6 +492,25 @@ class _DrawerPageState extends State<DrawerPage> {
               },
             ),
             createDrawerItem(
+              iconColor: Colors.orange[300] as Color,
+              textColorsubTitle: Colors.black.withOpacity(0.7),
+              icon: Icons.people,
+              text: 'Mostrar Usuarios',
+              onTap: () {
+                Get.to(
+                  () => const UserListPage(),
+                  duration: const Duration(milliseconds: 1000),
+                  fullscreenDialog: GetPlatform.isMobile,
+                  opaque: false,
+                  popGesture: true,
+                  transition: Transition.circularReveal,
+                );
+              },
+            ),
+
+            createDrawerItem(
+              textColorsubTitle: Colors.black.withOpacity(0.7),
+              iconColor: Constants.blueColor,
               icon: Icons.lock_person_rounded,
               text: 'Privilegios de usuario',
               onTap: () {
@@ -497,6 +525,8 @@ class _DrawerPageState extends State<DrawerPage> {
               },
             ),
             createDrawerItem(
+              iconColor: Colors.green,
+              textColorsubTitle: Colors.black.withOpacity(0.7),
               icon: Icons.account_circle,
               text: 'Nuevo perfil de usuario',
               onTap: () {
@@ -511,7 +541,9 @@ class _DrawerPageState extends State<DrawerPage> {
               },
             ),
             createDrawerItem(
+              textColorsubTitle: Colors.black.withOpacity(0.7),
               icon: Icons.delete_forever,
+              iconColor: Colors.red,
               text: 'Eliminar perfil de usuario',
               onTap: () {
                 Get.to(
@@ -527,6 +559,8 @@ class _DrawerPageState extends State<DrawerPage> {
           ],
         ),
         createDrawerItem(
+          textColorsubTitle: Constants.blueColor,
+          iconColor: Colors.blue[800] as Color,
           icon: Icons.settings,
           text: 'Configuración',
           onTap: () => Navigator.pop(context),
@@ -536,13 +570,14 @@ class _DrawerPageState extends State<DrawerPage> {
           child: Divider(color: Colors.blueGrey.withOpacity(0.5)),
         ),
         createDrawerItem(
-          icon: Icons.exit_to_app,
+          textColorsubTitle: Colors.blue[800] as Color,
+          iconColor: Colors.blue[800] as Color,
+          icon: Icons.door_back_door,
           text: 'Cerrar Sesión',
           onTap: () {
             authenticationRepository.showcerrarSesion(
                 "¿Estás seguro que quieres cerrar sesión?", context);
           },
-          textColor: Colors.cyan[900] as Color,
         ),
       ],
     );
@@ -552,8 +587,11 @@ class _DrawerPageState extends State<DrawerPage> {
     required IconData icon,
     required String text,
     required VoidCallback onTap,
-    Color textColor = const Color.fromARGB(255, 2, 54, 102),
+    Color textColorTitle = Colors.black,
+    Color textColorsubTitle = Colors.black,
+    required Color iconColor,
     List<Widget>? subOptions,
+    Color? subOptionsColor,
   }) {
     return subOptions != null
         ? Theme(
@@ -563,25 +601,34 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ExpansionTile(
               leading: Icon(
                 icon,
-                color: textColor,
+                color: iconColor,
               ),
-              title: Text(text,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  )),
-              children: subOptions,
+              title: Text(
+                text,
+                style: TextStyle(
+                  color: textColorTitle,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              children: subOptions.map((subOption) {
+                return Container(
+                  color: subOptionsColor ?? Colors.transparent,
+                  child: subOption,
+                );
+              }).toList(),
             ),
           )
         : ListTile(
-            leading: Icon(icon, color: textColor),
+            leading: Icon(icon, color: iconColor),
             title: Padding(
               padding: const EdgeInsets.only(right: 25),
-              child: Text(text,
-                  style: const TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  )),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: textColorsubTitle,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             onTap: onTap,
           );
