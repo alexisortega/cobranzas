@@ -498,7 +498,7 @@ class _DrawerPageState extends State<DrawerPage> {
               text: 'Mostrar Usuarios',
               onTap: () {
                 Get.to(
-                  () => const UserListPage(),
+                  () => const ShowUser(),
                   duration: const Duration(milliseconds: 1000),
                   fullscreenDialog: GetPlatform.isMobile,
                   opaque: false,

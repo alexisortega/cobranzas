@@ -3,6 +3,7 @@
 import 'package:cobranzas/ui/root_page.dart';
 //import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
@@ -53,8 +54,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft
+    ]);
+
     Size size = MediaQuery.of(context).size;
-    var orientation = MediaQuery.of(context).orientation;
+    // var orientation = MediaQuery.of(context).orientation;
 
     List<String> ClientesTypes = [
       'Nuevo Cliente',

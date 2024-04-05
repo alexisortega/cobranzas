@@ -8,6 +8,7 @@ import 'package:cobranzas/ui/screens/custom_drawerpage.dart';
 import 'package:cobranzas/ui/screens/home_page.dart';
 import 'package:cobranzas/ui/screens/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RootPage extends StatefulWidget {
@@ -52,6 +53,8 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     // var orientation = MediaQuery.of(context).orientation;
+
+   
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.white,
