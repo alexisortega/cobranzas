@@ -1,10 +1,9 @@
 import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
+import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ShowUser extends StatefulWidget {
@@ -45,7 +44,7 @@ class ShowUserState extends State<ShowUser>
     // Agrega más usuarios según sea necesario
   ];
   final ScrollController _scrollController = ScrollController();
-  int _currentIndex = 0;
+
   @override
   void initState() {
     fondoShowUser = "assets/FondoShowUsers.png";
@@ -170,7 +169,24 @@ class ShowUserState extends State<ShowUser>
                               color: Colors.orange,
                               size: 35,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              /*  late bool priv = false;
+                              await userController
+                                  .obtenerPrivilegioUsuario("Gerente", "Ver")
+                                  .then((value) {
+                                setState(() {
+                                  priv = value;
+                                });
+                              }); */
+
+                              /*      print("privilegio es: $priv"); */
+
+                              await userController.tipoUsuario(
+                                  "Ver",
+                                  () => mensaje1("Es superUser"),
+                                  () => mensaje1("tiene permisos"),
+                                  () => mensaje1("no tiene permisos"));
+
                               setState(() {
                                 isSelected = !isSelected;
                               });
@@ -479,5 +495,9 @@ class ShowUserState extends State<ShowUser>
                       );
               })),
     );
+  }
+
+  Future<dynamic> mensaje1(String s) async {
+    return await authenticationRepository.showMessage("Aviso", s, context);
   }
 }

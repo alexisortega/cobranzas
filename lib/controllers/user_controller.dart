@@ -137,7 +137,6 @@ class UserController extends GetxController {
     return false;
   }
 
-
   Future<List<String>> obtenerPrivilegiosUsuarioActivo() async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
 
@@ -255,6 +254,90 @@ class UserController extends GetxController {
       printError(info: 'Error al registrar el usuario: $e');
       isSuccefull = false;
       return isSuccefull;
+    }
+  }
+
+  Future<bool> obtenerPrivilegioUsuario(
+      String tipoUsuario, String privilegio) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      User? usuario = FirebaseAuth.instance.currentUser;
+      if (usuario == null) {
+        throw Exception('Usuario no autenticado.');
+      }
+
+      DocumentSnapshot<Map<String, dynamic>> usuarioSnapshot =
+          await firestore.collection('Usuarios').doc(usuario.uid).get();
+
+      if (usuarioSnapshot.exists) {
+        String idSuperUsuario = usuarioSnapshot.data()!['id_SuperUsuario'];
+
+        DocumentSnapshot<Map<String, dynamic>> superUsuarioSnapshot =
+            await firestore
+                .collection('SuperUsuarios')
+                .doc(idSuperUsuario)
+                .get();
+
+        if (superUsuarioSnapshot.exists) {
+          Map<String, dynamic> privilegios =
+              superUsuarioSnapshot.data()!['privilegios'];
+          bool tienePrivilegio = privilegios[tipoUsuario]?[privilegio] ?? false;
+          return tienePrivilegio;
+        } else {
+          throw Exception('No se encontró el superusuario asociado.');
+        }
+      } else {
+        throw Exception('No se encontró el documento de usuario.');
+      }
+    } catch (e) {
+      print('Error al obtener privilegio: $e');
+      return false;
+    }
+  }
+
+  Future<dynamic> tipoUsuario(
+    String tipoPrivilegio, [
+    Function()? metodoSuperUsuario,
+    Function()? metodoTienePermisos,
+    Function()? metodoNoTienePermisos,
+  ]) async {
+    try {
+      final esSuperUser = await esSuperUsuario();
+      print("Es superusuario: $esSuperUser");
+
+      if (esSuperUser != true) {
+        User? usuario = FirebaseAuth.instance.currentUser;
+        if (usuario == null) {
+          throw Exception('Usuario no autenticado.');
+        }
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance
+                .collection('Usuarios')
+                .doc(usuario.uid)
+                .get();
+
+        if (snapshot.exists) {
+          String? rol = snapshot.data()?['roll'];
+
+          final verificarPrivilegio =
+              await obtenerPrivilegioUsuario(rol!, tipoPrivilegio);
+          if (verificarPrivilegio == true) {
+            print("tiene permisos: $verificarPrivilegio");
+            await metodoTienePermisos!();
+          } else {
+            await metodoNoTienePermisos!();
+          }
+        } else {
+          throw Exception(
+              'El usuario no tiene un documento asociado en la colección "Usuarios".');
+        }
+      } else {
+        await metodoSuperUsuario!();
+        print("Es super Usuario");
+      }
+    } catch (e) {
+      printError(info: "$e");
     }
   }
 }
