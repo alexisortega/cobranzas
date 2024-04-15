@@ -1,9 +1,11 @@
 import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
-import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ShowUser extends StatefulWidget {
@@ -16,39 +18,15 @@ class ShowUser extends StatefulWidget {
 class ShowUserState extends State<ShowUser>
     with SingleTickerProviderStateMixin {
   static var userController = Get.put(UserController());
-
   late String fondoShowUser = "";
-
-  final List<String> users = [
-    'Usuario 1',
-    'Usuario 2',
-    'Usuario 3',
-    'Usuario 4',
-    'Usuario 5',
-    'Usuario 6',
-    'Usuario 7',
-    'Usuario 8',
-    'Usuario 9',
-    'Usuario 10',
-    'Usuario 11',
-    'Usuario 12',
-    'Usuario 13',
-    'Usuario 14',
-    'Usuario 15',
-    'Usuario 16',
-    'Usuario 17',
-    'Usuario 18',
-    'Usuario 19',
-    'Usuario 20',
-
-    // Agrega más usuarios según sea necesario
-  ];
   final ScrollController _scrollController = ScrollController();
+  Future<List<Map<String, dynamic>>> listUserdata = Future(() => []);
+  String search = "";
 
   @override
   void initState() {
     fondoShowUser = "assets/FondoShowUsers.png";
-
+    listUserdata = userController.getUsersLinkedToSuperUser();
     super.initState();
   }
 
@@ -85,30 +63,313 @@ class ShowUserState extends State<ShowUser>
           ),
         ),
         child: TextFormField(
+          controller: userController.serchShowUser,
+          showCursor: true,
+          cursorColor: Constants.blueColor,
+          enableInteractiveSelection: true,
           decoration: InputDecoration(
             hintText: 'Buscar usuario',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-            suffixIcon: Icon(
-              Icons.cancel,
+            hintStyle: TextStyle(
               color: Colors.white.withOpacity(0.7),
             ),
-            prefixIcon:
-                Icon(Icons.search, color: Colors.white.withOpacity(0.7)),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  userController.serchShowUser.text = "";
+                  search = "";
+                  userController.serchShowUser.text = search;
+                });
+              },
+              child: Icon(
+                Icons.cancel,
+                color: Colors.white.withOpacity(0.7),
+              ),
+            ),
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.white.withOpacity(0.7),
+            ),
             border: InputBorder.none,
             contentPadding: const EdgeInsets.only(
               top: 5,
             ),
           ),
-          style: const TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: _scrollController.position.pixels < 300
+                ? Colors.black.withOpacity(0.7)
+                : Colors.white,
+          ),
           onChanged: (value) {
-            // Handle search functionality
+            //guardar el valor del cuadro de texto
+            setState(() {
+              search = value;
+            });
           },
         ),
       ),
     ]);
   }
 
+  void showUserDetailsDialog(Size size, Map<String, dynamic> userData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          elevation: 8.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue[300] as Color,
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(1, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        "DETALLE DEL USUARIO",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Constants.blueColor,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildDetailRow("Nombre: ", userData['nombre']),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Correo electrónico: ", userData['correo']),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Tipo de usuario: ", userData['roll']),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Dirección: ", userData['direccion']),
+                    const SizedBox(height: 12),
+                    _buildDetailRow("Teléfono", userData['telefono']),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          backgroundColor: Colors.blue.withOpacity(0.9),
+                        ),
+                        child: const Text(
+                          "Cerrar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: Constants.blueColor.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void showEditUserDialog(Map<String, dynamic> userData) {
+    TextEditingController nombreController =
+        TextEditingController(text: userData['nombre']);
+    TextEditingController emailController =
+        TextEditingController(text: userData['correo']);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          elevation: 8.0,
+          backgroundColor: Colors.white,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue[300] as Color,
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(1, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(
+                      child: Text(
+                        "Editar usuario",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextField("Nombre", nombreController),
+                    const SizedBox(height: 12),
+                    _buildTextField("Correo electrónico", emailController),
+                    const SizedBox(height: 12),
+                    _buildTextField("Correo electrónico", emailController),
+                    const SizedBox(height: 12),
+                    _buildTextField("Correo electrónico", emailController),
+                    const SizedBox(height: 12),
+                    _buildTextField("Correo electrónico", emailController),
+                    const SizedBox(height: 12),
+                    _buildTextField("Correo electrónico", emailController),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.blue,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              backgroundColor: Colors.blue.withOpacity(0.1),
+                            ),
+                            child: Text(
+                              "Cancelar",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Aquí puedes manejar la lógica para guardar los cambios del usuario
+                              // Por ejemplo, puedes obtener los nuevos valores de los controladores nombreController y emailController
+                              // Y luego realizar las operaciones necesarias para actualizar los datos del usuario
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.blue,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            child: Text(
+                              "Guardar",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          style: TextStyle(fontSize: 16),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   bool isSelected = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -117,387 +378,352 @@ class ShowUserState extends State<ShowUser>
     return SafeArea(
       top: false,
       child: Scaffold(
-          body: CustomScrollView(
-            controller: _scrollController,
-            slivers: <Widget>[
-              SliverAppBar(
-                leading: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: IconButton(
-                    iconSize: 40,
-                    splashColor: Colors.blue,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent),
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: IconButton(
+                  iconSize: 40,
+                  splashColor: Colors.blue,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent),
 
-                    autofocus: true,
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Constants.orangeColor,
-                    ), // Cambia 'Icons.menu' por el icono que desees
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
-                ),
-                actions: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    alignment: orientation == Orientation.portrait
-                        ? Alignment.centerRight
-                        : isSelected == true
-                            ? Alignment.center
-                            : Alignment.centerRight,
-                    color: Colors.transparent,
-                    height: size.height,
-                    width: orientation == Orientation.portrait
-                        ? size.width * 0.87
-                        : size.width * 0.90,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          isSelected == true
-                              ? cuadroBusqueda(size)
-                              : Container(),
-                          IconButton(
-                            icon: Icon(
-                              isSelected == true
-                                  ? Icons.search_off_rounded
-                                  : Icons.search,
-                              color: Colors.orange,
-                              size: 35,
-                            ),
-                            onPressed: () async {
-                              /*  late bool priv = false;
-                              await userController
-                                  .obtenerPrivilegioUsuario("Gerente", "Ver")
-                                  .then((value) {
-                                setState(() {
-                                  priv = value;
-                                });
-                              }); */
-
-                              /*      print("privilegio es: $priv"); */
-
-                              await userController.tipoUsuario(
-                                  "Ver",
-                                  () => mensaje1("Es superUser"),
-                                  () => mensaje1("tiene permisos"),
-                                  () => mensaje1("no tiene permisos"));
-
-                              setState(() {
-                                isSelected = !isSelected;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-                forceMaterialTransparency: true,
-                backgroundColor: Colors.red,
-                expandedHeight:
-                    orientation == Orientation.portrait ? 350.0 : 200,
-                floating: false,
-                pinned: orientation == Orientation.portrait
-                    ? isSelected == true
-                        ? true
-                        : false
-                    : isSelected == true
-                        ? true
-                        : false,
-                snap: false,
-                scrolledUnderElevation: 40,
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  title: orientation == Orientation.portrait
-                      ? Container(
-                          height: size.height * 0.13,
-                          width: size.width * 0.54,
-                          color: Colors.transparent,
-                          padding: EdgeInsets.only(
-                            left: size.width * 0.016,
-                            top: size.height * 0.11,
-                            bottom: 0.0,
-                          ),
-                          child: const CustomTextTitle(
-                            title: 'TODOS LOS USUARIOS',
-                            size: 14.0,
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.only(
-                            left: size.width * 0.2,
-                          ),
-                          child: isSelected == false
-                              ? const CustomTextTitle(
-                                  title: 'TODOS LOS USUARIOS',
-                                  size: 14.0,
-                                )
-                              : null,
-                        ),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      orientation == Orientation.portrait
-                          ? Positioned(
-                              left: size.width * 0.0,
-                              right: size.width * 0.25,
-                              top: size.height * 0.08,
-                              bottom: size.height * 0.0,
-                              child: Image.asset(
-                                fondoShowUser, //imagen AppBar
-                                fit: BoxFit
-                                    .fitHeight, // Cubrir para que la imagen se expanda bien
-                              ),
-                            )
-                          : Positioned(
-                              left: size.width * 0.01,
-                              top: size.height * -0.001,
-                              right: size.width * 0.6,
-                              bottom: size.height * -0.10,
-                              child: Image.asset(
-                                fondoShowUser, //imagen AppBar
-                                fit: BoxFit
-                                    .fitHeight, // Cubrir para que la imagen se expanda bien
-                              ),
-                            ),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment(0.0, 0.5), //(X,Y)
-                            end: Alignment(0.0, 0.0),
-                            colors: <Color>[Colors.black12, Colors.transparent],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  autofocus: true,
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Constants.orangeColor,
+                  ), // Cambia 'Icons.menu' por el icono que desees
+                  onPressed: () {
+                    Get.back();
+                  },
                 ),
               ),
+              actions: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  alignment: orientation == Orientation.portrait
+                      ? Alignment.centerRight
+                      : isSelected == true
+                          ? Alignment.center
+                          : Alignment.centerRight,
+                  color: Colors.transparent,
+                  height: size.height,
+                  width: orientation == Orientation.portrait
+                      ? size.width * 0.87
+                      : size.width * 0.90,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        isSelected == true ? cuadroBusqueda(size) : Container(),
+                        IconButton(
+                          icon: Icon(
+                            isSelected == true
+                                ? Icons.search_off_rounded
+                                : Icons.search,
+                            color: Colors.orange,
+                            size: 35,
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              isSelected = !isSelected;
 
-              /*  SliverAppBar(
-              automaticallyImplyLeading: false,
-              expandedHeight: 80.0,
+                              userController.serchShowUser.text = "";
+                              search = "";
+                              userController.serchShowUser.text = search;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
               forceMaterialTransparency: true,
-              forceElevated: true,
-              floating: true,
-              pinned: true,
+              backgroundColor: Colors.white,
+              expandedHeight: orientation == Orientation.portrait ? 350.0 : 200,
+              floating: false,
+              pinned: orientation == Orientation.portrait
+                  ? isSelected == true
+                      ? true
+                      : false
+                  : isSelected == true
+                      ? true
+                      : false,
               snap: false,
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              scrolledUnderElevation: 40,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                title: orientation == Orientation.portrait
+                    ? Container(
+                        height: size.height * 0.13,
+                        width: size.width * 0.54,
+                        color: Colors.transparent,
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.016,
+                          top: size.height * 0.11,
+                          bottom: 0.0,
+                        ),
+                        child: const CustomTextTitle(
+                          title: 'TODOS LOS USUARIOS',
+                          size: 14.0,
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.2,
+                        ),
+                        child: isSelected == false
+                            ? const CustomTextTitle(
+                                title: 'TODOS LOS USUARIOS',
+                                size: 14.0,
+                              )
+                            : null,
+                      ),
+                background: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Container(
-                      height: size.height * 0.1,
-                      width: size.width * 0.95,
-                      margin: const EdgeInsets.only(
-                        left: 0,
-                        bottom: 0,
-                        right: 10,
-                        top: 0,
-                      ),
+                    orientation == Orientation.portrait
+                        ? Positioned(
+                            left: size.width * 0.0,
+                            right: size.width * 0.25,
+                            top: size.height * 0.08,
+                            bottom: size.height * 0.0,
+                            child: Image.asset(
+                              fondoShowUser, //imagen AppBar
+                              fit: BoxFit
+                                  .fitHeight, // Cubrir para que la imagen se expanda bien
+                            ),
+                          )
+                        : Positioned(
+                            left: size.width * 0.01,
+                            top: size.height * -0.001,
+                            right: size.width * 0.6,
+                            bottom: size.height * -0.10,
+                            child: Image.asset(
+                              fondoShowUser, //imagen AppBar
+                              fit: BoxFit
+                                  .fitHeight, // Cubrir para que la imagen se expanda bien
+                            ),
+                          ),
+                    const DecoratedBox(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
                         gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.blue.withOpacity(0.5),
-                            Colors.blueGrey.withOpacity(0.2),
-                          ],
+                          begin: Alignment(0.0, 0.5), //(X,Y)
+                          end: Alignment(0.0, 0.0),
+                          colors: <Color>[Colors.black12, Colors.transparent],
                         ),
-                      ),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Buscar usuario',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withOpacity(0.7)),
-                          suffixIcon: Icon(
-                            Icons.cancel,
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                          prefixIcon: Icon(Icons.search,
-                              color: Colors.white.withOpacity(0.7)),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.only(
-                            top: 5,
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.black),
-                        onChanged: (value) {
-                          // Handle search functionality
-                        },
                       ),
                     ),
                   ],
                 ),
-              ],
-            ), */
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 20,
-                ),
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: orientation == Orientation.portrait
-                                  ? 25.0
-                                  : 50),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.blue[300] as Color,
-                                  spreadRadius: 1,
-                                  blurRadius: 7,
-                                  offset: const Offset(1, 3),
-                                ),
-                              ],
-                            ),
-                            child: Stack(
-                              children: [
-                                ListTile(
-                                  titleAlignment: ListTileTitleAlignment.center,
-                                  leading: const CircleAvatar(
-                                    backgroundColor: Colors.blue,
-                                    child:
-                                        Icon(Icons.person, color: Colors.black),
-                                  ),
-                                  title: SizedBox(
-                                    width: 80,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Usuario ${index + 1}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'user${index + 1}@example.com',
-                                        style: const TextStyle(
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '(Administrador)',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Constants.blueColor),
+            ),
+
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: size.height * 0.02,
+              ),
+            ),
+
+            //todo: Sliver lista de usuarios
+
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: listUserdata,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    ),
+                  );
+                } else {
+                  List<Map<String, dynamic>> listUsers = snapshot.data ?? [];
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        final userData = listUsers[index];
+                        if ((userData['nombre'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (userData['correo'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (userData['roll'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search)) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.0,
+                                    horizontal:
+                                        orientation == Orientation.portrait
+                                            ? 25.0
+                                            : 50),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blue[300] as Color,
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: const Offset(1, 3),
                                       ),
                                     ],
                                   ),
-                                  trailing: const Icon(
-                                    Icons.edit,
-                                    color: Colors.orange,
+                                  child: Stack(
+                                    children: [
+                                      ListTile(
+                                        titleAlignment:
+                                            ListTileTitleAlignment.center,
+                                        leading: const CircleAvatar(
+                                          backgroundColor: Colors.blue,
+                                          child: Icon(Icons.person,
+                                              color: Colors.black),
+                                        ),
+                                        title: Container(
+                                          color: Colors.transparent,
+                                          margin:
+                                              const EdgeInsets.only(right: 5),
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  "${userData['nombre']}"
+                                                      .toUpperCase(),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "${userData['correo']}",
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              "(${userData['roll']})",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Constants.blueColor),
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: GestureDetector(
+                                          onTap: () {
+                                            showEditUserDialog(userData);
+                                          },
+                                          child: const Icon(
+                                            Icons.edit,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          showUserDetailsDialog(size, userData);
+                                        },
+                                      )
+                                    ],
                                   ),
-                                  onTap: () {
-                                    // Acción al seleccionar el usuario
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  childCount: users.length,
-                ),
-              ),
-              //todo:terminacion Sliver
-
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100,
-                ),
-              ),
-            ],
-          ),
-          floatingActionButton: AnimatedBuilder(
-              animation: _scrollController,
-              builder: (context, child) {
-                return _scrollController.hasClients &&
-                        _scrollController.offset > 100
-                    ? FloatingActionButton(
-                        heroTag: "",
-                        enableFeedback: false,
-                        onPressed: () {
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeInOut,
+                                ),
+                              ),
+                            ],
                           );
-                        },
-                        backgroundColor: Constants.blueColor,
-                        shape: CircleBorder(
-                            eccentricity: 1,
-                            side: BorderSide(
-                                width: 0.5, color: Constants.orangeColor)),
-                        elevation: 4.0, // Elevación del botón
-                        splashColor: Constants.orangeColor,
-                        child: const Icon(
-                          Icons.arrow_upward_outlined,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      )
-                    : FloatingActionButton(
-                        onPressed: () {
-                          Get.off(() => const NewUser());
-                        },
-                        heroTag: "",
-                        backgroundColor: Constants.blueColor,
-                        shape: CircleBorder(
-                            eccentricity: 1,
-                            side: BorderSide(
-                                width: 0.5, color: Constants.orangeColor)),
-                        elevation: 4.0, // Elevación del botón
-                        splashColor: Constants.orangeColor,
-                        child: Icon(
-                          Icons.person_add,
-                          color: Constants.orangeColor,
-                          size: 30,
-                        ), // Color de salpicadura al presionar
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                      childCount: listUsers.length,
+                    ),
+                  );
+                }
+              },
+            ),
+            //todo: terminacion SliverList
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: size.height * 0.1,
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: AnimatedBuilder(
+          animation: _scrollController,
+          builder: (context, child) {
+            return _scrollController.hasClients &&
+                    _scrollController.offset > 100
+                ? FloatingActionButton(
+                    heroTag: "",
+                    enableFeedback: false,
+                    onPressed: () {
+                      _scrollController.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
                       );
-              })),
+                    },
+                    backgroundColor: Constants.blueColor,
+                    shape: CircleBorder(
+                        eccentricity: 1,
+                        side: BorderSide(
+                            width: 0.5, color: Constants.orangeColor)),
+                    elevation: 4.0, // Elevación del botón
+                    splashColor: Constants.orangeColor,
+                    child: const Icon(
+                      Icons.arrow_upward_outlined,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  )
+                : FloatingActionButton(
+                    onPressed: () {
+                      Get.off(() => const NewUser());
+                    },
+                    heroTag: "",
+                    backgroundColor: Constants.blueColor,
+                    shape: CircleBorder(
+                        eccentricity: 1,
+                        side: BorderSide(
+                            width: 0.5, color: Constants.orangeColor)),
+                    elevation: 4.0, // Elevación del botón
+                    splashColor: Constants.orangeColor,
+                    child: Icon(
+                      Icons.person_add,
+                      color: Constants.orangeColor,
+                      size: 30,
+                    ), // Color de salpicadura al presionar
+                  );
+          },
+        ),
+      ),
     );
-  }
-
-  Future<dynamic> mensaje1(String s) async {
-    return await authenticationRepository.showMessage("Aviso", s, context);
   }
 }

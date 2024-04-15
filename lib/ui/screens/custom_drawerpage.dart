@@ -8,9 +8,8 @@ import 'package:cobranzas/ui/screens/widgets/new_profile_user.dart';
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:cobranzas/ui/screens/widgets/privilege_control.dart';
 import 'package:cobranzas/ui/screens/widgets/show_users.dart';
-
 import 'package:flutter/material.dart';
-
+import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:get/get.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -22,7 +21,9 @@ class DrawerPage extends StatefulWidget {
 
 class _DrawerPageState extends State<DrawerPage> {
   static var drawerController = Get.put(Drawercontroller());
+  static var userController = Get.put(UserController());
   late bool isSuperUser = true;
+
   @override
   void initState() {
     drawerController.esSuperUsuario().then((val) {
@@ -53,6 +54,9 @@ class _DrawerPageState extends State<DrawerPage> {
     // Devolver solo las primeras 3 iniciales
     return iniciales.substring(0, 3);
   }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -496,7 +500,29 @@ class _DrawerPageState extends State<DrawerPage> {
               textColorsubTitle: Colors.black.withOpacity(0.7),
               icon: Icons.people,
               text: 'Mostrar Usuarios',
-              onTap: () {
+              onTap: () async {
+                userController.tipoUsuario(
+                  "Ver",
+                  () => Get.to(
+                    () => const ShowUser(),
+                    duration: const Duration(milliseconds: 500),
+                    fullscreenDialog: GetPlatform.isMobile,
+                    opaque: false,
+                    popGesture: true,
+                    transition: Transition.circularReveal,
+                  ),
+                  () => Get.to(
+                    () => const ShowUser(),
+                    duration: const Duration(milliseconds: 500),
+                    fullscreenDialog: GetPlatform.isMobile,
+                    opaque: false,
+                    popGesture: true,
+                    transition: Transition.circularReveal,
+                  ),
+                  () => userController.mensajePrivilegio(
+                      "No tiene privilegios para mostrar usuarios", context),
+                );
+/* 
                 Get.to(
                   () => const ShowUser(),
                   duration: const Duration(milliseconds: 1000),
@@ -504,7 +530,7 @@ class _DrawerPageState extends State<DrawerPage> {
                   opaque: false,
                   popGesture: true,
                   transition: Transition.circularReveal,
-                );
+                ); */
               },
             ),
 

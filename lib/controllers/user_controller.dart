@@ -16,6 +16,8 @@ class UserController extends GetxController {
 
   //TextField para nuevo perfil de usuario
   final newTypeUser = TextEditingController();
+//
+  final serchShowUser = TextEditingController();
 
   Future<Map<String, dynamic>> getPrivilegiosFromFirestore() async {
     final auth1 = FirebaseAuth.instance;
@@ -338,6 +340,101 @@ class UserController extends GetxController {
       }
     } catch (e) {
       printError(info: "$e");
+    }
+  }
+
+  Future<dynamic> mensajePrivilegio(String s, BuildContext context) async {
+    return await authenticationRepository.showMessage("Aviso", s, context);
+  }
+
+  Future<List<Map<String, dynamic>>> getUsersLinkedToSuperUser() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        return [];
+      }
+
+      String uid = user.uid;
+      print('UID activo: $uid');
+
+      // Evaluamos si el usuario activo es superusuario
+      final esSuperUser = await esSuperUsuario();
+
+      // Si es superusuario, obtenemos los usuarios ligados
+      if (esSuperUser) {
+        // Consultamos los documentos en la colección 'Usuarios' donde el campo 'id_SuperUsuario' coincida con el UID activo
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('Usuarios')
+            .where('id_SuperUsuario', isEqualTo: uid)
+            .get();
+
+        List<Map<String, dynamic>> linkedUsersData = [];
+
+        // Iteramos sobre los documentos
+        for (var doc in querySnapshot.docs) {
+          // Obtenemos los datos de cada usuario
+          Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+          // Agregamos el ID del usuario a los datos
+          userData['id'] = doc.id;
+          // Agregamos los datos del usuario a la lista
+          linkedUsersData.add(userData);
+          print(
+              'Datos del usuario ${doc.id}: $userData'); // Print para mostrar los datos del usuario
+        }
+
+        print(
+            'Datos de los usuarios ligados al superusuario activo: $linkedUsersData');
+
+        // Retornamos la lista de datos de los usuarios normales ligados al superusuario activo
+        return linkedUsersData;
+      } else {
+        // Consultamos los documentos en la colección 'Usuarios' donde el campo 'id_SuperUsuario' coincida con el UID activo
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('Usuarios')
+            .doc(uid)
+            .get();
+        if (!userSnapshot.exists) {
+          print('El usuario activo no tiene un ID de superusuario vinculado');
+          return [];
+        }
+        String? idSuperUsuario =
+            (userSnapshot.data() as Map<String, dynamic>)['id_SuperUsuario'];
+
+        if (idSuperUsuario == null) {
+          print('El usuario activo no tiene un ID de superusuario vinculado');
+          return [];
+        }
+
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('Usuarios')
+            .where('id_SuperUsuario', isEqualTo: idSuperUsuario)
+            .get();
+
+        List<Map<String, dynamic>> linkedUsersData = [];
+
+        // Iteramos sobre los documentos
+        for (var doc in querySnapshot.docs) {
+          // Obtenemos los datos de cada usuario
+          Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+          // Agregamos el ID del usuario a los datos
+          userData['id'] = doc.id;
+          // Agregamos los datos del usuario a la lista
+          linkedUsersData.add(userData);
+          print(
+              'Datos del usuario ${doc.id}: $userData'); // Print para mostrar los datos del usuario
+        }
+
+        print(
+            'Datos de los usuarios ligados al superusuario activo: $linkedUsersData');
+
+        // Retornamos la lista de datos de los usuarios normales ligados al superusuario activo
+        return linkedUsersData;
+      }
+    } catch (e) {
+      print(
+          'Error al obtener los datos de usuarios ligados al superusuario: $e');
+      return [];
     }
   }
 }

@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool statusBottomDelete = false;
   var clients = Future(() => []);
 
-  var search = "";
+  String search = "";
   List<Object> customerData = [];
 
   bool isloading = false;
