@@ -1,11 +1,14 @@
 import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
-import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
+
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 class ShowUser extends StatefulWidget {
@@ -27,6 +30,7 @@ class ShowUserState extends State<ShowUser>
   void initState() {
     fondoShowUser = "assets/FondoShowUsers.png";
     listUserdata = userController.getUsersLinkedToSuperUser();
+
     super.initState();
   }
 
@@ -209,7 +213,7 @@ class ShowUserState extends State<ShowUser>
         ),
         const SizedBox(height: 4),
         Text(
-          value,
+          value.isEmail ? value : value.toUpperCase(),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w900,
@@ -289,14 +293,14 @@ class ShowUserState extends State<ShowUser>
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.blue,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 32, vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               backgroundColor: Colors.blue.withOpacity(0.1),
                             ),
-                            child: Text(
+                            child: const Text(
                               "Cancelar",
                               style: TextStyle(
                                 fontSize: 16,
@@ -304,23 +308,23 @@ class ShowUserState extends State<ShowUser>
                               ),
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           ElevatedButton(
                             onPressed: () {
                               // Aquí puedes manejar la lógica para guardar los cambios del usuario
                               // Por ejemplo, puedes obtener los nuevos valores de los controladores nombreController y emailController
                               // Y luego realizar las operaciones necesarias para actualizar los datos del usuario
-                              Navigator.of(context).pop();
+                              Get.back();
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.blue,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 32, vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               "Guardar",
                               style: TextStyle(
                                 fontSize: 16,
@@ -347,18 +351,19 @@ class ShowUserState extends State<ShowUser>
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         TextField(
           controller: controller,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -547,7 +552,8 @@ class ShowUserState extends State<ShowUser>
                       child: Text('Error: ${snapshot.error}'),
                     ),
                   );
-                } else {
+                } else if (snapshot.hasData &&
+                    snapshot.data.toString() != '[]') {
                   List<Map<String, dynamic>> listUsers = snapshot.data ?? [];
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
@@ -571,98 +577,221 @@ class ShowUserState extends State<ShowUser>
                                         orientation == Orientation.portrait
                                             ? 25.0
                                             : 50),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.blue[300] as Color,
-                                        spreadRadius: 1,
-                                        blurRadius: 7,
-                                        offset: const Offset(1, 3),
+                                child: Slidable(
+                                  direction: Axis.horizontal,
+                                  dragStartBehavior: DragStartBehavior.start,
+                                  closeOnScroll: true,
+                                  endActionPane: ActionPane(
+                                    extentRatio: 0.40,
+                                    motion: const BehindMotion(),
+                                    children: [
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      SlidableAction(
+                                        onPressed: (value) async {},
+                                        spacing: 7,
+                                        icon: Icons.delete,
+                                        backgroundColor: Constants.orangeColor,
+                                        foregroundColor: Colors.black,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                        ),
+                                        label: "Eliminar",
+                                        autoClose: true,
+                                      ),
+                                      SlidableAction(
+                                        onPressed: (value) async {
+                                          showEditUserDialog(userData);
+                                        },
+                                        spacing: 7,
+                                        icon: Icons.edit,
+                                        backgroundColor: Colors.green.shade400,
+                                        foregroundColor: Colors.black,
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                        label: "Editar",
+                                        autoClose: true,
                                       ),
                                     ],
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      ListTile(
-                                        titleAlignment:
-                                            ListTileTitleAlignment.center,
-                                        leading: const CircleAvatar(
-                                          backgroundColor: Colors.blue,
-                                          child: Icon(Icons.person,
-                                              color: Colors.black),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.blue[300] as Color,
+                                          spreadRadius: 1,
+                                          blurRadius: 7,
+                                          offset: const Offset(1, 3),
                                         ),
-                                        title: Container(
-                                          color: Colors.transparent,
-                                          margin:
-                                              const EdgeInsets.only(right: 5),
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "${userData['nombre']}"
-                                                      .toUpperCase(),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w900,
-                                                    color: Colors.black,
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        ListTile(
+                                          titleAlignment:
+                                              ListTileTitleAlignment.center,
+                                          leading: const CircleAvatar(
+                                            backgroundColor: Colors.blue,
+                                            child: Icon(Icons.person,
+                                                color: Colors.black),
+                                          ),
+                                          title: Container(
+                                            color: Colors.transparent,
+                                            margin:
+                                                const EdgeInsets.only(right: 5),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    "${userData['nombre']}"
+                                                        .toUpperCase(),
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      color: Colors.black,
+                                                    ),
                                                   ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "${userData['correo']}",
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                "(${userData['roll']})",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Constants.blueColor),
+                                              ),
+                                            ],
+                                          ),
+                                          trailing: GestureDetector(
+                                              onTap: () {
+                                                showEditUserDialog(userData);
+                                              },
+                                              child: Transform.rotate(
+                                                angle: 26.7,
+                                                child: Icon(
+                                                  size: 30,
+                                                  CupertinoIcons
+                                                      .square_arrow_down_on_square_fill,
+                                                  color: Constants.blueColor,
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "${userData['correo']}",
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              "(${userData['roll']})",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Constants.blueColor),
-                                            ),
-                                          ],
-                                        ),
-                                        trailing: GestureDetector(
+                                              )),
                                           onTap: () {
-                                            showEditUserDialog(userData);
+                                            showUserDetailsDialog(
+                                                size, userData);
                                           },
-                                          child: const Icon(
-                                            Icons.edit,
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          showUserDetailsDialog(size, userData);
-                                        },
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           );
                         } else {
-                          return const SizedBox();
+                          return Container();
                         }
                       },
                       childCount: listUsers.length,
                     ),
+                  );
+                } else {
+                  var orientation = MediaQuery.of(context).orientation;
+                  return SliverToBoxAdapter(
+                    child: orientation == Orientation.portrait
+                        ? SingleChildScrollView(
+                            child: Container(
+                              width: size.width,
+                              height: size.height * 0.7,
+                              color: Colors.transparent,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 100,
+                                  ),
+                                  SpinKitThreeBounce(
+                                    duration:
+                                        const Duration(milliseconds: 3000),
+                                    color: Colors.blue.withOpacity(0.7),
+                                    size: 50,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "No hay datos",
+                                    style: TextStyle(
+                                      color: Colors.blue.withOpacity(0.8),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      height: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        :
+                        //todo: no hay data cuando el telefono esta horizontal
+                        Container(
+                            width: size.width,
+                            height: size.height * 0.4,
+                            color: Colors.transparent,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  SpinKitThreeBounce(
+                                    duration:
+                                        const Duration(milliseconds: 3000),
+                                    color: Colors.blue.withOpacity(0.7),
+                                    size: 50,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "No hay datos",
+                                    style: TextStyle(
+                                      color: Colors.blue.withOpacity(0.8),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      height: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                   );
                 }
               },
