@@ -43,7 +43,7 @@ class _DrawerPageState extends State<DrawerPage> {
 
     for (var i = 0; i < palabras.length; i++) {
       var palabra = palabras[i];
-      iniciales += palabra[0].toUpperCase();
+      iniciales += palabra[i].toUpperCase();
 
       // Si las iniciales superan los 3 caracteres, detener el bucle
       if (iniciales.length >= 3) {
@@ -54,9 +54,6 @@ class _DrawerPageState extends State<DrawerPage> {
     // Devolver solo las primeras 3 iniciales
     return iniciales.substring(0, 3);
   }
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -150,39 +147,36 @@ class _DrawerPageState extends State<DrawerPage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             50),
-                                                    gradient: LinearGradient(
-                                                        colors: [
-                                                          Constants.blueColor,
-                                                          Constants.orangeColor
+                                                    gradient:
+                                                        const LinearGradient(
+                                                            begin: Alignment(
+                                                                0.09, -0.9),
+                                                            end: Alignment(
+                                                                -0.6, 0.8),
+                                                            colors: [
+                                                          Colors.blueGrey,
+                                                          Colors.white70,
+                                                          Colors.white,
+                                                          Colors.white70,
+                                                          Colors.blueGrey,
                                                         ])),
                                                 child: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  child: Text(
-                                                    isSuperUser == true
-                                                        ? obtenerIniciales(userData[
-                                                            'nombre_SuperUsuario'])
-                                                        : obtenerIniciales(
-                                                            userData['nombre']),
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      fontSize: 25,
-                                                      color: Colors.black,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                    ),
-                                                  ),
-                                                ),
+                                                    radius: 30,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      color: Colors.blue[700],
+                                                      size: 40,
+                                                    )),
                                               ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
                                               Text(
                                                 isSuperUser == true
-                                                    ? "(${userData["roll_SuperUsuario"]})"
-                                                    : "(${userData["roll"]})",
+                                                    ? "( ${userData["roll_SuperUsuario"]} )"
+                                                    : "( ${userData["roll"]} )",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w900,
                                                   fontSize: 17,
@@ -326,7 +320,6 @@ class _DrawerPageState extends State<DrawerPage> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Container(
-                                                alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                     border: Border.all(
                                                         width: 1,
@@ -335,32 +328,28 @@ class _DrawerPageState extends State<DrawerPage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             50),
-                                                    gradient: LinearGradient(
-                                                        colors: [
-                                                          Constants.blueColor,
-                                                          Constants.orangeColor
+                                                    gradient:
+                                                        const LinearGradient(
+                                                            begin: Alignment(
+                                                                0.09, -0.9),
+                                                            end: Alignment(
+                                                                -0.6, 0.8),
+                                                            colors: [
+                                                          Colors.blueGrey,
+                                                          Colors.white70,
+                                                          Colors.white,
+                                                          Colors.white70,
+                                                          Colors.blueGrey,
                                                         ])),
                                                 child: CircleAvatar(
-                                                  maxRadius: 28,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  child: Text(
-                                                    isSuperUser == true
-                                                        ? obtenerIniciales(userData[
-                                                            'nombre_SuperUsuario'])
-                                                        : obtenerIniciales(
-                                                            userData['nombre']),
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        overflow: TextOverflow
-                                                            .ellipsis),
-                                                  ),
-                                                ),
+                                                    radius: 30,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      color: Colors.blue[700],
+                                                      size: 40,
+                                                    )),
                                               ),
                                               const SizedBox(
                                                 width: 10,
@@ -380,7 +369,7 @@ class _DrawerPageState extends State<DrawerPage> {
                                         ),
                                         Positioned(
                                           top: size.height * 0.19,
-                                          left: size.width * 0.03,
+                                          left: size.width * 0.015,
                                           child: Stack(children: [
                                             Column(
                                               crossAxisAlignment:
@@ -390,7 +379,7 @@ class _DrawerPageState extends State<DrawerPage> {
                                               children: [
                                                 Container(
                                                   color: Colors.transparent,
-                                                  width: size.width * 0.33,
+                                                  width: size.width * 0.30,
                                                   child: FittedBox(
                                                     fit: BoxFit.fitWidth,
                                                     child: CustomTextTitle(

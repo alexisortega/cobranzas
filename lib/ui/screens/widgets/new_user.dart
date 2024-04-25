@@ -361,7 +361,7 @@ class _NewUserState extends State<NewUser> {
                                     height: 10,
                                   ),
                                   TextFormField(
-                                    maxLength: 35,
+                                    maxLength: 100,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Ingresa una dirección ';
@@ -542,110 +542,102 @@ class _NewUserState extends State<NewUser> {
                                             autofocus: true,
 
                                             onPressed: () async {
-                                              
-                                                isLoading = false;
+                                              isLoading = false;
 
-                                                try {
-                                                  final esSuperUsuario =
-                                                      await userController
-                                                          .esSuperUsuario();
-                                                  await userController
-                                                      .obtenerPrivilegiosUsuarioActivo();
+                                              try {
+                                                final esSuperUsuario =
+                                                    await userController
+                                                        .esSuperUsuario();
+                                                await userController
+                                                    .obtenerPrivilegiosUsuarioActivo();
 
-                                                  printInfo(
-                                                      info:
-                                                          " es superusuario: $esSuperUsuario");
-                                                  if (esSuperUsuario == true) {
-                                                    //todo Empiza  condicion de forms//
-                                                    if (formKey.currentState!
-                                                        .validate()) {
-                                                      setState(() {
-                                                        isLoading = true;
-                                                        if (isLoading == true) {
-                                                          showDialog(
-                                                              barrierDismissible:
-                                                                  false,
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return Center(
-                                                                    child:
-                                                                        SpinKitRing(
-                                                                  color: Colors
-                                                                      .orange
-                                                                      .withOpacity(
-                                                                          0.9),
-                                                                  size: 50.0,
-                                                                  lineWidth: 4,
-                                                                ));
-                                                              });
-
-                                                          Future.delayed(
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      2000),
-                                                              () {
-                                                            setState(() {
-                                                              isLoading = false;
-                                                              Get.back();
+                                                printInfo(
+                                                    info:
+                                                        " es superusuario: $esSuperUsuario");
+                                                if (esSuperUsuario == true) {
+                                                  //todo Empiza  condicion de forms//
+                                                  if (formKey.currentState!
+                                                      .validate()) {
+                                                    setState(() {
+                                                      isLoading = true;
+                                                      if (isLoading == true) {
+                                                        showDialog(
+                                                            barrierDismissible:
+                                                                false,
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Center(
+                                                                  child:
+                                                                      SpinKitRing(
+                                                                color: Colors
+                                                                    .orange
+                                                                    .withOpacity(
+                                                                        0.9),
+                                                                size: 50.0,
+                                                                lineWidth: 4,
+                                                              ));
                                                             });
-                                                          }).whenComplete(
-                                                              () async {
-                                                            await userController.registrarNuevoUsuario2(
-                                                                userController
-                                                                    .emailUser
-                                                                    .text
-                                                                    .trim(),
-                                                                userController
-                                                                    .passwordUser
-                                                                    .text
-                                                                    .trim(),
-                                                                userController
-                                                                    .fullName
-                                                                    .text
-                                                                    .trim(),
-                                                                userController
-                                                                    .addressUser
-                                                                    .text
-                                                                    .trim(),
-                                                                userController
-                                                                    .telUser
-                                                                    .text
-                                                                    .trim(),
-                                                                _selectedPrivilege);
 
-                                                            cleanFields();
+                                                        Future.delayed(
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    2000), () {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                            Get.back();
                                                           });
-                                                        }
-                                                      });
-                                                    } else {
-                                                      authenticationRepository
-                                                          .showMessage(
-                                                              "Advertencia",
-                                                              "Error de registro verifique los datos",
-                                                              context);
-                                                    }
+                                                        }).whenComplete(
+                                                            () async {
+                                                          await userController.registrarNuevoUsuario2(
+                                                              userController
+                                                                  .emailUser
+                                                                  .text
+                                                                  .trim(),
+                                                              userController
+                                                                  .passwordUser
+                                                                  .text
+                                                                  .trim(),
+                                                              userController
+                                                                  .fullName.text
+                                                                  .trim(),
+                                                              userController
+                                                                  .addressUser
+                                                                  .text
+                                                                  .trim(),
+                                                              userController
+                                                                  .telUser.text
+                                                                  .trim(),
+                                                              _selectedPrivilege);
+
+                                                          cleanFields();
+                                                        });
+                                                      }
+                                                    });
                                                   } else {
                                                     authenticationRepository
                                                         .showMessage(
                                                             "Advertencia",
-                                                            "No es superusuario",
+                                                            "Error de registro verifique los datos",
                                                             context);
                                                   }
-                                                } on FirebaseFirestore catch (_) {
+                                                } else {
                                                   authenticationRepository
                                                       .showMessage(
                                                           "Advertencia",
-                                                          "Error de base de datos Firebase",
-                                                          context);
-                                                } catch (e) {
-                                                  authenticationRepository
-                                                      .showMessage(
-                                                          "Advertencia",
-                                                          "Error $e ",
+                                                          "No es superusuario",
                                                           context);
                                                 }
-                                              
+                                              } on FirebaseFirestore catch (_) {
+                                                authenticationRepository
+                                                    .showMessage(
+                                                        "Advertencia",
+                                                        "Error de base de datos Firebase",
+                                                        context);
+                                              } catch (e) {
+                                                authenticationRepository
+                                                    .showMessage("Advertencia",
+                                                        "Error $e ", context);
+                                              }
                                             },
                                             child: const Row(
                                               children: [

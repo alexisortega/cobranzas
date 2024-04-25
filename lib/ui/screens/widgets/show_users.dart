@@ -1,6 +1,7 @@
 import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
+import 'package:cobranzas/repository/authentication.dart';
 
 import 'package:cobranzas/ui/screens/widgets/new_user.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,15 +22,27 @@ class ShowUser extends StatefulWidget {
 class ShowUserState extends State<ShowUser>
     with SingleTickerProviderStateMixin {
   static var userController = Get.put(UserController());
+  final formKey = GlobalKey<FormState>();
+
   late String fondoShowUser = "";
   final ScrollController _scrollController = ScrollController();
   Future<List<Map<String, dynamic>>> listUserdata = Future(() => []);
   String search = "";
 
+  String selectedPrivilege = '';
+  List<String> privilegios = [];
+
   @override
   void initState() {
     fondoShowUser = "assets/FondoShowUsers.png";
     listUserdata = userController.getUsersLinkedToSuperUser();
+
+    userController.obtenerPrivilegiosUsuarioActivo().then((listaPrivilegios) {
+      setState(() {
+        privilegios = listaPrivilegios;
+        selectedPrivilege = listaPrivilegios.first;
+      });
+    });
 
     super.initState();
   }
@@ -154,15 +167,15 @@ class ShowUserState extends State<ShowUser>
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildDetailRow("Nombre: ", userData['nombre']),
+                    buildDetailUser("Nombre: ", userData['nombre']),
                     const SizedBox(height: 12),
-                    _buildDetailRow("Correo electrónico: ", userData['correo']),
+                    buildDetailUser("Correo electrónico: ", userData['correo']),
                     const SizedBox(height: 12),
-                    _buildDetailRow("Tipo de usuario: ", userData['roll']),
+                    buildDetailUser("Tipo de usuario: ", userData['roll']),
                     const SizedBox(height: 12),
-                    _buildDetailRow("Dirección: ", userData['direccion']),
+                    buildDetailUser("Dirección: ", userData['direccion']),
                     const SizedBox(height: 12),
-                    _buildDetailRow("Teléfono", userData['telefono']),
+                    buildDetailUser("Teléfono", userData['telefono']),
                     const SizedBox(height: 16),
                     Align(
                       alignment: Alignment.center,
@@ -199,7 +212,7 @@ class ShowUserState extends State<ShowUser>
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget buildDetailUser(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -225,10 +238,24 @@ class ShowUserState extends State<ShowUser>
   }
 
   void showEditUserDialog(Map<String, dynamic> userData) {
-    TextEditingController nombreController =
-        TextEditingController(text: userData['nombre']);
-    TextEditingController emailController =
-        TextEditingController(text: userData['correo']);
+    userController.editFullNameUser.text =
+        TextEditingController(text: userData['nombre']).text;
+    userController.editEmailUser.text =
+        TextEditingController(text: userData['correo']).text;
+    userController.editaddressUser.text =
+        TextEditingController(text: userData['direccion']).text;
+    userController.editTelUser.text =
+        TextEditingController(text: userData['telefono']).text;
+
+    selectedPrivilege = userData['roll'];
+
+    String idUser = "";
+    userData.forEach((key, value) {
+      if (key == "id" && value != "") {
+        idUser = value;
+        print("id del usuario $idUser");
+      }
+    });
 
     showDialog(
       context: context,
@@ -238,104 +265,389 @@ class ShowUserState extends State<ShowUser>
             borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 8.0,
-          backgroundColor: Colors.white,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.blue[300] as Color,
-                  spreadRadius: 1,
-                  blurRadius: 7,
-                  offset: const Offset(1, 3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Center(
-                      child: Text(
-                        "Editar usuario",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+          child: Form(
+            key: formKey,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue[400] as Color,
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: const Offset(1, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Center(
+                        child: Text(
+                          "Editar usuario",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextField("Nombre", nombreController),
-                    const SizedBox(height: 12),
-                    _buildTextField("Correo electrónico", emailController),
-                    const SizedBox(height: 12),
-                    _buildTextField("Correo electrónico", emailController),
-                    const SizedBox(height: 12),
-                    _buildTextField("Correo electrónico", emailController),
-                    const SizedBox(height: 12),
-                    _buildTextField("Correo electrónico", emailController),
-                    const SizedBox(height: 12),
-                    _buildTextField("Correo electrónico", emailController),
-                    const SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.blue,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              backgroundColor: Colors.blue.withOpacity(0.1),
-                            ),
-                            child: const Text(
-                              "Cancelar",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Aquí puedes manejar la lógica para guardar los cambios del usuario
-                              // Por ejemplo, puedes obtener los nuevos valores de los controladores nombreController y emailController
-                              // Y luego realizar las operaciones necesarias para actualizar los datos del usuario
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.blue,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                            ),
-                            child: const Text(
-                              "Guardar",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(height: 16),
+                      buildText(
+                        "Nombre completo",
                       ),
-                    ),
-                  ],
+                      TextFormField(
+                        maxLength: 60,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Ingresa un nombre completo';
+                          }
+
+                          if (value.length < 3) {
+                            return 'El nombre debe tener al menos 3 caracteres';
+                          }
+
+                          // Expresión regular para validar el nombre completo
+                          RegExp regExp = RegExp(
+                            r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ][a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]{2,}(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+){2,}$',
+                          );
+
+                          if (!regExp.hasMatch(value)) {
+                            return 'Ingresa un nombre completo válido';
+                          }
+
+                          return null;
+                        },
+                        controller: userController.editFullNameUser,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Constants.blueColor,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              userController.editFullNameUser.clear();
+                            },
+                            child: Icon(
+                              Icons.cancel,
+                              color: Constants.blueColor.withOpacity(0.7),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular((10.0)),
+                            borderSide: BorderSide(
+                                color: Colors.orange.withOpacity(.8), width: 3),
+                          ),
+                        ),
+                      ),
+                      buildText(
+                        "Correo electrónico",
+                      ),
+                      TextFormField(
+                        maxLength: 60,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Ingresa un correo eléctronico';
+                          }
+                          // Utilizar una expresión regular para validar el formato del correo electrónico
+                          bool isValid = RegExp(
+                            r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                          ).hasMatch(value);
+                          if (!isValid) {
+                            return 'Ingresa un correo valido';
+                          }
+
+                          return null; // Return null means the input is valid
+                        },
+                        controller: userController.editEmailUser,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.alternate_email_outlined,
+                              color: Constants.blueColor),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              userController.editEmailUser.clear();
+                            },
+                            child: Icon(
+                              Icons.cancel,
+                              color: Constants.blueColor.withOpacity(0.7),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular((10.0)),
+                            borderSide: BorderSide(
+                                color: Colors.orange.withOpacity(.8), width: 3),
+                          ),
+                        ),
+                      ),
+                      buildText(
+                        "Dirección",
+                      ),
+                      TextFormField(
+                        maxLength: 100,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Ingresa una dirección ';
+                          }
+
+                          if (value.length < 5) {
+                            return 'La dirección es muy corta debe tener al menos 5 caracteres';
+                          }
+
+                          return null;
+                        },
+                        controller: userController.editaddressUser,
+                        keyboardType: TextInputType.streetAddress,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.location_on,
+                            color: Constants.blueColor,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              userController.editaddressUser.clear();
+                            },
+                            child: Icon(
+                              Icons.cancel,
+                              color: Constants.blueColor.withOpacity(0.7),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular((10.0)),
+                            borderSide: BorderSide(
+                                color: Colors.orange.withOpacity(.8), width: 3),
+                          ),
+                        ),
+                      ),
+                      buildText(
+                        "Teléfono",
+                      ),
+                      TextFormField(
+                        maxLength: 10,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Ingresa un número de teléfono ';
+                          }
+                          //validacion  de numero con caracters  formato (###) ###-####//
+                          // RegExp regExp = RegExp(
+                          //   r'^\(\d{3}\) \d{3}-\d{4}$',
+                          // );
+
+                          // if (!regExp.hasMatch(value)) {
+                          //   return 'formato (###) ###-####';
+                          // }
+
+                          RegExp regExp = RegExp(
+                            r'^\d{10}$',
+                          );
+
+                          if (!regExp.hasMatch(value)) {
+                            return 'Ingresa un número de teléfono válido con 10 dígitos';
+                          }
+
+                          return null;
+                        },
+                        controller: userController.editTelUser,
+                        keyboardType: TextInputType.phone,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.phone_iphone_outlined,
+                            color: Constants.blueColor,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              userController.editTelUser.clear();
+                            },
+                            child: Icon(
+                              Icons.cancel,
+                              color: Constants.blueColor.withOpacity(0.7),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular((10.0)),
+                            borderSide: BorderSide(
+                                color: Colors.orange.withOpacity(.8), width: 3),
+                          ),
+                        ),
+                      ),
+                      buildText("Tipo de usuario"),
+                      DropdownButtonFormField<String>(
+                        validator: (value) {
+                          if (value.toString().isEmpty || value == null) {
+                            return "Necesitás llenar el campo";
+                          }
+
+                          return null;
+                        },
+                        icon: const Icon(
+                          Icons.abc,
+                          color: Colors.transparent,
+                          size: null,
+                        ),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(
+                                left: 5, right: 10, top: 20, bottom: 15),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: Constants.blueColor,
+                            ),
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down,
+                              color: Constants.blueColor,
+                              size: 30,
+                            ),
+                            prefix: null,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(
+                                    width: 3, color: Colors.orange))),
+                        value: selectedPrivilege,
+                        items: (privilegios
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(item,
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color:
+                                              Colors.black.withOpacity(.7)))),
+                            )
+                            .toList()),
+                        onChanged: (item) => setState(() {
+                          selectedPrivilege = item!;
+                        }),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                backgroundColor: Colors.blue.withOpacity(0.8),
+                              ),
+                              child: const Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            ElevatedButton(
+                              onPressed: () async {
+                                bool isLoading = false;
+                                if (formKey.currentState!.validate()) {
+                                  //todo: botón edita
+                                  try {
+                                    isLoading = true;
+                                    if (isLoading == true) {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return Center(
+                                                child: SpinKitRing(
+                                              color: Colors.orange
+                                                  .withOpacity(0.9),
+                                              size: 50.0,
+                                              lineWidth: 4,
+                                            ));
+                                          });
+
+                                      Future.delayed(
+                                          const Duration(milliseconds: 2000),
+                                          () {
+                                        setState(() {
+                                          isLoading = false;
+                                          Get.back();
+                                        });
+                                      }).whenComplete(
+                                        () async {
+                                          await userController
+                                              .editUserData(
+                                            userData,
+                                            idUser.trim(),
+                                            userController.editEmailUser.text
+                                                .trim()
+                                                .toLowerCase(),
+                                            userController.editaddressUser.text
+                                                .trim()
+                                                .toLowerCase(),
+                                            userController.editFullNameUser.text
+                                                .trim()
+                                                .toLowerCase(),
+                                            selectedPrivilege.trim(),
+                                            userController.editTelUser.text
+                                                .trim()
+                                                .toLowerCase(),
+                                          )
+                                              .whenComplete(() {
+                                            setState(() {
+                                              listUserdata = userController
+                                                  .getUsersLinkedToSuperUser();
+                                            });
+                                          });
+                                          Get.back();
+
+                                          authenticationRepository.showMessage(
+                                              "Aviso",
+                                              "Se edito correctamente la información",
+                                              context);
+                                        },
+                                      );
+                                    }
+                                  } catch (e) {
+                                    print(e);
+                                  }
+                                } else {
+                                  authenticationRepository.showMessage(
+                                      "Advertencia",
+                                      "Error al editar, revisa los datos e intenta nuevamente",
+                                      context);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.blue,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                              ),
+                              child: const Text(
+                                "Guardar",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -345,7 +657,9 @@ class ShowUserState extends State<ShowUser>
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget buildText(
+    String label,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -358,17 +672,6 @@ class ShowUserState extends State<ShowUser>
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          style: const TextStyle(fontSize: 16),
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -555,10 +858,12 @@ class ShowUserState extends State<ShowUser>
                 } else if (snapshot.hasData &&
                     snapshot.data.toString() != '[]') {
                   List<Map<String, dynamic>> listUsers = snapshot.data ?? [];
+
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         final userData = listUsers[index];
+
                         if ((userData['nombre'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
@@ -598,12 +903,21 @@ class ShowUserState extends State<ShowUser>
                                           topLeft: Radius.circular(10),
                                           bottomLeft: Radius.circular(10),
                                         ),
+                                        flex: 1,
                                         label: "Eliminar",
+                                        padding: const EdgeInsets.all(10),
                                         autoClose: true,
                                       ),
                                       SlidableAction(
                                         onPressed: (value) async {
-                                          showEditUserDialog(userData);
+                                          await userController.tipoUsuario(
+                                            "Editar",
+                                            () => showEditUserDialog(userData),
+                                            () => showEditUserDialog(userData),
+                                            () => userController.mensajePrivilegio(
+                                                "No tiene privilegios para editar usuarios",
+                                                context),
+                                          );
                                         },
                                         spacing: 7,
                                         icon: Icons.edit,
@@ -614,6 +928,7 @@ class ShowUserState extends State<ShowUser>
                                           bottomRight: Radius.circular(10),
                                         ),
                                         label: "Editar",
+                                        padding: const EdgeInsets.all(10),
                                         autoClose: true,
                                       ),
                                     ],
@@ -757,7 +1072,7 @@ class ShowUserState extends State<ShowUser>
                             ),
                           )
                         :
-                        //todo: no hay data cuando el telefono esta horizontal
+                        //todo: no hay datos cuando el telefono esta horizontal
                         Container(
                             width: size.width,
                             height: size.height * 0.4,

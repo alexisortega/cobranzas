@@ -16,8 +16,13 @@ class UserController extends GetxController {
 
   //TextField para nuevo perfil de usuario
   final newTypeUser = TextEditingController();
-//
+//buscar nuevos usuarios
   final serchShowUser = TextEditingController();
+//editar usuarios
+  final editFullNameUser = TextEditingController();
+  final editEmailUser = TextEditingController();
+  final editaddressUser = TextEditingController();
+  final editTelUser = TextEditingController();
 
   Future<Map<String, dynamic>> getPrivilegiosFromFirestore() async {
     final auth1 = FirebaseAuth.instance;
@@ -435,6 +440,44 @@ class UserController extends GetxController {
       print(
           'Error al obtener los datos de usuarios ligados al superusuario: $e');
       return [];
+    }
+  }
+
+  Future<void> editUserData(
+    Map<String, dynamic> userData,
+    String idUser,
+    String correo,
+    String direccion,
+    String nombre,
+    String roll,
+    String telefono,
+  ) async {
+    try {
+      final esSuperUser = await esSuperUsuario();
+
+      CollectionReference usersCollection =
+          FirebaseFirestore.instance.collection('Usuarios');
+
+      if (esSuperUser == true) {
+        print("Datos del superusuario editados correctamente");
+      } else {
+        Map<String, dynamic> updatedData = {
+          'correo': correo,
+          'direccion': direccion,
+          'nombre': nombre,
+          'roll': roll,
+          'telefono': telefono,
+        };
+
+        await usersCollection.doc(idUser).update(updatedData);
+
+        if (correo.isNotEmpty) {
+        } else {}
+
+        print("Datos del usuario editados correctamente");
+      }
+    } catch (error) {
+      print("Error al editar los datos del usuario: $error");
     }
   }
 }
