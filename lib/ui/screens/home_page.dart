@@ -250,6 +250,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         break;
                       case 1:
                         //ACTUALIZAR
+
+                        
                         setState(() {
                           statusBottomDelete = false;
                           clients = controllerClientes.showClientes();
@@ -497,26 +499,32 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         itemBuilder: (context, index) {
                           Color colorCard = colors[index % colors.length];
                           final codigo_cliente =
-                              (snapshot.data?[index]["codigo_cliente"]);
-                          final nombre = (snapshot.data?[index]["nombre"]);
+                              (snapshot.data?[index]["codigo_Cliente"]);
+                          final nombre =
+                              (snapshot.data?[index]["nombre_Cliente"]);
                           final apellido_p =
-                              (snapshot.data?[index]["apellido_p"]);
+                              (snapshot.data?[index]["apellido_p_Cliente"]);
                           final apellido_m =
-                              (snapshot.data?[index]["apellido_m"]);
-                          final genero = (snapshot.data?[index]["genero"]);
-                          final curp = (snapshot.data?[index]["curp"]);
-                          final calle = (snapshot.data?[index]["calle"]);
-                          final colonia = (snapshot.data?[index]["colonia"]);
-                          final municipio_delegacion =
-                              (snapshot.data?[index]["municipio_delegacion"]);
-                          final estado = (snapshot.data?[index]["estado"]);
+                              (snapshot.data?[index]["apellido_m_Cliente"]);
+                          final genero =
+                              (snapshot.data?[index]["genero_Cliente"]);
+                          final curp = (snapshot.data?[index]["curp_Cliente"]);
+                          final calle =
+                              (snapshot.data?[index]["calle_Cliente"]);
+                          final colonia =
+                              (snapshot.data?[index]["colonia_Cliente"]);
+                          final municipio_delegacion = (snapshot.data?[index]
+                              ["municipio_deleg_Cliente"]);
+                          final estado =
+                              (snapshot.data?[index]["estado_Cliente"]);
                           final codigo_postal =
-                              (snapshot.data?[index]["codigo_postal"]);
+                              (snapshot.data?[index]["codigo_p_Cliente"]);
                           final numero_tel =
-                              (snapshot.data?[index]["numero_tel"]);
+                              (snapshot.data?[index]["telefono_Cliente"]);
                           final fecha_nacimiento =
-                              (snapshot.data?[index]["fecha_nacimiento"]);
-                          final urlFoto = (snapshot.data?[index]["foto_url"]);
+                              (snapshot.data?[index]["fecha_n_Cliente"]);
+                          final urlFoto =
+                              (snapshot.data?[index]["url_foto_Cliente"]);
                           return Container(
                               padding: const EdgeInsets.only(),
                               width: 160, // Ancho de cada card
@@ -538,11 +546,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             height: size.height,
                                             fit: BoxFit.cover,
                                             imageUrl: (snapshot.data?[index]
-                                                ["foto_url"]),
+                                                ["url_foto_Cliente"]),
                                           ))),
                                       const SizedBox(height: 5),
                                       Text(
-                                        '${snapshot.data?[index]['nombre']} ${snapshot.data?[index]['apellido_p']}',
+                                        '${snapshot.data?[index]['nombre_Cliente']} ${snapshot.data?[index]['apellido_p_Cliente']}',
                                         style: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold),
@@ -652,28 +660,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int cont) {
-                        if ((snapshot.data?[cont]['nombre'])!
+                        if ((snapshot.data?[cont]['nombre_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['codigo_cliente'])!
+                            (snapshot.data?[cont]['codigo_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_p'])!
+                            (snapshot.data?[cont]['apellido_p_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_m'])!
+                            (snapshot.data?[cont]['apellido_m_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['apellido_p'] +
+                            (snapshot.data?[cont]['apellido_p_Cliente'] +
                                     " " +
-                                    snapshot.data?[cont]['apellido_m'])!
+                                    snapshot.data?[cont]['apellido_m_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['nombre'] +
+                            (snapshot.data?[cont]['nombre_Cliente'] +
                                     " " +
-                                    snapshot.data?[cont]['apellido_p'] +
+                                    snapshot.data?[cont]['apellido_p_Cliente'] +
                                     " " +
-                                    snapshot.data?[cont]['apellido_m'])!
+                                    snapshot.data?[cont]['apellido_m_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search)) {
                           return principalMetodo(
@@ -962,21 +970,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () {
         customerData = [
-          "Codigo: " + snapshot.data?[cont]["codigo_cliente"],
-          "Nombre: " + snapshot.data?[cont]["nombre"],
-          "Apellido Paterno: " + snapshot.data?[cont]["apellido_p"],
-          "Apellido Materno: " + snapshot.data?[cont]["apellido_m"],
-          "Genero: " + snapshot.data?[cont]["genero"],
-          "Curp: " + snapshot.data?[cont]["curp"],
-          "Calle: " + snapshot.data?[cont]["calle"],
-          "Colonia: " + snapshot.data?[cont]["colonia"],
+          "Codigo: " + snapshot.data?[cont]["codigo_Cliente"],
+          "Nombre: " + snapshot.data?[cont]["nombre_Cliente"],
+          "Apellido Paterno: " + snapshot.data?[cont]["apellido_p_Cliente"],
+          "Apellido Materno: " + snapshot.data?[cont]["apellido_m_Cliente"],
+          "Genero: " + snapshot.data?[cont]["genero_Cliente"],
+          "Curp: " + snapshot.data?[cont]["curp_Cliente"],
+          "Calle: " + snapshot.data?[cont]["calle_Cliente"],
+          "Colonia: " + snapshot.data?[cont]["colonia_Cliente"],
           "Municio ó Delegación: " +
-              snapshot.data?[cont]["municipio_delegacion"],
-          "Estado: " + snapshot.data?[cont]["estado"],
-          "CP: " + (snapshot.data?[cont]["codigo_postal"]).toString(),
-          "Telefono :" + (snapshot.data?[cont]["numero_tel"]).toString(),
+              snapshot.data?[cont]["municipio_deleg_Cliente"],
+          "Estado: " + snapshot.data?[cont]["estado_Cliente"],
+          "CP: " + (snapshot.data?[cont]["codigo_p_Cliente"]).toString(),
+          "Telefono :" + (snapshot.data?[cont]["telefono_Cliente"]).toString(),
           "Fecha de nacimiento: " +
-              (snapshot.data?[cont]["fecha_nacimiento"])
+              (snapshot.data?[cont]["fecha_n_Cliente"])
                   .toDate()
                   .toString()
                   .substring(0, 10)
@@ -985,21 +993,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   .join("/"),
         ];
 
-        final codigo_cliente = (snapshot.data?[cont]["codigo_cliente"]);
-        final nombre = (snapshot.data?[cont]["nombre"]);
-        final apellido_p = (snapshot.data?[cont]["apellido_p"]);
-        final apellido_m = (snapshot.data?[cont]["apellido_m"]);
-        final genero = (snapshot.data?[cont]["genero"]);
-        final curp = (snapshot.data?[cont]["curp"]);
-        final calle = (snapshot.data?[cont]["calle"]);
-        final colonia = (snapshot.data?[cont]["colonia"]);
+        final codigo_cliente = (snapshot.data?[cont]["codigo_Cliente"]);
+        final nombre = (snapshot.data?[cont]["nombre_Cliente"]);
+        final apellido_p = (snapshot.data?[cont]["apellido_p_Cliente"]);
+        final apellido_m = (snapshot.data?[cont]["apellido_m_Cliente"]);
+        final genero = (snapshot.data?[cont]["genero_Cliente"]);
+        final curp = (snapshot.data?[cont]["curp_Cliente"]);
+        final calle = (snapshot.data?[cont]["calle_Cliente"]);
+        final colonia = (snapshot.data?[cont]["colonia_Cliente"]);
         final municipio_delegacion =
-            (snapshot.data?[cont]["municipio_delegacion"]);
-        final estado = (snapshot.data?[cont]["estado"]);
-        final codigo_postal = (snapshot.data?[cont]["codigo_postal"]);
-        final numero_tel = (snapshot.data?[cont]["numero_tel"]);
-        final fecha_nacimiento = (snapshot.data?[cont]["fecha_nacimiento"]);
-        final urlFoto = (snapshot.data?[cont]["foto_url"]);
+            (snapshot.data?[cont]["municipio_deleg_Cliente"]);
+        final estado = (snapshot.data?[cont]["estado_Cliente"]);
+        final codigo_postal = (snapshot.data?[cont]["codigo_p_Cliente"]);
+        final numero_tel = (snapshot.data?[cont]["telefono_Cliente"]);
+        final fecha_nacimiento = (snapshot.data?[cont]["fecha_n_Cliente"]);
+        final urlFoto = (snapshot.data?[cont]["url_foto_Cliente"]);
 
         /*
           snapshot.data?[cont]["interes_asignado"],
@@ -1076,8 +1084,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     SlidableAction(
                       onPressed: (value) async {
                         await controllerClientes.showDeleteMessage(
-                            "Realmente deseas eliminar a ${(snapshot.data?[cont]["nombre"])}?",
-                            (snapshot.data?[cont]["codigo_cliente"]));
+                            "Realmente deseas eliminar a ${(snapshot.data?[cont]["nombre_Cliente"])}?",
+                            (snapshot.data?[cont]["codigo_Cliente"]));
 
                         setState(() {
                           statusBottomDelete = false;
@@ -1155,15 +1163,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         },
                                         child: CircleAvatar(
                                           backgroundColor: Colors.transparent,
-                                          child: (snapshot.data?[cont]
-                                                          ["foto_url"]) ==
+                                          child: (snapshot.data?[cont][
+                                                          "url_foto_Cliente"]) ==
                                                       null ||
                                                   (snapshot.data?[cont]
-                                                          ["foto_url"])
+                                                          ["url_foto_Cliente"])
                                                       .toString()
                                                       .isEmpty
                                               ? Text(
-                                                  "${(snapshot.data?[cont]["nombre"]).substring(0, 1)}",
+                                                  "${(snapshot.data?[cont]["nombre_Cliente"]).substring(0, 1)}",
                                                   style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 23,
@@ -1174,12 +1182,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               : ClipOval(
                                                   child: Hero(
                                                     tag: (snapshot.data?[cont]
-                                                        ["foto_url"]),
+                                                        ["url_foto_Cliente"]),
                                                     child: CachedNetworkImage(
                                                       key: UniqueKey(),
-                                                      imageUrl:
-                                                          (snapshot.data?[cont]
-                                                              ["foto_url"]),
+                                                      imageUrl: (snapshot
+                                                              .data?[cont]
+                                                          ["url_foto_Cliente"]),
                                                       fit: BoxFit.cover,
                                                       height: size.height,
                                                       width: 63,
@@ -1230,7 +1238,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       scrollDirection: Axis.horizontal,
                                       child: Text(
                                           maxLines: 2,
-                                          "${snapshot.data?[cont]['codigo_cliente']} ${snapshot.data?[cont]['nombre']}",
+                                          "${snapshot.data?[cont]['codigo_Cliente']} ${snapshot.data?[cont]['nombre_Cliente']}",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -1253,7 +1261,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       softWrap: true,
                                       maxLines: 1,
 
-                                      "${snapshot.data?[cont]['apellido_p']} ${snapshot.data?[cont]['apellido_m']}",
+                                      "${snapshot.data?[cont]['apellido_p_Cliente']} ${snapshot.data?[cont]['apellido_m_Cliente']}",
                                       //"${snapshot.data?[cont]['apellido_m']}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -1277,8 +1285,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 onTap: () async {
                                   if (statusBottomDelete == true) {
                                     await clientsController().showDeleteMessage(
-                                        '¿Seguro que quieres eliminar a\n ${snapshot.data?[cont]["nombre"]}?',
-                                        '${snapshot.data?[cont]["codigo_cliente"]}');
+                                        '¿Seguro que quieres eliminar a\n ${snapshot.data?[cont]["nombre_Cliente"]}?',
+                                        '${snapshot.data?[cont]["codigo_Cliente"]}');
                                     setState(() {
                                       clients =
                                           controllerClientes.showClientes();

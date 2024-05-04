@@ -22,8 +22,6 @@ class MyApp extends StatelessWidget {
       title: "Gestor de Cobranza",
       home: OnboardingScreen(),
       debugShowCheckedModeBanner: false,
-      
-      
     );
   }
 }

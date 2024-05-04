@@ -33,7 +33,7 @@ class creditController extends GetxController {
 
   Stream<List> getCredits() {
     final CollectionReference collectionReferenceCredits =
-        database.collection('creditos');
+        database.collection('Creditos');
     return collectionReferenceCredits
         .snapshots()
         .map((QuerySnapshot querySnapshot) {
@@ -58,7 +58,7 @@ class creditController extends GetxController {
   }) async {
     try {
       //
-      await database.collection('creditos').doc(codigoCredito).set({
+      await database.collection('Creditos').doc(codigoCredito).set({
         //
 
         'codigo_credito': codigoCredito,

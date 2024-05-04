@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class customerDetails extends StatefulWidget {
   final int cont;
@@ -374,12 +373,10 @@ class textViewCustomer extends StatelessWidget {
     return FittedBox(
       fit: BoxFit.fill,
       child: Text(texto,
-          style: GoogleFonts.aleo(
-            textStyle: TextStyle(
-              fontSize: size,
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
+          style: TextStyle(
+            fontSize: size,
+            color: color,
+            fontWeight: FontWeight.bold,
           )),
     );
   }

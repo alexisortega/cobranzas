@@ -176,15 +176,22 @@ class authenticationRepository extends GetxController {
     }
   }
 
-  Future<void> enviarLinkResetContrasena(String email) async {
+  Future<void> enviarLinkResetContrasena(
+      String email, BuildContext context) async {
     try {
       await _auth1.sendPasswordResetEmail(email: email);
+
+      showMessage(
+          "Aviso",
+          'Se envío un enlace a tú correo, ingresa y cambia la contraseña \nNota:Si no aparece el mensaje revisa en "correos no deseados"',
+          context);
     } on FirebaseAuthException catch (e) {
       final ex = signUpWithEmailAndPasswordFailure.code(e.code.toString());
       printError(info: "'''FIREBASE AUTH EXCEPTION 3'''-${ex.message1}");
-      validaciones(ex.message1.toString());
+
+      showMessage("Advertencia", ex.message1.toString(), context);
     } catch (e) {
-      validaciones("$e");
+      showMessage("Advertencia", "$e", context);
     }
   }
 
@@ -562,7 +569,7 @@ class authenticationRepository extends GetxController {
                         child: Text(
                           title,
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: title == "Advertencia" ? 25 : 30,
                             fontWeight: FontWeight.w900,
                             color: title == "Advertencia"
                                 ? Colors.red

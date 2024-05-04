@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cobranzas/controllers/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,8 +11,9 @@ import 'dart:io';
 
 // ignore: camel_case_types
 class clientsController extends GetxController {
-  static clientsController get instance => Get.put(clientsController());
-
+  static clientsController get instanc => Get.put(clientsController());
+  static UserController get userController => Get.put(UserController());
+  User? user = FirebaseAuth.instance.currentUser;
   FirebaseFirestore database = FirebaseFirestore.instance;
 
   final codigo_cliente = TextEditingController();
@@ -56,7 +59,7 @@ class clientsController extends GetxController {
   }
 
   Future deleteClient(String codigo_cliente) async {
-    final deleteClients = database.collection("clientes").doc(codigo_cliente);
+    final deleteClients = database.collection("Clientes").doc(codigo_cliente);
     await deleteClients.delete();
   }
 
@@ -83,45 +86,79 @@ class clientsController extends GetxController {
     required List<String> dias_semana,*/
   }) async {
     try {
-      await database.collection('clientes').doc(codigo_cliente).set({
-        'codigo_cliente': codigo_cliente,
-        'nombre': nombre,
-        'apellido_m': apellido_m,
-        'apellido_p': apellido_p,
-        'genero': genero,
-        'curp': curp,
-        'calle': calle,
-        'colonia': colonia,
-        'municipio_delegacion': municipio_delegacion,
-        'estado': estado,
-        'codigo_postal': codigo_postal,
-        'fecha_nacimiento': fecha_nacimiento,
-        'numero_tel': numero_tel,
-        'foto_url': imageUrl,
-        /*'interes_asignado': interes_asignado,
-        'monto_solicitado': monto_solicitado,
-        'monto_inicial': monto_inicial,
-        'plazos': plazos,
-        'fecha_prestamo': fecha_prestamo,
-        'dias_semana': dias_semana,*/
-      });
+      String uIdUserActivo = user!.uid;
+      final esSuperUser = await userController.esSuperUsuario();
+      if (esSuperUser) {
+        await database.collection('Clientes').doc().set({
+          'codigo_Cliente': codigo_cliente,
+          'nombre_Cliente': nombre,
+          'apellido_p_Cliente': apellido_m,
+          'apellido_m_Cliente': apellido_p,
+          'genero_Cliente': genero,
+          'curp_Cliente': curp,
+          'calle_Cliente': calle,
+          'colonia_Cliente': colonia,
+          'municipio_deleg_Cliente': municipio_delegacion,
+          'estado_Cliente': estado,
+          'codigo_p_Cliente': codigo_postal,
+          'fecha_n_Cliente': fecha_nacimiento,
+          'telefono_Cliente': numero_tel,
+          'url_foto_Cliente': imageUrl,
+          'id_SuperUsuario': uIdUserActivo,
+          'id_Usuario_Registro': uIdUserActivo
+        });
+      } else {
+        if (user != null) {
+          CollectionReference usersCollection =
+              FirebaseFirestore.instance.collection('Usuarios');
+          DocumentSnapshot userSnapshot =
+              await usersCollection.doc(uIdUserActivo).get();
+
+          if (userSnapshot.exists) {
+            final idSuperUsuario = userSnapshot.get('id_SuperUsuario');
+
+            await database.collection('Clientes').doc().set({
+              'codigo_Cliente': codigo_cliente,
+              'nombre_Cliente': nombre,
+              'apellido_p_Cliente': apellido_m,
+              'apellido_m_Cliente': apellido_p,
+              'genero_Cliente': genero,
+              'curp_Cliente': curp,
+              'calle_Cliente': calle,
+              'colonia_Cliente': colonia,
+              'municipio_deleg_Cliente': municipio_delegacion,
+              'estado_Cliente': estado,
+              'codigo_p_Cliente': codigo_postal,
+              'fecha_n_Cliente': fecha_nacimiento,
+              'telefono_Cliente': numero_tel,
+              'url_foto_Cliente': imageUrl,
+              'id_SuperUsuario': idSuperUsuario,
+              'id_Usuario_Registro': uIdUserActivo
+            });
+          } else {
+            throw Exception('No se encontraron datos para este usuario.');
+          }
+        }
+      }
     } catch (e) {
       printError(info: "${e.hashCode}");
     }
   }
 
   Stream<QuerySnapshot> getClients() {
-    return FirebaseFirestore.instance.collection("clientes").snapshots();
+    return FirebaseFirestore.instance.collection("Clientes").snapshots();
   }
 
   Future<List> showClientes() async {
     List readClients = [];
     CollectionReference CollectionReferenceClients =
-        database.collection("clientes");
+        database.collection("Clientes");
     QuerySnapshot queryClients = await CollectionReferenceClients.get();
     for (var documento in queryClients.docs) {
       readClients.add(documento.data());
     }
+
+    printInfo(info: "$readClients");
     return readClients;
   }
 

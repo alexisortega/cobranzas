@@ -346,7 +346,7 @@ class ShowUserState extends State<ShowUser>
                           ),
                         ),
                       ),
-                      buildText(
+                      /* buildText(
                         "Correo electrónico",
                       ),
                       TextFormField(
@@ -385,7 +385,7 @@ class ShowUserState extends State<ShowUser>
                                 color: Colors.orange.withOpacity(.8), width: 3),
                           ),
                         ),
-                      ),
+                      ), */
                       buildText(
                         "Dirección",
                       ),
@@ -603,10 +603,8 @@ class ShowUserState extends State<ShowUser>
                                                 .toLowerCase(),
                                           )
                                               .whenComplete(() {
-                                            setState(() {
-                                              listUserdata = userController
-                                                  .getUsersLinkedToSuperUser();
-                                            });
+                                            listUserdata = userController
+                                                .getUsersLinkedToSuperUser();
                                           });
                                           Get.back();
 
@@ -887,13 +885,13 @@ class ShowUserState extends State<ShowUser>
                                   dragStartBehavior: DragStartBehavior.start,
                                   closeOnScroll: true,
                                   endActionPane: ActionPane(
-                                    extentRatio: 0.40,
+                                    extentRatio: 0.30,
                                     motion: const BehindMotion(),
                                     children: [
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      SlidableAction(
+                                      /*  SlidableAction(
                                         onPressed: (value) async {},
                                         spacing: 7,
                                         icon: Icons.delete,
@@ -907,7 +905,7 @@ class ShowUserState extends State<ShowUser>
                                         label: "Eliminar",
                                         padding: const EdgeInsets.all(10),
                                         autoClose: true,
-                                      ),
+                                      ), */
                                       SlidableAction(
                                         onPressed: (value) async {
                                           await userController.tipoUsuario(
@@ -924,9 +922,10 @@ class ShowUserState extends State<ShowUser>
                                         backgroundColor: Colors.green.shade400,
                                         foregroundColor: Colors.black,
                                         borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                        ),
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10),
+                                            topLeft: Radius.circular(10)),
                                         label: "Editar",
                                         padding: const EdgeInsets.all(10),
                                         autoClose: true,
@@ -1003,7 +1002,11 @@ class ShowUserState extends State<ShowUser>
                                           ),
                                           trailing: GestureDetector(
                                               onTap: () {
-                                                showEditUserDialog(userData);
+                                                authenticationRepository
+                                                    .showMessage(
+                                                        "Aviso",
+                                                        "Desliza a la izquierda para más opciones",
+                                                        context);
                                               },
                                               child: Transform.rotate(
                                                 angle: 26.7,

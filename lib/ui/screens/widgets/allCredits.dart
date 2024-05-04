@@ -7,7 +7,7 @@ import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
@@ -415,15 +415,13 @@ class _AllCreditsState extends State<AllCredits> with TickerProviderStateMixin {
                                           text: "Folio: " +
                                               (credit?["codigo_credito"])
                                                   .toString(),
-                                          font: GoogleFonts.aldrich(),
+                                          font: const TextStyle(),
                                         ),
                                         const SizedBox(width: 5),
                                         CustomText(
                                           text:
                                               "Monto: ${credit?["monto_solicitado"]}",
-                                          font: GoogleFonts.aldrich(
-                                            textStyle: const TextStyle(),
-                                          ),
+                                          font: const TextStyle(),
                                         ),
                                       ],
                                     ),

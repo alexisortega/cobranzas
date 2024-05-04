@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/repository/authentication.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 
 class UserController extends GetxController {
   //TextField nuevos usuarios
@@ -455,14 +454,30 @@ class UserController extends GetxController {
     try {
       final esSuperUser = await esSuperUsuario();
 
-      CollectionReference usersCollection =
-          FirebaseFirestore.instance.collection('Usuarios');
-
       if (esSuperUser == true) {
-        print("Datos del superusuario editados correctamente");
+        try {
+          CollectionReference usersCollection =
+              FirebaseFirestore.instance.collection('Usuarios');
+          Map<String, dynamic> updatedData = {
+            /*    'correo': correo, */
+            'direccion': direccion,
+            'nombre': nombre,
+            'roll': roll,
+            'telefono': telefono,
+          };
+          await usersCollection.doc(idUser).update(updatedData);
+
+          printInfo(
+              info:
+                  "Datos del usuario editados correctamente desde superusuario");
+        } catch (e) {
+          printError(info: "$e");
+        }
       } else {
+        CollectionReference usersCollection =
+            FirebaseFirestore.instance.collection('Usuarios');
         Map<String, dynamic> updatedData = {
-          'correo': correo,
+          /* 'correo': correo, */
           'direccion': direccion,
           'nombre': nombre,
           'roll': roll,
@@ -470,9 +485,6 @@ class UserController extends GetxController {
         };
 
         await usersCollection.doc(idUser).update(updatedData);
-
-        if (correo.isNotEmpty) {
-        } else {}
 
         print("Datos del usuario editados correctamente");
       }

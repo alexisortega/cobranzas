@@ -9,7 +9,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class NewCredit extends StatefulWidget {
@@ -106,12 +106,10 @@ class _NewCreditState extends State<NewCredit> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'NUEVO CRÉDITO',
-                                  style: GoogleFonts.aldrich(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30.0,
-                                        color: Constants.blueColor),
-                                  ),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30.0,
+                                      color: Constants.blueColor),
                                 )),
                           ),
                         ),

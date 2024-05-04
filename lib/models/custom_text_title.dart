@@ -1,6 +1,6 @@
 import 'package:cobranzas/models/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 class CustomTextTitle extends StatelessWidget {
   final String title;
@@ -17,13 +17,13 @@ class CustomTextTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: GoogleFonts.aldrich(
-        textStyle: TextStyle(
+      style: 
+        TextStyle(
           fontWeight: FontWeight.w900,
           fontSize: size,
           color: Constants.blueColor,
         
-        ),
+        
       ),
     );
   }

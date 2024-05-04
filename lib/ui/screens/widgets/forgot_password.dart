@@ -1,3 +1,4 @@
+import 'package:cobranzas/controllers/user_controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/auth_controllers.dart';
 import 'package:cobranzas/repository/authentication.dart';
@@ -6,16 +7,15 @@ import 'package:cobranzas/ui/screens/widgets/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:page_transition/page_transition.dart';
-
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});
-  final controller3 = Get.put(SingUpController());
 
+  final controller3 = Get.put(SingUpController());
+  final userController = Get.put(UserController());
+
+  final GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
-
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -62,7 +62,7 @@ class ForgotPassword extends StatelessWidget {
                   controller: controller3.passwordRecuperar,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    label: const Text("Correo Eléctronico"),
+                    label: const Text("Correo Electrónico"),
                     prefixIcon: Icon(
                       Icons.email,
                       color: Constants.blueColor,
@@ -78,7 +78,8 @@ class ForgotPassword extends StatelessWidget {
                       try {
                         await authenticationRepository()
                             .enviarLinkResetContrasena(
-                                controller3.passwordRecuperar.text.trim());
+                                controller3.passwordRecuperar.text.trim(),
+                                context);
 
                         borrarCamposResetCont();
                       } catch (e) {
@@ -110,11 +111,7 @@ class ForgotPassword extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                            child: const SignIn(),
-                            type: PageTransitionType.bottomToTop));
+                    Get.off(const SignIn(), transition: Transition.downToUp);
                     borrarCamposResetCont();
                   },
                   child: Center(

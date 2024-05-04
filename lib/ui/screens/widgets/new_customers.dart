@@ -7,7 +7,6 @@ import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 
 class Newcustomers extends StatefulWidget {
@@ -122,12 +121,10 @@ class _NewcustomersState extends State<Newcustomers> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   'NUEVO CLIENTE',
-                                  style: GoogleFonts.aldrich(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30.0,
-                                        color: Constants.blueColor),
-                                  ),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30.0,
+                                      color: Constants.blueColor),
                                 )),
                           ),
                         ),

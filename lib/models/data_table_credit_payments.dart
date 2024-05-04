@@ -3,8 +3,6 @@ import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 // ignore: depend_on_referenced_packages
 
@@ -238,22 +236,20 @@ class _CreditPaymentsState extends State<CreditPayments> {
       amortizacion = abonoTotal - interesTotal;
       saldoInsoluto = saldoInsoluto - amortizacion;
 
-      var formatter = NumberFormat("#.##");
-      double capitalInsoluto2D =
-          double.parse(formatter.format(capitalInsoluto));
-      double abono2D = double.parse(formatter.format(abonoTotal));
-      double interes2D = double.parse(formatter.format(interesTotal));
-      double amortizacion2D = double.parse(formatter.format(amortizacion));
-      double saldoInsoluto2D = double.parse(formatter.format(saldoInsoluto));
+      double capitalInsoluto2D = double.parse(capitalInsoluto.toString());
+      double abono2D = double.parse(abonoTotal.toString());
+      double interes2D = double.parse(interesTotal.toString());
+      double amortizacion2D = double.parse(amortizacion.toString());
+      double saldoInsoluto2D = double.parse(saldoInsoluto.toString());
       late DateTime nuevafecha;
 //RESULTADO FIMAlES DEL PRESTAMO
       sumaTotal = abono2D * numeroPagos;
       capitalTotal = capitalTotal + amortizacion2D;
       sumaInteres = sumaTotal - capitalTotal;
 
-      sumaTotal2D = double.parse(formatter.format(sumaTotal));
-      sumaInteres2D = double.parse(formatter.format(sumaInteres));
-      capitalTotal2D = double.parse(formatter.format(capitalTotal));
+      sumaTotal2D = double.parse(sumaTotal.toString());
+      sumaInteres2D = double.parse(sumaInteres.toString());
+      capitalTotal2D = double.parse(capitalTotal.toString());
 
       if (plazos.isCaseInsensitiveContains("diario")) {
         //
@@ -403,22 +399,19 @@ class _CreditPaymentsState extends State<CreditPayments> {
                       children: [
                         CustomText(
                             text: "Capital \$ $capitalTotal2D",
-                            font: GoogleFonts.aldrich(
-                                fontWeight: FontWeight.bold)),
+                            font: const TextStyle()),
                         const SizedBox(
                           width: 10,
                         ),
                         CustomText(
                             text: "Total interes \$ $sumaInteres2D",
-                            font: GoogleFonts.aldrich(
-                                fontWeight: FontWeight.bold)),
+                            font: const TextStyle()),
                         const SizedBox(
                           width: 10,
                         ),
                         CustomText(
                             text: "Monto total \$ $sumaTotal2D",
-                            font: GoogleFonts.aldrich(
-                                fontWeight: FontWeight.bold)),
+                            font: const TextStyle()),
                       ],
                     )),
               ),
