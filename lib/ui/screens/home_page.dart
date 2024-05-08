@@ -4,6 +4,7 @@ import 'package:cobranzas/ui/root_page.dart';
 //import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   bool statusBottomDelete = false;
   var clients = Future(() => []);
+  var showlastFiveClients = Future(() => []);
 
   String search = "";
   List<Object> customerData = [];
@@ -41,6 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     clients = controllerClientes.showClientes();
+    showlastFiveClients = controllerClientes.showLastFiveClients();
     super.initState();
   }
 
@@ -243,6 +246,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             )).then((_) {
                           setState(() {
                             clients = controllerClientes.showClientes();
+                            showlastFiveClients =
+                                controllerClientes.showLastFiveClients();
                             statusBottomDelete = false;
                           });
                         });
@@ -251,10 +256,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       case 1:
                         //ACTUALIZAR
 
-                        
                         setState(() {
                           statusBottomDelete = false;
                           clients = controllerClientes.showClientes();
+                          showlastFiveClients =
+                              controllerClientes.showLastFiveClients();
                           isloading = true;
                           Get.to(() => const RootPage());
                           if (isloading == true) {
@@ -447,6 +453,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: FutureBuilder(
           future: clients,
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text(
+                  "Cargando...",
+                  style: TextStyle(
+                      color: Constants.blueColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
             if (snapshot.hasData && snapshot.data.toString() != '[]') {
               // LISTA DE CLIENTES
 
@@ -491,123 +512,178 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: SizedBox(
                       height:
                           200, // Altura del contenedor de la lista horizontal
-                      child: ListView.builder(
-                        scrollDirection:
-                            Axis.horizontal, // Desplazamiento horizontal
-                        itemCount: (snapshot
-                            .data!.length), // Número de elementos en la lista
-                        itemBuilder: (context, index) {
-                          Color colorCard = colors[index % colors.length];
-                          final codigo_cliente =
-                              (snapshot.data?[index]["codigo_Cliente"]);
-                          final nombre =
-                              (snapshot.data?[index]["nombre_Cliente"]);
-                          final apellido_p =
-                              (snapshot.data?[index]["apellido_p_Cliente"]);
-                          final apellido_m =
-                              (snapshot.data?[index]["apellido_m_Cliente"]);
-                          final genero =
-                              (snapshot.data?[index]["genero_Cliente"]);
-                          final curp = (snapshot.data?[index]["curp_Cliente"]);
-                          final calle =
-                              (snapshot.data?[index]["calle_Cliente"]);
-                          final colonia =
-                              (snapshot.data?[index]["colonia_Cliente"]);
-                          final municipio_delegacion = (snapshot.data?[index]
-                              ["municipio_deleg_Cliente"]);
-                          final estado =
-                              (snapshot.data?[index]["estado_Cliente"]);
-                          final codigo_postal =
-                              (snapshot.data?[index]["codigo_p_Cliente"]);
-                          final numero_tel =
-                              (snapshot.data?[index]["telefono_Cliente"]);
-                          final fecha_nacimiento =
-                              (snapshot.data?[index]["fecha_n_Cliente"]);
-                          final urlFoto =
-                              (snapshot.data?[index]["url_foto_Cliente"]);
-                          return Container(
-                              padding: const EdgeInsets.only(),
-                              width: 160, // Ancho de cada card
-                              child: Card(
-                                shadowColor: Colors.transparent,
-                                color: colorCard,
-                                elevation: 18,
-                                margin: const EdgeInsets.all(12.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircleAvatar(
-                                          maxRadius: 28,
-                                          child: ClipOval(
-                                              child: CachedNetworkImage(
-                                            width: size.width,
-                                            height: size.height,
-                                            fit: BoxFit.cover,
-                                            imageUrl: (snapshot.data?[index]
-                                                ["url_foto_Cliente"]),
-                                          ))),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        '${snapshot.data?[index]['nombre_Cliente']} ${snapshot.data?[index]['apellido_p_Cliente']}',
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      SizedBox(
-                                        height: 35,
-                                        width: 70,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            //ultimos agregados
-                                            Get.to(
-                                              () => customerDetails(
-                                                cont: index,
-                                                datos: customerData,
-                                                codigoCliente: codigo_cliente,
-                                                nombre: nombre,
-                                                apellidoP: apellido_p,
-                                                apellidoM: apellido_m,
-                                                genero: genero,
-                                                curp: curp,
-                                                calle: calle,
-                                                colonia: colonia,
-                                                municipioDelegacion:
-                                                    municipio_delegacion,
-                                                estado: estado,
-                                                codigoPostal: codigo_postal,
-                                                numeroTel: numero_tel,
-                                                fechaNacimiento:
-                                                    fecha_nacimiento
-                                                        .toDate()
-                                                        .toString()
-                                                        .substring(0, 10)
-                                                        .split("-")
-                                                        .reversed
-                                                        .join("/"),
-                                                urlFoto: urlFoto,
+                      child: FutureBuilder(
+                        future: showlastFiveClients,
+                        builder: (context, snapsho) {
+                          if (snapsho.data.toString() == "[]") {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.blueGrey.withOpacity(0.2),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: Center(
+                                  child: Text(
+                                "No hay datos",
+                                style: TextStyle(
+                                    color: Constants.blueColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              )),
+                            );
+                          }
+                          if (snapsho.hasData &&
+                              snapsho.data.toString() != '[]') {
+                            return ListView.builder(
+                              scrollDirection:
+                                  Axis.horizontal, // Desplazamiento horizontal
+                              itemCount: snapsho.data!
+                                  .length, // Número de elementos en la lista
+                              itemBuilder: (context, index) {
+                                Color colorCard = colors[index % colors.length];
+
+                                final codigo_cliente =
+                                    (snapsho.data?[index]["codigo_Cliente"]);
+                                final nombre =
+                                    (snapsho.data?[index]["nombre_Cliente"]);
+                                final apellido_p = (snapsho.data?[index]
+                                    ["apellido_p_Cliente"]);
+                                final apellido_m = (snapsho.data?[index]
+                                    ["apellido_m_Cliente"]);
+                                final genero =
+                                    (snapsho.data?[index]["genero_Cliente"]);
+                                final curp =
+                                    (snapsho.data?[index]["curp_Cliente"]);
+                                final calle =
+                                    (snapsho.data?[index]["calle_Cliente"]);
+                                final colonia =
+                                    (snapsho.data?[index]["colonia_Cliente"]);
+                                final municipio_delegacion = (snapsho
+                                    .data?[index]["municipio_deleg_Cliente"]);
+                                final estado =
+                                    (snapsho.data?[index]["estado_Cliente"]);
+                                final codigo_postal =
+                                    (snapsho.data?[index]["codigo_p_Cliente"]);
+                                final numero_tel =
+                                    (snapsho.data?[index]["telefono_Cliente"]);
+                                final fecha_nacimiento =
+                                    (snapsho.data?[index]["fecha_n_Cliente"]);
+                                final urlFoto =
+                                    (snapsho.data?[index]["url_foto_Cliente"]);
+                                return Container(
+                                  padding: const EdgeInsets.only(),
+                                  width:
+                                      size.width * 0.37, // Ancho de cada card
+                                  child: Card(
+                                    shadowColor: Colors.transparent,
+                                    color: colorCard,
+                                    elevation: 50,
+                                    margin: const EdgeInsets.all(12.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          CircleAvatar(
+                                              maxRadius: 28,
+                                              child: ClipOval(
+                                                  child: CachedNetworkImage(
+                                                width: size.width,
+                                                height: size.height,
+                                                fit: BoxFit.cover,
+                                                imageUrl: (snapsho.data?[index]
+                                                    ["url_foto_Cliente"]),
+                                              ))),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            '${snapsho.data?[index]['nombre_Cliente']} ${snapsho.data?[index]['apellido_p_Cliente']}',
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Get.to(
+                                                preventDuplicates: true,
+                                                () => customerDetails(
+                                                  cont: index,
+                                                  datos: customerData,
+                                                  codigoCliente: codigo_cliente,
+                                                  nombre: nombre,
+                                                  apellidoP: apellido_p,
+                                                  apellidoM: apellido_m,
+                                                  genero: genero,
+                                                  curp: curp,
+                                                  calle: calle,
+                                                  colonia: colonia,
+                                                  municipioDelegacion:
+                                                      municipio_delegacion,
+                                                  estado: estado,
+                                                  codigoPostal: codigo_postal,
+                                                  numeroTel: numero_tel,
+                                                  fechaNacimiento:
+                                                      fecha_nacimiento
+                                                          .toDate()
+                                                          .toString()
+                                                          .substring(0, 10)
+                                                          .split("-")
+                                                          .reversed
+                                                          .join("/"),
+                                                  urlFoto: urlFoto,
+                                                ),
+                                              );
+                                            },
+                                            child: Stack(children: [
+                                              Container(
+                                                height: 35,
+                                                width: 70,
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue
+                                                      .withOpacity(0.44),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(36),
+                                                    topLeft:
+                                                        Radius.circular(36),
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.blueGrey
+                                                          .withOpacity(0.5),
+                                                      blurStyle:
+                                                          BlurStyle.inner,
+                                                      spreadRadius: 1,
+                                                      blurRadius: 7,
+                                                      offset:
+                                                          const Offset(3, 7),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: const SizedBox(
+                                                  height: 70,
+                                                  width: 90,
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    size: 25,
+                                                  ),
+                                                ),
                                               ),
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                            ),
+                                            ]),
                                           ),
-                                          child: Icon(
-                                            Icons.arrow_forward_outlined,
-                                            size: 25,
-                                            color: Constants.blueColor,
-                                          ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ));
+                                );
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
                         },
                       ),
                     ),
@@ -1057,7 +1133,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       },
       child: FadeInRight(
         duration: const Duration(milliseconds: 100),
-        delay: Duration(milliseconds: 20 * cont),
+        delay: Duration(milliseconds: 100 * cont),
         child: Stack(alignment: Alignment.center, children: [
           DecoratedBox(
               decoration: BoxDecoration(
@@ -1084,12 +1160,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     SlidableAction(
                       onPressed: (value) async {
                         await controllerClientes.showDeleteMessage(
-                            "Realmente deseas eliminar a ${(snapshot.data?[cont]["nombre_Cliente"])}?",
+                            "Realmente deseas eliminar a ${(snapshot.data![cont]["codigo_Cliente"])}?",
                             (snapshot.data?[cont]["codigo_Cliente"]));
 
                         setState(() {
                           statusBottomDelete = false;
-                          clients = clientsController().showClientes();
+                          clients = controllerClientes.showClientes();
+                          showlastFiveClients =
+                              controllerClientes.showLastFiveClients();
                         });
                       },
                       spacing: 7,

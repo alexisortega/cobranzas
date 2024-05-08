@@ -12,7 +12,7 @@ import 'dart:io';
 // ignore: camel_case_types
 class clientsController extends GetxController {
   static clientsController get instanc => Get.put(clientsController());
-  static UserController get userController => Get.put(UserController());
+  UserController get userController => Get.put(UserController());
   User? user = FirebaseAuth.instance.currentUser;
   FirebaseFirestore database = FirebaseFirestore.instance;
 
@@ -33,7 +33,7 @@ class clientsController extends GetxController {
   final filtrar = TextEditingController();
   int indexCustomer = 0;
 
-  Future showDeleteMessage(String mensaje, String codigo_cliente) async {
+  Future showDeleteMessage(String mensaje, String codigo_Cliente) async {
     await Get.defaultDialog(
       title: "Eliminar",
       titleStyle: const TextStyle(fontSize: 25),
@@ -48,7 +48,7 @@ class clientsController extends GetxController {
         Get.back();
       },
       onConfirm: () {
-        deleteClient(codigo_cliente).then((_) {
+        deleteClient(codigo_Cliente).then((_) {
           Get.back();
         });
       },
@@ -59,8 +59,30 @@ class clientsController extends GetxController {
   }
 
   Future deleteClient(String codigo_cliente) async {
-    final deleteClients = database.collection("Clientes").doc(codigo_cliente);
-    await deleteClients.delete();
+    try {
+      // Obtenemos una referencia a la colección "Clientes"
+      CollectionReference clientesRef =
+          FirebaseFirestore.instance.collection('Clientes');
+
+      // Realizamos una consulta para obtener el documento con el campo "codigo_Cliente" igual a codigoCliente
+      QuerySnapshot querySnapshot = await clientesRef
+          .where('codigo_Cliente', isEqualTo: codigo_cliente)
+          .get();
+
+      // Verificamos si se encontró algún documento
+      if (querySnapshot.docs.isNotEmpty) {
+        // Si se encontró al menos un documento, eliminamos el primero encontrado
+        DocumentSnapshot documentoAEliminar = querySnapshot.docs.first;
+        await documentoAEliminar.reference.delete();
+
+        print('Documento eliminado exitosamente');
+      } else {
+        print(
+            'No se encontraron documentos con el código de cliente especificado');
+      }
+    } catch (e) {
+      print('Error al eliminar el documento: $e');
+    }
   }
 
   Future createClients({
@@ -116,6 +138,7 @@ class clientsController extends GetxController {
 
           if (userSnapshot.exists) {
             final idSuperUsuario = userSnapshot.get('id_SuperUsuario');
+            final rollSuperUsuario = userSnapshot.get('roll');
 
             await database.collection('Clientes').doc().set({
               'codigo_Cliente': codigo_cliente,
@@ -133,7 +156,7 @@ class clientsController extends GetxController {
               'telefono_Cliente': numero_tel,
               'url_foto_Cliente': imageUrl,
               'id_SuperUsuario': idSuperUsuario,
-              'id_Usuario_Registro': uIdUserActivo
+              'id_Usuario_Registro': uIdUserActivo,
             });
           } else {
             throw Exception('No se encontraron datos para este usuario.');
@@ -149,17 +172,127 @@ class clientsController extends GetxController {
     return FirebaseFirestore.instance.collection("Clientes").snapshots();
   }
 
-  Future<List> showClientes() async {
-    List readClients = [];
-    CollectionReference CollectionReferenceClients =
-        database.collection("Clientes");
-    QuerySnapshot queryClients = await CollectionReferenceClients.get();
-    for (var documento in queryClients.docs) {
-      readClients.add(documento.data());
+  Future<List<Map<String, dynamic>>> obtenerUltimosCincoRegistros() async {
+    List<Map<String, dynamic>> ultimosCincoRegistros = [];
+    User? user = FirebaseAuth.instance.currentUser;
+    String uid = user!.uid;
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Clientes')
+        .where('id_Usuario_Registro', isEqualTo: uid)
+        .orderBy(FieldPath.documentId,
+            descending:
+                true) // Ordenar por ID de documento, que contiene una marca de tiempo
+        .limit(5) // Limitar a los últimos 5 registros
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      // Convertir el objeto a un Map<String, dynamic>
+      Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+      if (data != null) {
+        ultimosCincoRegistros.add(data);
+      }
     }
 
-    printInfo(info: "$readClients");
+    return ultimosCincoRegistros;
+  }
+
+  Future<List> showLastFiveClients() async {
+    final superUser = await userController.esSuperUsuario();
+    List readClients = [];
+
+    User? user = FirebaseAuth.instance.currentUser;
+    String uid = user!.uid;
+
+    if (superUser == true) {
+      QuerySnapshot queryClients = await database
+          .collection('Clientes')
+          .where('id_Usuario_Registro', isEqualTo: uid)
+          .orderBy(FieldPath.documentId,
+              descending:
+                  true) // Ordenar por ID de documento, que contiene una marca de tiempo
+          .limit(5) // Limitar a los últimos 5 registros
+          .get();
+
+      for (var documento in queryClients.docs) {
+        if (documento.data() != null) {
+          readClients.add(documento.data());
+        } else {
+          readClients = [];
+        }
+      }
+    } else {
+      QuerySnapshot queryClients = await database
+          .collection('Clientes')
+          .where('id_Usuario_Registro', isEqualTo: uid)
+          .orderBy(FieldPath.documentId,
+              descending:
+                  true) // Ordenar por ID de documento, que contiene una marca de tiempo
+          .limit(5) // Limitar a los últimos 5 registros
+          .get();
+
+      for (var documento in queryClients.docs) {
+        if (documento.data() != null) {
+          readClients.add(documento.data());
+        } else {
+          readClients = [];
+        }
+      }
+    }
+
     return readClients;
+  }
+
+  Future<List> showClientes() async {
+    try {
+      bool? isSuperUser = await userController.esSuperUsuario();
+      List readClients = [];
+      String id_SuperUsuario;
+      String usuarioRealizoRegistro;
+      User? user = FirebaseAuth.instance.currentUser;
+      String uid = user!.uid;
+
+      if (isSuperUser == true) {
+        printInfo(info: "Id superUsuario para clientes");
+        id_SuperUsuario = uid;
+
+        CollectionReference CollectionReferenceClients =
+            database.collection("Clientes");
+        QuerySnapshot queryClients = await CollectionReferenceClients.where(
+                "id_SuperUsuario",
+                isEqualTo: id_SuperUsuario)
+            .get();
+
+        for (var documento in queryClients.docs) {
+          readClients.add(documento.data());
+        }
+      } else {
+        printInfo(info: "Id Usuarios para clientes");
+
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection("Usuarios")
+            .doc(uid)
+            .get();
+        usuarioRealizoRegistro = uid;
+
+        CollectionReference CollectionReferenceClients =
+            database.collection("Clientes");
+        QuerySnapshot queryClients = await CollectionReferenceClients.where(
+                "id_Usuario_Registro",
+                isEqualTo: usuarioRealizoRegistro)
+            .get();
+
+        for (var documento in queryClients.docs) {
+          readClients.add(documento.data());
+        }
+      }
+
+      printInfo(info: "$readClients");
+      return readClients;
+    } catch (e) {
+      printError(info: " $e");
+      return [];
+    }
   }
 
   Future<Object> TakePhoto(String imageUrl) async {
