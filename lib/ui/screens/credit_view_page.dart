@@ -1,9 +1,7 @@
 // ignore_for_file: file_names
 import 'package:cobranzas/controllers/creditController.dart';
 import 'package:cobranzas/models/constants.dart';
-import 'package:cobranzas/ui/screens/widgets/allCredits.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
-import 'package:cobranzas/ui/screens/widgets/new_credit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -372,25 +370,25 @@ class CreditViewPageState extends State<CreditViewPage> {
                         onTap: (() {
                           switch (index) {
                             case 0:
-                              Get.to(
+                              /*  Get.to(
                                   () => NewCredit(
                                         listaData: listCreditsData,
                                       ),
                                   opaque: false,
                                   fullscreenDialog: true,
                                   transition: Transition.circularReveal,
-                                  duration: const Duration(milliseconds: 1000));
+                                  duration: const Duration(milliseconds: 1000)); */
                               break;
 
                             case 1:
-                              Get.to(
+                              /*  Get.to(
                                   () => AllCredits(
                                         listaData: listCreditsData,
                                       ),
                                   opaque: false,
                                   fullscreenDialog: true,
                                   transition: Transition.circularReveal,
-                                  duration: const Duration(milliseconds: 1000));
+                                  duration: const Duration(milliseconds: 1000)); */
                               break;
                           }
                         }),

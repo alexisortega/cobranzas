@@ -454,15 +454,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           future: clients,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text(
-                  "Cargando...",
-                  style: TextStyle(
-                      color: Constants.blueColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
-                ),
-              );
+              return Container();
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
