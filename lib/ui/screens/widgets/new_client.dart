@@ -1,42 +1,32 @@
-// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
-import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'dart:io';
 
-class Newcustomers extends StatefulWidget {
-  const Newcustomers({
-    super.key,
-  });
+class NewClient extends StatefulWidget {
+  const NewClient({super.key});
 
   @override
-  State<Newcustomers> createState() => _NewcustomersState();
+  State<NewClient> createState() => NewClientState();
 }
 
-class _NewcustomersState extends State<Newcustomers> {
-  final controller4 = Get.put(clientsController());
-  static final formKey2 = GlobalKey<FormState>();
-  int _currentStep = 0;
-  String profile = "";
-
+class NewClientState extends State<NewClient> {
+  static var ControllerClients = Get.put(clientsController());
+  final formKey = GlobalKey<FormState>();
+  late String fondoNewUser = "";
+  int currentStep = 0;
   @override
   void initState() {
-    super.initState();
+    fondoNewUser = "assets/clientes.png";
 
-    profile = "assets/profile2.png";
+    super.initState();
   }
 
-  String imageUrl = "";
-  String imageUrl2 = "";
-  bool disable = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var orientation = MediaQuery.of(context).orientation;
 
     List<String> itemsGenero = [
       "Genero",
@@ -46,322 +36,439 @@ class _NewcustomersState extends State<Newcustomers> {
     String? selectedGenero = 'Genero';
 
     return SafeArea(
+      top: false,
       child: Scaffold(
-        body: Stack(
-          // ignore: sort_child_properties_last
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: IconButton(
+                  iconSize: 40,
+                  splashColor: Colors.blue,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent),
 
-          children: [
-            Positioned(
-                top: size.height * .03,
-                left: size.width * .04,
-                right: size.width * .04,
-                height: 45,
-                child: Container(
-                  // width: size.width,
-                  //height: size.height,
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.orangeAccent.withOpacity(.5),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Constants.blueColor,
-                          ),
+                  autofocus: true,
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Constants.orangeColor,
+                  ), // Cambia 'Icons.menu' por el icono que desees
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
+              forceMaterialTransparency: true,
+              backgroundColor: Colors.red,
+              expandedHeight: 170.0,
+              floating: false,
+              pinned: false,
+              snap: false,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                title: orientation == Orientation.portrait
+                    ? Container(
+                        height: size.height * 0.13,
+                        width: size.width * 0.54,
+                        color: Colors.transparent,
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.175,
+                          top: size.height * 0.10,
+                          bottom: 0.0,
+                        ),
+                        child: const CustomTextTitle(
+                          title: 'NUEVO CLIENTE',
+                          size: 15.0,
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.2,
+                        ),
+                        child: const CustomTextTitle(
+                          title: 'NUEVO CLIENTE',
+                          size: 16.0,
                         ),
                       ),
-                      /*GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Colors.orangeAccent.withOpacity(.5),
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.save,
-                              color: Constants.primaryColor,
-                              size: 25,
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    orientation == Orientation.portrait
+                        ? Positioned(
+                            left: size.width * 0.01,
+                            top: size.height * 0.009,
+                            right: size.width * 0.4,
+                            bottom: size.height * -0.09,
+                            child: Image.asset(
+                              fondoNewUser, //imagen AppBar
+                              fit: BoxFit
+                                  .fitHeight, // Cubrir para que la imagen se expanda bien
+                            ),
+                          )
+                        : Positioned(
+                            left: size.width * 0.01,
+                            top: size.height * 0.009,
+                            right: size.width * 0.6,
+                            bottom: size.height * -0.15,
+                            child: Image.asset(
+                              fondoNewUser, //imagen AppBar
+                              fit: BoxFit
+                                  .fitHeight, // Cubrir para que la imagen se expanda bien
                             ),
                           ),
-                        ),
-                      ),*/
-                    ],
-                  ),
-                )),
-            Positioned(
-                top: 70,
-                right: size.width * 0.04,
-                left: size.width * 0.04,
-                height: size.height * 0.120,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  color: Colors.transparent,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            color: Colors.transparent,
-                            child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'NUEVO CLIENTE',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30.0,
-                                      color: Constants.blueColor),
-                                )),
-                          ),
-                        ),
-                        Container(
-                          color: Colors.transparent,
-                          child: Image(
-                              width: size.width / 4,
-                              height: 80,
-                              alignment: Alignment.topCenter,
-                              image: const AssetImage("assets/clientes.png")),
-                        ),
-                      ]),
-                )),
-            Positioned(
-              top: 166,
-              right: size.width * 0.04,
-              left: size.width * 0.04,
-              bottom: size.height * 0.02,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        gradient: LinearGradient(colors: [
-                          Colors.blue.withOpacity(0.2),
-                          Colors.transparent,
-                          Colors.blue.withOpacity(0.2),
-                          Colors.blue.withOpacity(0.3),
-                        ])),
-                    child: Form(
-                      key: formKey2,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            Stepper(
-                              
-                              steps: [
-                                Step(
-                                  state: _currentStep >= 0
-                                      ? StepState.complete
-                                      : StepState.indexed,
-                                  isActive: _currentStep >= 0,
-                                  title: const Text(
-                                    "Datos generales",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 17),
-                                  ),
-                                  content: ContentStep1(
-                                      controller4,
-                                      selectedGenero,
-                                      itemsGenero,
-                                      context,
-                                      size),
-                                ),
-                                Step(
-                                    state: _currentStep >= 1
-                                        ? StepState.complete
-                                        : StepState.indexed,
-                                    isActive: _currentStep >= 0,
-                                    title: const Text(
-                                      "Encuesta Socio-Económica",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 17),
-                                    ),
-                                    content: ContentStep2()),
-                                Step(
-                                    state: _currentStep >= 2
-                                        ? StepState.complete
-                                        : StepState.indexed,
-                                    isActive: _currentStep >= 0,
-                                    title: const Text(
-                                      "Identificación",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 17),
-                                    ),
-                                    content: ContentStep3(size)),
-                              ],
-                              currentStep: _currentStep,
-                              onStepCancel: () {
-                                if (_currentStep != 0) {
-                                  setState(() => _currentStep--);
-                                }
-                              },
-                              onStepContinue: () {
-                                if (_currentStep != 2) {
-                                  setState(() => _currentStep++);
-                                }
-                              },
-                              type: StepperType.vertical,
-                              onStepTapped: (index) {
-                                setState(() => _currentStep = index);
-                              },
-                              physics: const ScrollPhysics(),
-                              elevation: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 20, bottom: 20, right: 20),
-                              child: bottonRegisterCustomer(
-                                  controller4, selectedGenero, size, imageUrl),
-                            ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(0.0, 0.5), //(X,Y)
+                          end: Alignment(0.0, 0.0),
+                          colors: <Color>[
+                            Colors.black12,
+                            Colors.transparent,
                           ],
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            /* SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            bottom: 10,
+                            top: 0.0,
+                            left: orientation == Orientation.portrait ? 0 : 35,
+                            right: orientation == Orientation.portrait ? 0 : 35,
+                          ),
+                          width: orientation == Orientation.portrait
+                              ? size.width
+                              : 600,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              gradient: LinearGradient(colors: [
+                                Colors.blue.withOpacity(0.2),
+                                Colors.transparent,
+                                Colors.blue.withOpacity(0.2),
+                                Colors.blue.withOpacity(0.3),
+                              ])),
+                          child: Form(
+                            key: formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 10.0,
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection:
+                                    orientation == Orientation.portrait
+                                        ? Axis.vertical
+                                        : Axis.horizontal,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    //todo:inicio de widgets//
+
+                                    Stepper(
+                                      connectorColor: MaterialStatePropertyAll(
+                                          Constants.blueColor),
+                                      type: orientation == Orientation.portrait
+                                          ? StepperType.vertical
+                                          : StepperType.horizontal,
+                                      currentStep: currentStep,
+                                      onStepTapped: (int step) {
+                                        setState(() {
+                                          currentStep = step;
+                                        });
+                                      },
+                                      onStepContinue: () {
+                                        if (currentStep < 2) {
+                                          setState(() {
+                                            currentStep += 1;
+                                          });
+                                        }
+                                      },
+                                      onStepCancel: () {
+                                        if (currentStep > 0) {
+                                          setState(() {
+                                            currentStep -= 1;
+                                          });
+                                        }
+                                      },
+                                      steps: <Step>[
+                                        Step(
+                                          title: Text('Step 1'),
+                                          content: Text('Content for Step 1'),
+                                          isActive: currentStep >= 0,
+                                          state: currentStep > 0
+                                              ? StepState.complete
+                                              : StepState.indexed,
+                                        ),
+                                        Step(
+                                          title: Text('Step 2'),
+                                          content: Text('Content for Step 2'),
+                                          isActive: currentStep >= 1,
+                                          state: currentStep > 1
+                                              ? StepState.complete
+                                              : StepState.indexed,
+                                        ),
+                                        Step(
+                                          title: Text('Step 3'),
+                                          content: Wrap(
+                                            children: [TextFormField()],
+                                          ),
+                                          isActive: currentStep >= 2,
+                                          state: currentStep == 2
+                                              ? StepState.complete
+                                              : StepState.indexed,
+                                        ),
+                                      ],
+                                      controlsBuilder: (BuildContext context,
+                                          ControlsDetails details) {
+                                        bool isLastStep = currentStep == 2;
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            if (!isLastStep)
+                                              ElevatedButton(
+                                                onPressed:
+                                                    details.onStepContinue,
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.green),
+                                                child: const Text(
+                                                    'CONTINUE'), // Cambia el color del botón a verde
+                                              ),
+                                            TextButton(
+                                              onPressed: details.onStepCancel,
+                                              style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.red),
+                                              child: Text(
+                                                  'CANCEL'), // Cambia el color del texto del botón a rojo
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    //todo:final de widgets//
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
+              ),
+            ), */
+            SliverPadding(
+              padding:
+                  const EdgeInsets.only(top: 20, right: 5, left: 5, bottom: 10),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          bottom: 10,
+                          top: 0.0,
+                          left: orientation == Orientation.portrait ? 0 : 50,
+                          right: orientation == Orientation.portrait ? 0 : 50,
+                        ),
+                        width: orientation == Orientation.portrait
+                            ? size.width
+                            : size.width * 0.8,
+                        height: size.height * 0.7,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          gradient: LinearGradient(colors: [
+                            Colors.blue.withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.blue.withOpacity(0.2),
+                            Colors.blue.withOpacity(0.3),
+                          ]),
+                        ),
+                        child: Form(
+                          key: formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                              left: 10,
+                              right: 10,
+                              bottom: 35.0,
+                            ),
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.start,
+                              children: [
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          orientation == Orientation.portrait
+                                              ? size.height * 0.8
+                                              : size.height * 0.8),
+                                  // Limitar la altura máxima
+                                  child: Stepper(
+                                    type: orientation == Orientation.portrait
+                                        ? StepperType.vertical
+                                        : StepperType.horizontal,
+                                    connectorThickness: 0.5,
+                                    elevation: 10.0,
+                                    currentStep: currentStep,
+                                    connectorColor: MaterialStatePropertyAll(
+                                        Constants.blueColor),
+                                    onStepTapped: (int step) {
+                                      setState(() {
+                                        currentStep = step;
+                                      });
+                                    },
+                                    onStepContinue: () {
+                                      if (currentStep < 2) {
+                                        setState(() {
+                                          currentStep += 1;
+                                        });
+                                      }
+                                    },
+                                    onStepCancel: () {
+                                      if (currentStep > 0) {
+                                        setState(() {
+                                          currentStep -= 1;
+                                        });
+                                      }
+                                    },
+                                    steps: <Step>[
+                                      Step(
+                                        title: const Text(
+                                          "Datos generales",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        content: ContentStep1(
+                                            ControllerClients,
+                                            selectedGenero,
+                                            itemsGenero,
+                                            context,
+                                            size),
+                                        isActive: currentStep >= 0,
+                                        state: currentStep > 0
+                                            ? StepState.complete
+                                            : StepState.indexed,
+                                      ),
+                                      Step(
+                                        title: const Text(
+                                          'Fotografía',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        content: Text('Content for Step 2'),
+                                        isActive: currentStep >= 1,
+                                        state: currentStep > 1
+                                            ? StepState.complete
+                                            : StepState.indexed,
+                                      ),
+                                      Step(
+                                        title: const Text(
+                                          'Finalizar',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        content: TextFormField(),
+                                        isActive: currentStep >= 2,
+                                        state: currentStep == 2
+                                            ? StepState.complete
+                                            : StepState.indexed,
+                                      ),
+                                    ],
+                                    controlsBuilder: (BuildContext context,
+                                        ControlsDetails details) {
+                                      bool isLastStep = currentStep == 2;
+                                      return Container(
+                                        alignment: Alignment.bottomLeft,
+                                        color: Colors.transparent,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            if (!isLastStep)
+                                              Flexible(
+                                                flex: 1,
+                                                child: ElevatedButton(
+                                                  onPressed:
+                                                      details.onStepContinue,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: Constants
+                                                        .blueColor
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                  child: const Text(
+                                                    'Continuar',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w900),
+                                                  ),
+                                                ),
+                                              ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Flexible(
+                                              flex: 1,
+                                              child: TextButton(
+                                                onPressed: details.onStepCancel,
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Constants
+                                                        .orangeColor
+                                                        .withOpacity(0.35)),
+                                                child: const Text(
+                                                  'Regresar',
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Container ContentStep3(Size size) {
-    return Container(
-        //STEP NUMERO 3
-        width: size.width,
-        color: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  30,
-                ),
-              ),
-              height: size.height * 0.3,
-              width: size.width * 0.5,
-              child: imageUrl == ""
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.asset(
-                        profile,
-                        fit: BoxFit.fill,
-                      ),
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.file(
-                        File(imageUrl),
-                        fit: BoxFit.fill,
-                        height: size.height,
-                      ),
-                    ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(
-                  decelerationRate: ScrollDecelerationRate.normal),
-              child: Column(children: [
-                TextButton.icon(
-                  onPressed: () async {
-                    //cargar imagen de la camara
-                    if (disable == true) {
-                      authenticationRepository.validaciones(
-                          "YA SE CARGO LA FOTO\nNecesitas actualizar...");
-                    } else {
-                      await controller4.TakePhoto(imageUrl)
-                          .then((value) => imageUrl = value.toString());
-
-                      if (imageUrl.toString().isEmpty) {
-                        printError(info: "NO HAY IMAGEN (NULL)");
-                      } else {
-                        printError(info: "Selecciono imagen");
-                      }
-                    }
-
-                    setState(() {});
-
-                    /*   ImagePicker imageCustomer =
-                                              ImagePicker();
-                                          XFile? file =
-                                              await imageCustomer.pickImage(
-                                                  source:
-                                                      ImageSource.gallery);
-                                          if (file == null) return;
-                                          String uniqueFileName =
-                                              DateTime.now()
-                                                  .millisecondsSinceEpoch
-                                                  .toString();
-                                                                  
-                                          Reference referenceRoot =
-                                              FirebaseStorage.instance.ref();
-                                          Reference referenceDirImage =
-                                              referenceRoot.child("images");
-                                                                  
-                                          Reference referenceImageToUpload =
-                                              referenceDirImage
-                                                  .child(uniqueFileName);
-                                                                  
-                                          try {
-                                            await referenceImageToUpload
-                                                .putFile(File(file.path));
-                                            imageUrl =
-                                                await referenceImageToUpload
-                                                    .getDownloadURL();
-                                          } catch (e) {
-                                            print(
-                                                "$e error referenceImageToUpload ");
-                                          }
-                                          */
-                  },
-                  icon: Icon(
-                    Icons.camera_alt_outlined,
-                    size: 45,
-                    color: Colors.orange[600],
-                  ),
-                  label: const Text(
-                    "Fotografía",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                ),
-              ]),
-            ),
-            const SizedBox(
-              height: 15,
-            )
-          ],
-        ));
-  }
-
-  Container ContentStep2() {
-    return Container(
-      color: Colors.amber,
-      child: const Text("step 2"),
     );
   }
 
@@ -372,7 +479,7 @@ class _NewcustomersState extends State<Newcustomers> {
     BuildContext context,
     Size size,
   ) {
-    return Column(children: [
+    return Wrap(children: [
       const SizedBox(
         height: 10,
       ),
@@ -977,167 +1084,5 @@ class _NewcustomersState extends State<Newcustomers> {
         height: 25,
       ),
     ]);
-  }
-
-  ElevatedButton bottonRegisterCustomer(
-    clientsController controller4,
-    String selectedGenero,
-    Size size,
-    String ImagenURl,
-  ) {
-    return ElevatedButton(
-        autofocus: true,
-        clipBehavior: Clip.none,
-        onPressed: () async {
-          /// GUARDAR DATOS GENERALES EN FIREBASE
-          ImagenURl = imageUrl;
-          bool register = false;
-          try {
-/**Validaciones **/ if (formKey2.currentState!.validate()) {
-              //MENSAJE DE IMAGEN NULA
-              if (ImagenURl.isEmpty) {
-                authenticationRepository
-                    .validaciones("Te falta agregar una foto");
-                /*   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    backgroundColor: Colors.cyan,
-                    content: Text("NO hay imagen")));
-                print("imageUrl {${imageUrl} ${ImagenURl}");
-                */
-                return;
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    elevation: 20.0,
-                    backgroundColor: Constants.blueColor.withOpacity(0.5),
-                    content: const Text("Cargando..."),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-                await Future.delayed(const Duration(seconds: 2));
-                await clientsController()
-                    .UploadPhoto(ImagenURl)
-                    .then((value) => imageUrl2 = value.toString());
-              }
-
-              showDialog(
-                barrierDismissible: false,
-                builder: (context) {
-                  return Center(
-                      child: SpinKitRing(
-                    color: Colors.orange.withOpacity(0.9),
-                    size: 50.0,
-                    lineWidth: 4,
-                    duration: const Duration(seconds: 3),
-                  ));
-                },
-                // ignore: use_build_context_synchronously
-                context: context,
-              );
-
-              try {
-                if (mounted) {
-                  await clientsController()
-                      .createClients(
-                    nombre: controller4.nombre.text.toUpperCase().trim(),
-                    apellido_p:
-                        controller4.apellido_p.text.toUpperCase().trim(),
-                    apellido_m:
-                        controller4.apellido_m.text.toUpperCase().trim(),
-                    genero: selectedGenero.toString().trim().toUpperCase(),
-                    calle: controller4.calle.text.toUpperCase().trim(),
-                    municipio_delegacion: controller4.municipio_delegacion.text
-                        .toUpperCase()
-                        .trim(),
-                    colonia: controller4.colonia.text.toUpperCase().trim(),
-                    estado: controller4.estado.text.toUpperCase().trim(),
-                    curp:
-                        controller4.curp.text.toUpperCase().replaceAll(" ", ""),
-                    codigo_cliente: controller4.codigo_cliente.text
-                        .toUpperCase()
-                        .replaceAll(" ", ""),
-                    codigo_postal:
-                        int.parse(controller4.codigo_postal.text.trim()),
-                    fecha_nacimiento:
-                        DateTime.parse(controller4.fecha_nacimiento.text),
-                    numero_tel: int.parse(controller4.numero_tel.text.trim()),
-                    imageUrl: imageUrl2,
-                    context: context,
-                  )
-                      .then((value) {
-                    if (value == true) {
-                      setState(() {
-                        register = true;
-                        printInfo(info: "Se subio la información...");
-                      });
-                    }
-                  });
-                }
-                if (register == true) {
-                  Get.back();
-                  Get.back();
-                  authenticationRepository
-                      .validaciones("Cliente registrado existosamente");
-                  deletecustomerfields();
-                  printInfo(info: "registro temminado: $register");
-                } else if (register == false) {
-                  authenticationRepository.validaciones(
-                      "Cliente no se registro, verifique los datos e intente de nuevo");
-                }
-              } on FirebaseFirestore catch (_) {
-                authenticationRepository.validaciones("Error Firebase ");
-              } catch (_) {
-                authenticationRepository
-                    .validaciones("Algo salío mal verifique los datos");
-              }
-
-              //TERMINA LA CONDICIÓN DE VALIDACIÓN
-            } else {
-              authenticationRepository
-                  .validaciones("Error de registro verifique los datos");
-            }
-          } catch (e) {
-            printError(info: "$e");
-          }
-        }, //TERMINACION BOTON REGISTRAR
-        style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(
-              Colors.cyan.withOpacity(.8),
-            ),
-            fixedSize: MaterialStatePropertyAll(
-              Size.fromWidth(size.width / 2),
-              //Size.fromHeight(size.height / 2)
-            )),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.save_as,
-              color: Colors.black,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "Registrar",
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
-        ));
-  }
-
-  void deletecustomerfields() {
-    controller4.codigo_cliente.clear();
-    controller4.nombre.clear();
-    controller4.apellido_m.clear();
-    controller4.apellido_p.clear();
-    controller4.genero.clear();
-    controller4.calle.clear();
-    controller4.municipio_delegacion.clear();
-    controller4.colonia.clear();
-    controller4.estado.clear();
-    controller4.curp.clear();
-    controller4.codigo_postal.clear();
-    controller4.fecha_nacimiento.clear();
-    controller4.numero_tel.clear();
   }
 }

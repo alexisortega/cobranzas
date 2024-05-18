@@ -3,6 +3,7 @@
 import 'package:cobranzas/ui/root_page.dart';
 //import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
+import 'package:cobranzas/ui/screens/widgets/new_client.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -11,7 +12,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/ui/screens/widgets/customer_details.dart';
-import 'package:cobranzas/ui/screens/widgets/new_customers.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -241,7 +242,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             context,
                             PageTransition(
                               duration: const Duration(milliseconds: 850),
-                              child: const Newcustomers(),
+                              child: const NewClient(),
                               type: PageTransitionType.bottomToTop,
                             )).then((_) {
                           setState(() {

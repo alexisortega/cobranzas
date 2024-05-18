@@ -534,9 +534,9 @@ class authenticationRepository extends GetxController {
     );
   }
 
-  static showMessage(String title, String mensaje, BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    var orientation = MediaQuery.of(context).orientation;
+  static showMessage(String title, String mensaje, [BuildContext? context]) {
+    /*    Size size = MediaQuery.of(context!).size;
+    var orientation = MediaQuery.of(context).orientation; */
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -545,9 +545,10 @@ class authenticationRepository extends GetxController {
         ),
         backgroundColor: Colors.white.withOpacity(0.8),
         child: SizedBox(
-          width: orientation == Orientation.portrait
+          width: 50,
+          /* orientation == Orientation.portrait
               ? size.width * 0.7
-              : size.width * 0.45,
+              : size.width * 0.45, */
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,

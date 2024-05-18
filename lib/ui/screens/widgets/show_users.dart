@@ -58,7 +58,7 @@ class ShowUserState extends State<ShowUser>
     return Stack(children: [
       Container(
         margin: const EdgeInsets.all(8.5),
-        height: size.height,
+        height: size.height, 
         width: size.width * 0.7,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),

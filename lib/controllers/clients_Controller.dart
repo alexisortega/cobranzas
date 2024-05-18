@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/user_controller.dart';
+import 'package:cobranzas/repository/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,19 @@ class clientsController extends GetxController {
     }
   }
 
-  Future createClients({
+  Future<bool> isCodigoClienteUnique(String codigoCliente) async {
+    final idSuperUsuario = user!.uid;
+
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Clientes')
+        .where('codigo_Cliente', isEqualTo: codigoCliente)
+        .where('id_SuperUsuario', isEqualTo: idSuperUsuario)
+        .limit(1)
+        .get();
+    return querySnapshot.docs.isEmpty;
+  }
+
+  Future<bool> createClients({
     required String codigo_cliente,
     required String nombre,
     required String apellido_m,
@@ -100,35 +113,46 @@ class clientsController extends GetxController {
     required DateTime fecha_nacimiento,
     required int numero_tel,
     required String imageUrl,
-    /*  required double monto_inicial,
-    required double interes_asignado,
-    required double monto_solicitado,
-    required String plazos,
-    required DateTime fecha_prestamo,
-    required List<String> dias_semana,*/
+    required BuildContext context,
   }) async {
     try {
       String uIdUserActivo = user!.uid;
       final esSuperUser = await userController.esSuperUsuario();
+      final isUnique = await isCodigoClienteUnique(codigo_cliente);
+
+      if (!isUnique) {
+        Get.back();
+        authenticationRepository.showMessage(
+          "Aviso",
+          "El codigo del cliente ya se registro",
+        );
+
+        return false;
+      }
+
       if (esSuperUser) {
-        await database.collection('Clientes').doc().set({
-          'codigo_Cliente': codigo_cliente,
-          'nombre_Cliente': nombre,
-          'apellido_p_Cliente': apellido_m,
-          'apellido_m_Cliente': apellido_p,
-          'genero_Cliente': genero,
-          'curp_Cliente': curp,
-          'calle_Cliente': calle,
-          'colonia_Cliente': colonia,
-          'municipio_deleg_Cliente': municipio_delegacion,
-          'estado_Cliente': estado,
-          'codigo_p_Cliente': codigo_postal,
-          'fecha_n_Cliente': fecha_nacimiento,
-          'telefono_Cliente': numero_tel,
-          'url_foto_Cliente': imageUrl,
-          'id_SuperUsuario': uIdUserActivo,
-          'id_Usuario_Registro': uIdUserActivo
-        });
+        if (user != null) {
+          await database.collection('Clientes').doc().set({
+            'codigo_Cliente': codigo_cliente,
+            'nombre_Cliente': nombre,
+            'apellido_p_Cliente': apellido_m,
+            'apellido_m_Cliente': apellido_p,
+            'genero_Cliente': genero,
+            'curp_Cliente': curp,
+            'calle_Cliente': calle,
+            'colonia_Cliente': colonia,
+            'municipio_deleg_Cliente': municipio_delegacion,
+            'estado_Cliente': estado,
+            'codigo_p_Cliente': codigo_postal,
+            'fecha_n_Cliente': fecha_nacimiento,
+            'telefono_Cliente': numero_tel,
+            'url_foto_Cliente': imageUrl,
+            'id_SuperUsuario': uIdUserActivo,
+            'id_Usuario_Registro': uIdUserActivo
+          });
+          return true;
+        }
+        return false;
       } else {
         if (user != null) {
           CollectionReference usersCollection =
@@ -158,13 +182,17 @@ class clientsController extends GetxController {
               'id_SuperUsuario': idSuperUsuario,
               'id_Usuario_Registro': uIdUserActivo,
             });
+            return true;
           } else {
-            throw Exception('No se encontraron datos para este usuario.');
+            print("no se encontraron los datos");
+            return false;
           }
         }
+        return false;
       }
     } catch (e) {
       printError(info: "${e.hashCode}");
+      return false;
     }
   }
 
