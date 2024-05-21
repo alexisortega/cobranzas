@@ -1,7 +1,9 @@
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class NewClient extends StatefulWidget {
@@ -12,15 +14,30 @@ class NewClient extends StatefulWidget {
 }
 
 class NewClientState extends State<NewClient> {
-  static var ControllerClients = Get.put(clientsController());
+  static var controllerClients = Get.put(clientsController());
   final formKey = GlobalKey<FormState>();
   late String fondoNewUser = "";
   int currentStep = 0;
+
+  final ScrollController scrollController = ScrollController();
+  bool isAppBarExpanded = true;
+
   @override
   void initState() {
     fondoNewUser = "assets/clientes.png";
-
+    scrollController.addListener(scrollListener);
     super.initState();
+  }
+
+  void scrollListener() {
+    if (scrollController.hasClients) {
+      bool isExpanded = scrollController.offset <= 0;
+      if (isExpanded != isAppBarExpanded) {
+        setState(() {
+          isAppBarExpanded = isExpanded;
+        });
+      }
+    }
   }
 
   @override
@@ -39,6 +56,7 @@ class NewClientState extends State<NewClient> {
       top: false,
       child: Scaffold(
         body: CustomScrollView(
+          controller: scrollController,
           slivers: <Widget>[
             SliverAppBar(
               leading: Container(
@@ -61,7 +79,9 @@ class NewClientState extends State<NewClient> {
               ),
               forceMaterialTransparency: true,
               backgroundColor: Colors.red,
-              expandedHeight: 170.0,
+              expandedHeight: orientation == Orientation.portrait
+                  ? size.height * 0.185
+                  : size.height * 0.2,
               floating: false,
               pinned: false,
               snap: false,
@@ -133,163 +153,36 @@ class NewClientState extends State<NewClient> {
                 ),
               ),
             ),
-            /* SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Container(
-                    margin: const EdgeInsets.all(20),
-                    child: Stack(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            bottom: 10,
-                            top: 0.0,
-                            left: orientation == Orientation.portrait ? 0 : 35,
-                            right: orientation == Orientation.portrait ? 0 : 35,
-                          ),
-                          width: orientation == Orientation.portrait
-                              ? size.width
-                              : 600,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              gradient: LinearGradient(colors: [
-                                Colors.blue.withOpacity(0.2),
-                                Colors.transparent,
-                                Colors.blue.withOpacity(0.2),
-                                Colors.blue.withOpacity(0.3),
-                              ])),
-                          child: Form(
-                            key: formKey,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 20,
-                                left: 20,
-                                right: 20,
-                                bottom: 10.0,
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection:
-                                    orientation == Orientation.portrait
-                                        ? Axis.vertical
-                                        : Axis.horizontal,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    //todo:inicio de widgets//
-
-                                    Stepper(
-                                      connectorColor: MaterialStatePropertyAll(
-                                          Constants.blueColor),
-                                      type: orientation == Orientation.portrait
-                                          ? StepperType.vertical
-                                          : StepperType.horizontal,
-                                      currentStep: currentStep,
-                                      onStepTapped: (int step) {
-                                        setState(() {
-                                          currentStep = step;
-                                        });
-                                      },
-                                      onStepContinue: () {
-                                        if (currentStep < 2) {
-                                          setState(() {
-                                            currentStep += 1;
-                                          });
-                                        }
-                                      },
-                                      onStepCancel: () {
-                                        if (currentStep > 0) {
-                                          setState(() {
-                                            currentStep -= 1;
-                                          });
-                                        }
-                                      },
-                                      steps: <Step>[
-                                        Step(
-                                          title: Text('Step 1'),
-                                          content: Text('Content for Step 1'),
-                                          isActive: currentStep >= 0,
-                                          state: currentStep > 0
-                                              ? StepState.complete
-                                              : StepState.indexed,
-                                        ),
-                                        Step(
-                                          title: Text('Step 2'),
-                                          content: Text('Content for Step 2'),
-                                          isActive: currentStep >= 1,
-                                          state: currentStep > 1
-                                              ? StepState.complete
-                                              : StepState.indexed,
-                                        ),
-                                        Step(
-                                          title: Text('Step 3'),
-                                          content: Wrap(
-                                            children: [TextFormField()],
-                                          ),
-                                          isActive: currentStep >= 2,
-                                          state: currentStep == 2
-                                              ? StepState.complete
-                                              : StepState.indexed,
-                                        ),
-                                      ],
-                                      controlsBuilder: (BuildContext context,
-                                          ControlsDetails details) {
-                                        bool isLastStep = currentStep == 2;
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            if (!isLastStep)
-                                              ElevatedButton(
-                                                onPressed:
-                                                    details.onStepContinue,
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.green),
-                                                child: const Text(
-                                                    'CONTINUE'), // Cambia el color del botón a verde
-                                              ),
-                                            TextButton(
-                                              onPressed: details.onStepCancel,
-                                              style: TextButton.styleFrom(
-                                                  foregroundColor: Colors.red),
-                                              child: Text(
-                                                  'CANCEL'), // Cambia el color del texto del botón a rojo
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                    //todo:final de widgets//
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ), */
             SliverPadding(
               padding:
-                  const EdgeInsets.only(top: 20, right: 5, left: 5, bottom: 10),
+                  const EdgeInsets.only(top: 10, right: 5, left: 5, bottom: 10),
               sliver: SliverToBoxAdapter(
                 child: Container(
+                  color: Colors.transparent,
+                  height: orientation == Orientation.portrait
+                      ? size.height * 0.91
+                      : size.height * 0.87,
                   margin: const EdgeInsets.all(20),
                   child: Stack(
                     children: [
-                      Container(
+                      AnimatedContainer(
+                        duration: const Duration(microseconds: 200),
+                        height: orientation == Orientation.portrait
+                            ? isAppBarExpanded == false
+                                ? size.height * 0.95
+                                : size.height * 0.7
+                            : isAppBarExpanded == true
+                                ? size.height * 0.85
+                                : size.height * 0.62,
                         margin: EdgeInsets.only(
                           bottom: 10,
                           top: 0.0,
-                          left: orientation == Orientation.portrait ? 0 : 50,
-                          right: orientation == Orientation.portrait ? 0 : 50,
+                          left: orientation == Orientation.portrait ? 0 : 35,
+                          right: orientation == Orientation.portrait ? 0 : 35,
                         ),
                         width: orientation == Orientation.portrait
                             ? size.width
-                            : size.width * 0.8,
-                        height: size.height * 0.7,
+                            : size.width * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
                           gradient: LinearGradient(colors: [
@@ -311,149 +204,175 @@ class NewClientState extends State<NewClient> {
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.start,
                               children: [
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          orientation == Orientation.portrait
-                                              ? size.height * 0.8
-                                              : size.height * 0.8),
-                                  // Limitar la altura máxima
-                                  child: Stepper(
-                                    type: orientation == Orientation.portrait
-                                        ? StepperType.vertical
-                                        : StepperType.horizontal,
-                                    connectorThickness: 0.5,
-                                    elevation: 10.0,
-                                    currentStep: currentStep,
-                                    connectorColor: MaterialStatePropertyAll(
-                                        Constants.blueColor),
-                                    onStepTapped: (int step) {
-                                      setState(() {
-                                        currentStep = step;
-                                      });
-                                    },
-                                    onStepContinue: () {
-                                      if (currentStep < 2) {
-                                        setState(() {
-                                          currentStep += 1;
-                                        });
-                                      }
-                                    },
-                                    onStepCancel: () {
-                                      if (currentStep > 0) {
-                                        setState(() {
-                                          currentStep -= 1;
-                                        });
-                                      }
-                                    },
-                                    steps: <Step>[
-                                      Step(
-                                        title: const Text(
-                                          "Datos generales",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        content: ContentStep1(
-                                            ControllerClients,
-                                            selectedGenero,
-                                            itemsGenero,
-                                            context,
-                                            size),
-                                        isActive: currentStep >= 0,
-                                        state: currentStep > 0
-                                            ? StepState.complete
-                                            : StepState.indexed,
-                                      ),
-                                      Step(
-                                        title: const Text(
-                                          'Fotografía',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        content: Text('Content for Step 2'),
-                                        isActive: currentStep >= 1,
-                                        state: currentStep > 1
-                                            ? StepState.complete
-                                            : StepState.indexed,
-                                      ),
-                                      Step(
-                                        title: const Text(
-                                          'Finalizar',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        content: TextFormField(),
-                                        isActive: currentStep >= 2,
-                                        state: currentStep == 2
-                                            ? StepState.complete
-                                            : StepState.indexed,
-                                      ),
-                                    ],
-                                    controlsBuilder: (BuildContext context,
-                                        ControlsDetails details) {
-                                      bool isLastStep = currentStep == 2;
-                                      return Container(
-                                        alignment: Alignment.bottomLeft,
-                                        color: Colors.transparent,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            if (!isLastStep)
-                                              Flexible(
-                                                flex: 1,
-                                                child: ElevatedButton(
-                                                  onPressed:
-                                                      details.onStepContinue,
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor: Constants
-                                                        .blueColor
-                                                        .withOpacity(0.7),
-                                                  ),
-                                                  child: const Text(
-                                                    'Continuar',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w900),
-                                                  ),
-                                                ),
-                                              ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              child: TextButton(
-                                                onPressed: details.onStepCancel,
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor: Constants
-                                                        .orangeColor
-                                                        .withOpacity(0.35)),
-                                                child: const Text(
-                                                  'Regresar',
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
+                                SingleChildScrollView(
+                                  scrollDirection:
+                                      orientation == Orientation.portrait
+                                          ? Axis.vertical
+                                          : Axis.horizontal,
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxHeight:
+                                            orientation == Orientation.portrait
+                                                ? isAppBarExpanded == false
+                                                    ? size.height * 0.83
+                                                    : size.height * 0.64
+                                                : isAppBarExpanded == false
+                                                    ? size.height * 0.75
+                                                    : size.height * 0.55,
+                                        maxWidth:
+                                            orientation == Orientation.portrait
+                                                ? size.width
+                                                : size.width),
+                                    // Limitar la altura máxima
+                                    child: SizedBox(
+                                      width: size.width * 0.85,
+                                      child: Stepper(
+                                        type:
+                                            orientation == Orientation.portrait
+                                                ? StepperType.vertical
+                                                : StepperType.horizontal,
+                                        connectorThickness: 0.5,
+                                        elevation: 10.0,
+                                        currentStep: currentStep,
+                                        connectorColor:
+                                            MaterialStatePropertyAll(
+                                                Constants.blueColor),
+                                        onStepTapped: (int step) {
+                                          setState(() {
+                                            currentStep = step;
+                                          });
+                                        },
+                                        onStepContinue: () {
+                                          if (currentStep < 2) {
+                                            setState(() {
+                                              currentStep += 1;
+                                            });
+                                          }
+                                        },
+                                        onStepCancel: () {
+                                          if (currentStep > 0) {
+                                            setState(() {
+                                              currentStep -= 1;
+                                            });
+                                          }
+                                        },
+                                        steps: <Step>[
+                                          Step(
+                                            title: const Text(
+                                              "Datos generales",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                            content: contentStep1(
+                                                controllerClients,
+                                                selectedGenero,
+                                                itemsGenero,
+                                                context,
+                                                size),
+                                            isActive: currentStep >= 0,
+                                            state: currentStep > 0
+                                                ? StepState.complete
+                                                : StepState.indexed,
+                                          ),
+                                          Step(
+                                            title: const Text(
+                                              'Fotografía',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            content: Text('Content for Step 2'),
+                                            isActive: currentStep >= 1,
+                                            state: currentStep > 1
+                                                ? StepState.complete
+                                                : StepState.indexed,
+                                          ),
+                                          Step(
+                                            title: const Text(
+                                              'Finalizar',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            content: TextFormField(),
+                                            isActive: currentStep >= 2,
+                                            state: currentStep == 2
+                                                ? StepState.complete
+                                                : StepState.indexed,
+                                          ),
+                                        ],
+                                        controlsBuilder: (BuildContext context,
+                                            ControlsDetails details) {
+                                          bool isLastStep = currentStep == 2;
+                                          return Container(
+                                            alignment: Alignment.bottomLeft,
+                                            color: Colors.transparent,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                if (!isLastStep)
+                                                  Flexible(
+                                                    flex: 1,
+                                                    child: ElevatedButton(
+                                                      onPressed: details
+                                                          .onStepContinue,
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Constants
+                                                                .blueColor
+                                                                .withOpacity(
+                                                                    0.7),
+                                                      ),
+                                                      child: const Text(
+                                                        'Continuar',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w900),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: TextButton(
+                                                    onPressed:
+                                                        details.onStepCancel,
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Constants
+                                                                    .orangeColor
+                                                                    .withOpacity(
+                                                                        0.35)),
+                                                    child: const Text(
+                                                      'Regresar',
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -472,14 +391,14 @@ class NewClientState extends State<NewClient> {
     );
   }
 
-  Widget ContentStep1(
-    clientsController controller4,
+  Column contentStep1(
+    clientsController controllerClients,
     String selectedGenero,
     List<String> itemsGenero,
     BuildContext context,
     Size size,
   ) {
-    return Wrap(children: [
+    return Column(children: [
       const SizedBox(
         height: 10,
       ),
@@ -498,7 +417,7 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.codigo_cliente,
+          controller: controllerClients.codigo_cliente,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Código del cliente"),
@@ -508,7 +427,7 @@ class NewClientState extends State<NewClient> {
             ),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.codigo_cliente.clear();
+                controllerClients.codigo_cliente.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -536,7 +455,7 @@ class NewClientState extends State<NewClient> {
 
           return null;
         },
-        controller: controller4.nombre,
+        controller: controllerClients.nombre,
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
           label: const Text("Nombre"),
@@ -547,7 +466,7 @@ class NewClientState extends State<NewClient> {
                   BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
           suffixIcon: GestureDetector(
             onTap: () {
-              controller4.nombre.clear();
+              controllerClients.nombre.clear();
             },
             child: Icon(
               Icons.cancel,
@@ -572,14 +491,14 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.apellido_p,
+          controller: controllerClients.apellido_p,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Apellido paterno"),
             prefixIcon: Icon(Icons.switch_account, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.apellido_p.clear();
+                controllerClients.apellido_p.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -605,14 +524,14 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.apellido_m,
+          controller: controllerClients.apellido_m,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Apellido materno"),
             prefixIcon: Icon(Icons.switch_account, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.apellido_m.clear();
+                controllerClients.apellido_m.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -667,9 +586,14 @@ class NewClientState extends State<NewClient> {
           selectedGenero = item!;
         }),
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 20),
       TextFormField(
           maxLength: 18,
+          inputFormatters: [
+            TextInputFormatter.withFunction((oldValue, newValue) =>
+                upperCaseTextFormatter(oldValue,
+                    newValue)), // Aquí aplicamos el formateador personalizado
+          ],
           validator: (value) {
             if (value!.isEmpty) {
               return "Necesitás llenar el campo";
@@ -683,7 +607,7 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.curp,
+          controller: controllerClients.curp,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Curp"),
@@ -691,7 +615,7 @@ class NewClientState extends State<NewClient> {
                 Icon(Icons.text_snippet_outlined, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.curp.clear();
+                controllerClients.curp.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -717,14 +641,14 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.calle,
+          controller: controllerClients.calle,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Calle, #Ext"),
             prefixIcon: Icon(Icons.house, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.calle.clear();
+                controllerClients.calle.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -750,14 +674,14 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.colonia,
+          controller: controllerClients.colonia,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Colonia"),
             prefixIcon: Icon(Icons.location_city, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.colonia.clear();
+                controllerClients.colonia.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -783,7 +707,7 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.municipio_delegacion,
+          controller: controllerClients.municipio_delegacion,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(top: 10),
@@ -792,7 +716,7 @@ class NewClientState extends State<NewClient> {
                 Icon(Icons.location_city_rounded, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.municipio_delegacion.clear();
+                controllerClients.municipio_delegacion.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -818,14 +742,14 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.estado,
+          controller: controllerClients.estado,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Estado"),
             prefixIcon: Icon(Icons.star_rate, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.estado.clear();
+                controllerClients.estado.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -853,7 +777,7 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.codigo_postal,
+          controller: controllerClients.codigo_postal,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Código postal"),
@@ -861,7 +785,7 @@ class NewClientState extends State<NewClient> {
                 Icon(Icons.numbers_outlined, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.codigo_postal.clear();
+                controllerClients.codigo_postal.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -881,11 +805,12 @@ class NewClientState extends State<NewClient> {
           }
           return null;
         },
-        controller: controller4.fecha_nacimiento,
+        controller: controllerClients.fecha_nacimiento,
         keyboardType: TextInputType.none,
         decoration: InputDecoration(
           label: const Text("Fecha de nacimiento "),
           prefixIcon: Icon(Icons.cake, color: Constants.blueColor),
+          suffixIcon: Icon(Icons.touch_app, color: Constants.blueColor),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular((10.0)),
               borderSide:
@@ -900,13 +825,13 @@ class NewClientState extends State<NewClient> {
 
           if (pickeddate != null) {
             setState(() {
-              controller4.fecha_nacimiento.text =
+              controllerClients.fecha_nacimiento.text =
                   pickeddate.toString().substring(0, 10);
             });
           }
         },
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 20),
       TextFormField(
           maxLength: 10,
           validator: (value) {
@@ -922,7 +847,7 @@ class NewClientState extends State<NewClient> {
 
             return null;
           },
-          controller: controller4.numero_tel,
+          controller: controllerClients.numero_tel,
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             label: const Text(
@@ -931,7 +856,7 @@ class NewClientState extends State<NewClient> {
             prefixIcon: Icon(Icons.phone, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.numero_tel.clear();
+                controllerClients.numero_tel.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -943,146 +868,17 @@ class NewClientState extends State<NewClient> {
                 borderSide:
                     BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
           )),
-      /*        
-    TextFormField(
-          maxLength: 20,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "Necesitás llenar el campo";
-            } else {
-              if (!RegExp(r'(^\d*\.?\d*)$').hasMatch(value)) {
-                return "Formato [0-0.0]";
-              } else if (!(double.tryParse(value)! > 100)) {
-                return "Tiene que ser mayor a 100";
-              }
-            }
-
-            return null;
-          },
-          controller: controller4.monto_inicial,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            label: const Text("Cantidad otorgada"),
-            prefixIcon: Icon(Icons.monetization_on, color: Constants.blueColor),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular((10.0)),
-                borderSide:
-                    BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
-          )),
-      const SizedBox(height: 10),
-      TextFormField(
-          maxLength: 20,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "Necesitás llenar el campo";
-            } else {
-              if (!RegExp(r'(^\d*\.?\d*)$').hasMatch(value)) {
-                return "Formato [0-0.0]";
-              } else if (!(double.tryParse(value)! > 100)) {
-                return "Tiene que ser mayor a 100";
-              }
-            }
-
-            return null;
-          },
-          controller: controller4.monto_solicitado,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            label: const Text("Monto solicitado"),
-            prefixIcon: Icon(Icons.attach_money, color: Constants.blueColor),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular((10.0)),
-                borderSide:
-                    BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
-          )),
-      const SizedBox(height: 10),
-      TextFormField(
-          maxLength: 4,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "Necesitás llenar el campo";
-            } else {
-              if (!RegExp(r'(^\d*\.?\d*)$').hasMatch(value)) {
-                return "Formato [0-0.0]";
-              } else if (!(double.tryParse(value)! >= 0 &&
-                  double.tryParse(value)! < 101)) {
-                return "Tiene que ser un porcentaje 0-100";
-              }
-            }
-
-            return null;
-          },
-          controller: controller4.interes_asignado,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            label: const Text("Interés asignado"),
-            prefixIcon:
-                Icon(Icons.percent_outlined, color: Constants.blueColor),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular((10.0)),
-                borderSide:
-                    BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
-          )),
-      const SizedBox(height: 10),
-      DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-            label: const Text("Plazos diferidos"),
-            prefix: Icon(
-              Icons.timer_outlined,
-              color: Constants.blueColor,
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(width: 3, color: Colors.orange))),
-        value: selectedPlazos,
-        items: itemsPlazos
-            .map((item) => DropdownMenuItem<String>(
-                value: item,
-                child: Text(item,
-                    style: TextStyle(
-                        fontSize: 17, color: Colors.black.withOpacity(.7)))))
-            .toList(),
-        onChanged: (item) => setState(() {
-          item = selectedPlazos;
-        }),
-      ),
-      const SizedBox(height: 15),
-      TextFormField(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Necesita llenar el campo';
-          }
-          return null;
-        },
-        controller: controller4.fecha_prestamo,
-        keyboardType: TextInputType.none,
-        decoration: InputDecoration(
-          label: const Text("Fecha del prestamo"),
-          prefixIcon: Icon(Icons.edit_calendar, color: Constants.blueColor),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide:
-                  BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
-        ),
-        onTap: () async {
-          DateTime? pickeddated = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(1920),
-              lastDate: DateTime(2099));
-
-          if (pickeddated != null) {
-            setState(() {
-              controller4.fecha_prestamo.text =
-                  pickeddated.toString().substring(0, 10);
-            });
-          }
-        },
-      ),
-    */
       const SizedBox(
         height: 25,
       ),
     ]);
   }
+}
+
+TextEditingValue upperCaseTextFormatter(
+    TextEditingValue oldValue, TextEditingValue newValue) {
+  return TextEditingValue(
+    text: newValue.text.toUpperCase(),
+    selection: newValue.selection,
+  );
 }
