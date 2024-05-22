@@ -50,15 +50,21 @@ class _customerViewState extends State<customerDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var orientation = MediaQuery.of(context).orientation;
     return SafeArea(
       child: Scaffold(
         body: Container(
           color: Colors.blue[50],
           child: Stack(
+            alignment: Alignment.topCenter,
             children: [
               SizedBox(
-                width: size.width,
-                height: size.height / 2,
+                width: orientation == Orientation.portrait
+                    ? size.width * 0.8
+                    : size.width * 0.55,
+                height: orientation == Orientation.portrait
+                    ? size.height * 0.5
+                    : size.height * 0.65,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
                   child: ClipRRect(
@@ -77,8 +83,9 @@ class _customerViewState extends State<customerDetails> {
                   ),
                 ),
               ),
-              buttonArrow(),
+              buttonArrow(size, orientation),
               scroll(
+                  orientation,
                   widget.datos,
                   size,
                   widget.cont,
@@ -104,7 +111,8 @@ class _customerViewState extends State<customerDetails> {
   }
 }
 
-scroll(
+Widget scroll(
+    Orientation orientation,
     List<dynamic> datos,
     Size size,
     int cont,
@@ -123,11 +131,12 @@ scroll(
     String fechaNacimiento,
     String urlFoto) {
   return DraggableScrollableSheet(
-      initialChildSize: 0.6,
+      initialChildSize: 0.5,
       maxChildSize: 1.0,
-      minChildSize: 0.6,
+      minChildSize: 0.5,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
+          margin: EdgeInsets.only(left: 10, right: 10),
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
             color: Colors.blue.withOpacity(0.7),
@@ -150,7 +159,7 @@ scroll(
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: Colors.black),
+                            color: Colors.black87),
                         height: 6,
                         width: 40,
                       ),
@@ -194,8 +203,8 @@ scroll(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white70,
                   ),
-                  margin: const EdgeInsets.only(
-                    left: 25,
+                  margin: EdgeInsets.only(
+                    left: size.width * 0.035,
                     top: 15,
                   ),
                   padding: const EdgeInsets.all(15),
@@ -261,9 +270,9 @@ scroll(
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 27, top: 10),
-                  child: textViewCustomer(
+                Padding(
+                  padding: EdgeInsets.only(left: size.width * 0.05, top: 10),
+                  child: const textViewCustomer(
                     texto: "Dirección:",
                     color: Colors.black,
                     size: 20,
@@ -274,8 +283,8 @@ scroll(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white70,
                   ),
-                  margin: const EdgeInsets.only(
-                    left: 25,
+                  margin: EdgeInsets.only(
+                    left: size.width * 0.03,
                     top: 10,
                   ),
                   padding: const EdgeInsets.only(
@@ -382,9 +391,11 @@ class textViewCustomer extends StatelessWidget {
   }
 }
 
-buttonArrow() {
+buttonArrow(Size size, Orientation orientation) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+    padding: orientation == Orientation.portrait
+        ? EdgeInsets.only(right: size.width * 0.78, top: size.height * 0.02)
+        : EdgeInsets.only(right: size.width * 0.88, top: 15),
     child: InkWell(
       onTap: () {
         //BOTON Regresar

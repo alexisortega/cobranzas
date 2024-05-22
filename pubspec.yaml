@@ -61,6 +61,7 @@ dependencies:
   camera: ^0.10.3+2
   flutter_keyboard_visibility: ^6.0.0
   logging: ^1.2.0
+  intl: ^0.18.1
   
   
   

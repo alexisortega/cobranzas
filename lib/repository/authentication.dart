@@ -545,7 +545,7 @@ class authenticationRepository extends GetxController {
         ),
         backgroundColor: Colors.white.withOpacity(0.8),
         child: SizedBox(
-          width: 50,
+          width: 320,
           /* orientation == Orientation.portrait
               ? size.width * 0.7
               : size.width * 0.45, */

@@ -19,7 +19,7 @@ class Newcustomers extends StatefulWidget {
 }
 
 class _NewcustomersState extends State<Newcustomers> {
-  final controller4 = Get.put(clientsController());
+  final controller = Get.put(clientsController());
   static final formKey2 = GlobalKey<FormState>();
   int _currentStep = 0;
   String profile = "";
@@ -161,7 +161,6 @@ class _NewcustomersState extends State<Newcustomers> {
                           children: [
                             const SizedBox(height: 10),
                             Stepper(
-                              
                               steps: [
                                 Step(
                                   state: _currentStep >= 0
@@ -174,7 +173,7 @@ class _NewcustomersState extends State<Newcustomers> {
                                         color: Colors.black, fontSize: 17),
                                   ),
                                   content: ContentStep1(
-                                      controller4,
+                                      controller,
                                       selectedGenero,
                                       itemsGenero,
                                       context,
@@ -225,7 +224,7 @@ class _NewcustomersState extends State<Newcustomers> {
                               padding: const EdgeInsets.only(
                                   left: 20, top: 20, bottom: 20, right: 20),
                               child: bottonRegisterCustomer(
-                                  controller4, selectedGenero, size, imageUrl),
+                                  controller, selectedGenero, size, imageUrl),
                             ),
                           ],
                         ),
@@ -241,7 +240,7 @@ class _NewcustomersState extends State<Newcustomers> {
     );
   }
 
-  Container ContentStep3(Size size) {
+  Widget ContentStep3(Size size) {
     return Container(
         //STEP NUMERO 3
         width: size.width,
@@ -291,10 +290,10 @@ class _NewcustomersState extends State<Newcustomers> {
                   onPressed: () async {
                     //cargar imagen de la camara
                     if (disable == true) {
-                      authenticationRepository.validaciones(
+                      authenticationRepository.showMessage("Aviso",
                           "YA SE CARGO LA FOTO\nNecesitas actualizar...");
                     } else {
-                      await controller4.TakePhoto(imageUrl)
+                      await controller.TakePhoto(imageUrl)
                           .then((value) => imageUrl = value.toString());
 
                       if (imageUrl.toString().isEmpty) {
@@ -366,7 +365,7 @@ class _NewcustomersState extends State<Newcustomers> {
   }
 
   Widget ContentStep1(
-    clientsController controller4,
+    clientsController controller,
     String selectedGenero,
     List<String> itemsGenero,
     BuildContext context,
@@ -391,7 +390,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.codigo_cliente,
+          controller: controller.codigo_cliente,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Código del cliente"),
@@ -401,7 +400,7 @@ class _NewcustomersState extends State<Newcustomers> {
             ),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.codigo_cliente.clear();
+                controller.codigo_cliente.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -429,7 +428,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
           return null;
         },
-        controller: controller4.nombre,
+        controller: controller.nombre,
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
           label: const Text("Nombre"),
@@ -440,7 +439,7 @@ class _NewcustomersState extends State<Newcustomers> {
                   BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
           suffixIcon: GestureDetector(
             onTap: () {
-              controller4.nombre.clear();
+              controller.nombre.clear();
             },
             child: Icon(
               Icons.cancel,
@@ -465,14 +464,14 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.apellido_p,
+          controller: controller.apellido_p,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Apellido paterno"),
             prefixIcon: Icon(Icons.switch_account, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.apellido_p.clear();
+                controller.apellido_p.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -498,14 +497,14 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.apellido_m,
+          controller: controller.apellido_m,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Apellido materno"),
             prefixIcon: Icon(Icons.switch_account, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.apellido_m.clear();
+                controller.apellido_m.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -576,7 +575,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.curp,
+          controller: controller.curp,
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             label: const Text("Curp"),
@@ -584,7 +583,7 @@ class _NewcustomersState extends State<Newcustomers> {
                 Icon(Icons.text_snippet_outlined, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.curp.clear();
+                controller.curp.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -610,14 +609,14 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.calle,
+          controller: controller.calle,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Calle, #Ext"),
             prefixIcon: Icon(Icons.house, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.calle.clear();
+                controller.calle.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -643,14 +642,14 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.colonia,
+          controller: controller.colonia,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Colonia"),
             prefixIcon: Icon(Icons.location_city, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.colonia.clear();
+                controller.colonia.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -676,7 +675,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.municipio_delegacion,
+          controller: controller.municipio_delegacion,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(top: 10),
@@ -685,7 +684,7 @@ class _NewcustomersState extends State<Newcustomers> {
                 Icon(Icons.location_city_rounded, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.municipio_delegacion.clear();
+                controller.municipio_delegacion.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -711,14 +710,14 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.estado,
+          controller: controller.estado,
           keyboardType: TextInputType.streetAddress,
           decoration: InputDecoration(
             label: const Text("Estado"),
             prefixIcon: Icon(Icons.star_rate, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.estado.clear();
+                controller.estado.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -746,7 +745,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.codigo_postal,
+          controller: controller.codigo_postal,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Código postal"),
@@ -754,7 +753,7 @@ class _NewcustomersState extends State<Newcustomers> {
                 Icon(Icons.numbers_outlined, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.codigo_postal.clear();
+                controller.codigo_postal.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -774,7 +773,7 @@ class _NewcustomersState extends State<Newcustomers> {
           }
           return null;
         },
-        controller: controller4.fecha_nacimiento,
+        controller: controller.fecha_nacimiento,
         keyboardType: TextInputType.none,
         decoration: InputDecoration(
           label: const Text("Fecha de nacimiento "),
@@ -793,7 +792,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
           if (pickeddate != null) {
             setState(() {
-              controller4.fecha_nacimiento.text =
+              controller.fecha_nacimiento.text =
                   pickeddate.toString().substring(0, 10);
             });
           }
@@ -815,7 +814,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.numero_tel,
+          controller: controller.numero_tel,
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             label: const Text(
@@ -824,7 +823,7 @@ class _NewcustomersState extends State<Newcustomers> {
             prefixIcon: Icon(Icons.phone, color: Constants.blueColor),
             suffixIcon: GestureDetector(
               onTap: () {
-                controller4.numero_tel.clear();
+                controller.numero_tel.clear();
               },
               child: Icon(
                 Icons.cancel,
@@ -852,7 +851,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.monto_inicial,
+          controller: controller.monto_inicial,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Cantidad otorgada"),
@@ -878,7 +877,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.monto_solicitado,
+          controller: controller.monto_solicitado,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Monto solicitado"),
@@ -905,7 +904,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
             return null;
           },
-          controller: controller4.interes_asignado,
+          controller: controller.interes_asignado,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             label: const Text("Interés asignado"),
@@ -947,7 +946,7 @@ class _NewcustomersState extends State<Newcustomers> {
           }
           return null;
         },
-        controller: controller4.fecha_prestamo,
+        controller: controller.fecha_prestamo,
         keyboardType: TextInputType.none,
         decoration: InputDecoration(
           label: const Text("Fecha del prestamo"),
@@ -966,7 +965,7 @@ class _NewcustomersState extends State<Newcustomers> {
 
           if (pickeddated != null) {
             setState(() {
-              controller4.fecha_prestamo.text =
+              controller.fecha_prestamo.text =
                   pickeddated.toString().substring(0, 10);
             });
           }
@@ -980,7 +979,7 @@ class _NewcustomersState extends State<Newcustomers> {
   }
 
   ElevatedButton bottonRegisterCustomer(
-    clientsController controller4,
+    clientsController controller,
     String selectedGenero,
     Size size,
     String ImagenURl,
@@ -996,8 +995,8 @@ class _NewcustomersState extends State<Newcustomers> {
 /**Validaciones **/ if (formKey2.currentState!.validate()) {
               //MENSAJE DE IMAGEN NULA
               if (ImagenURl.isEmpty) {
-                authenticationRepository
-                    .validaciones("Te falta agregar una foto");
+                authenticationRepository.showMessage(
+                    "Advertencia", "Te falta agregar una foto");
                 /*   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     backgroundColor: Colors.cyan,
                     content: Text("NO hay imagen")));
@@ -1038,28 +1037,26 @@ class _NewcustomersState extends State<Newcustomers> {
                 if (mounted) {
                   await clientsController()
                       .createClients(
-                    nombre: controller4.nombre.text.toUpperCase().trim(),
-                    apellido_p:
-                        controller4.apellido_p.text.toUpperCase().trim(),
-                    apellido_m:
-                        controller4.apellido_m.text.toUpperCase().trim(),
+                    nombre: controller.nombre.text.toUpperCase().trim(),
+                    apellido_p: controller.apellido_p.text.toUpperCase().trim(),
+                    apellido_m: controller.apellido_m.text.toUpperCase().trim(),
                     genero: selectedGenero.toString().trim().toUpperCase(),
-                    calle: controller4.calle.text.toUpperCase().trim(),
-                    municipio_delegacion: controller4.municipio_delegacion.text
+                    calle: controller.calle.text.toUpperCase().trim(),
+                    municipio_delegacion: controller.municipio_delegacion.text
                         .toUpperCase()
                         .trim(),
-                    colonia: controller4.colonia.text.toUpperCase().trim(),
-                    estado: controller4.estado.text.toUpperCase().trim(),
+                    colonia: controller.colonia.text.toUpperCase().trim(),
+                    estado: controller.estado.text.toUpperCase().trim(),
                     curp:
-                        controller4.curp.text.toUpperCase().replaceAll(" ", ""),
-                    codigo_cliente: controller4.codigo_cliente.text
+                        controller.curp.text.toUpperCase().replaceAll(" ", ""),
+                    codigo_cliente: controller.codigo_cliente.text
                         .toUpperCase()
                         .replaceAll(" ", ""),
                     codigo_postal:
-                        int.parse(controller4.codigo_postal.text.trim()),
+                        int.parse(controller.codigo_postal.text.trim()),
                     fecha_nacimiento:
-                        DateTime.parse(controller4.fecha_nacimiento.text),
-                    numero_tel: int.parse(controller4.numero_tel.text.trim()),
+                        DateTime.parse(controller.fecha_nacimiento.text),
+                    numero_tel: int.parse(controller.numero_tel.text.trim()),
                     imageUrl: imageUrl2,
                     context: context,
                   )
@@ -1126,18 +1123,18 @@ class _NewcustomersState extends State<Newcustomers> {
   }
 
   void deletecustomerfields() {
-    controller4.codigo_cliente.clear();
-    controller4.nombre.clear();
-    controller4.apellido_m.clear();
-    controller4.apellido_p.clear();
-    controller4.genero.clear();
-    controller4.calle.clear();
-    controller4.municipio_delegacion.clear();
-    controller4.colonia.clear();
-    controller4.estado.clear();
-    controller4.curp.clear();
-    controller4.codigo_postal.clear();
-    controller4.fecha_nacimiento.clear();
-    controller4.numero_tel.clear();
+    controller.codigo_cliente.clear();
+    controller.nombre.clear();
+    controller.apellido_m.clear();
+    controller.apellido_p.clear();
+    controller.genero.clear();
+    controller.calle.clear();
+    controller.municipio_delegacion.clear();
+    controller.colonia.clear();
+    controller.estado.clear();
+    controller.curp.clear();
+    controller.codigo_postal.clear();
+    controller.fecha_nacimiento.clear();
+    controller.numero_tel.clear();
   }
 }

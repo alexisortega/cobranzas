@@ -454,9 +454,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: FutureBuilder(
           future: clients,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container();
-            } else if (snapshot.hasError) {
+            if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
@@ -573,101 +571,112 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     margin: const EdgeInsets.all(12.0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          CircleAvatar(
-                                              maxRadius: 28,
-                                              child: ClipOval(
-                                                  child: CachedNetworkImage(
-                                                width: size.width,
-                                                height: size.height,
-                                                fit: BoxFit.cover,
-                                                imageUrl: (snapsho.data?[index]
-                                                    ["url_foto_Cliente"]),
-                                              ))),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            '${snapsho.data?[index]['nombre_Cliente']} ${snapsho.data?[index]['apellido_p_Cliente']}',
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Get.to(
-                                                preventDuplicates: true,
-                                                () => customerDetails(
-                                                  cont: index,
-                                                  datos: customerData,
-                                                  codigoCliente: codigo_cliente,
-                                                  nombre: nombre,
-                                                  apellidoP: apellido_p,
-                                                  apellidoM: apellido_m,
-                                                  genero: genero,
-                                                  curp: curp,
-                                                  calle: calle,
-                                                  colonia: colonia,
-                                                  municipioDelegacion:
-                                                      municipio_delegacion,
-                                                  estado: estado,
-                                                  codigoPostal: codigo_postal,
-                                                  numeroTel: numero_tel,
-                                                  fechaNacimiento:
-                                                      fecha_nacimiento
-                                                          .toDate()
-                                                          .toString()
-                                                          .substring(0, 10)
-                                                          .split("-")
-                                                          .reversed
-                                                          .join("/"),
-                                                  urlFoto: urlFoto,
-                                                ),
-                                              );
-                                            },
-                                            child: Stack(children: [
-                                              Container(
-                                                height: 35,
-                                                width: 70,
-                                                clipBehavior:
-                                                    Clip.antiAliasWithSaveLayer,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.blue
-                                                      .withOpacity(0.44),
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    bottomRight:
-                                                        Radius.circular(36),
-                                                    topLeft:
-                                                        Radius.circular(36),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            CircleAvatar(
+                                                maxRadius: 28,
+                                                child: ClipOval(
+                                                    child: CachedNetworkImage(
+                                                  width: size.width,
+                                                  height: size.height,
+                                                  fit: BoxFit.cover,
+                                                  imageUrl:
+                                                      (snapsho.data?[index]
+                                                          ["url_foto_Cliente"]),
+                                                ))),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              '${snapsho.data?[index]['nombre_Cliente']} ${snapsho.data?[index]['apellido_p_Cliente']}',
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Get.to(
+                                                  preventDuplicates: true,
+                                                  () => customerDetails(
+                                                    cont: index,
+                                                    datos: customerData,
+                                                    codigoCliente:
+                                                        codigo_cliente,
+                                                    nombre: nombre,
+                                                    apellidoP: apellido_p,
+                                                    apellidoM: apellido_m,
+                                                    genero: genero,
+                                                    curp: curp,
+                                                    calle: calle,
+                                                    colonia: colonia,
+                                                    municipioDelegacion:
+                                                        municipio_delegacion,
+                                                    estado: estado,
+                                                    codigoPostal: codigo_postal,
+                                                    numeroTel: numero_tel,
+                                                    fechaNacimiento:
+                                                        fecha_nacimiento
+                                                            .toDate()
+                                                            .toString()
+                                                            .substring(0, 10)
+                                                            .split("-")
+                                                            .reversed
+                                                            .join("/"),
+                                                    urlFoto: urlFoto,
                                                   ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.blueGrey
-                                                          .withOpacity(0.5),
-                                                      blurStyle:
-                                                          BlurStyle.inner,
-                                                      spreadRadius: 1,
-                                                      blurRadius: 7,
-                                                      offset:
-                                                          const Offset(3, 7),
+                                                );
+                                              },
+                                              child: Stack(children: [
+                                                Container(
+                                                  height: 35,
+                                                  width: 70,
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blue
+                                                        .withOpacity(0.44),
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      bottomRight:
+                                                          Radius.circular(36),
+                                                      topLeft:
+                                                          Radius.circular(36),
                                                     ),
-                                                  ],
-                                                ),
-                                                child: const SizedBox(
-                                                  height: 70,
-                                                  width: 90,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 25,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.blueGrey
+                                                            .withOpacity(0.5),
+                                                        blurStyle:
+                                                            BlurStyle.inner,
+                                                        spreadRadius: 1,
+                                                        blurRadius: 7,
+                                                        offset:
+                                                            const Offset(3, 7),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: const SizedBox(
+                                                    height: 70,
+                                                    width: 90,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 25,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ]),
-                                          ),
-                                        ],
+                                              ]),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1125,8 +1134,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 type: PageTransitionType.bottomToTop));
       },
       child: FadeInRight(
-        duration: const Duration(milliseconds: 100),
-        delay: Duration(milliseconds: 100 * cont),
+        duration: const Duration(milliseconds: 30),
+        delay: Duration(milliseconds: 50 * cont),
         child: Stack(alignment: Alignment.center, children: [
           DecoratedBox(
               decoration: BoxDecoration(

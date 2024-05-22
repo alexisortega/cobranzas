@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
-
+import 'package:cobranzas/repository/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'dart:io';
+import 'package:intl/intl.dart';
 
 class NewClient extends StatefulWidget {
   const NewClient({super.key});
@@ -16,15 +20,19 @@ class NewClient extends StatefulWidget {
 class NewClientState extends State<NewClient> {
   static var controllerClients = Get.put(clientsController());
   final formKey = GlobalKey<FormState>();
+
   late String fondoNewUser = "";
   int currentStep = 0;
 
   final ScrollController scrollController = ScrollController();
   bool isAppBarExpanded = true;
 
+  String profile = "";
+
   @override
   void initState() {
-    fondoNewUser = "assets/clientes.png";
+    profile = "assets/profile2.png";
+    fondoNewUser = "assets/pantallaCliente.png";
     scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -40,17 +48,20 @@ class NewClientState extends State<NewClient> {
     }
   }
 
+  String imageUrl = "";
+  String imageUrl2 = "";
+  bool disable = false;
+
+  List<String> itemsGenero = [
+    "Genero",
+    'Hombre',
+    'Mujer',
+  ];
+  String selectedGenero = "Genero";
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var orientation = MediaQuery.of(context).orientation;
-
-    List<String> itemsGenero = [
-      "Genero",
-      'Hombre',
-      'Mujer',
-    ];
-    String? selectedGenero = 'Genero';
 
     return SafeArea(
       top: false,
@@ -78,7 +89,6 @@ class NewClientState extends State<NewClient> {
                 ),
               ),
               forceMaterialTransparency: true,
-              backgroundColor: Colors.red,
               expandedHeight: orientation == Orientation.portrait
                   ? size.height * 0.185
                   : size.height * 0.2,
@@ -128,23 +138,25 @@ class NewClientState extends State<NewClient> {
                           )
                         : Positioned(
                             left: size.width * 0.01,
-                            top: size.height * 0.009,
-                            right: size.width * 0.6,
-                            bottom: size.height * -0.15,
+                            top: size.height * 0.0009,
+                            right: size.width * 0.5,
+                            bottom: size.height * -0.07,
                             child: Image.asset(
                               fondoNewUser, //imagen AppBar
                               fit: BoxFit
                                   .fitHeight, // Cubrir para que la imagen se expanda bien
                             ),
                           ),
-                    const DecoratedBox(
+                    DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          begin: Alignment(0.0, 0.5), //(X,Y)
-                          end: Alignment(0.0, 0.0),
+                          begin: orientation == Orientation.portrait
+                              ? const Alignment(0.03, 0.30)
+                              : const Alignment(0.005, 0.27), //(X,Y)
+                          end: const Alignment(0.0, 0.0),
                           colors: <Color>[
-                            Colors.black12,
-                            Colors.transparent,
+                            Colors.blueGrey.withOpacity(0.23),
+                            Colors.transparent
                           ],
                         ),
                       ),
@@ -171,7 +183,7 @@ class NewClientState extends State<NewClient> {
                             ? isAppBarExpanded == false
                                 ? size.height * 0.95
                                 : size.height * 0.7
-                            : isAppBarExpanded == true
+                            : isAppBarExpanded == false
                                 ? size.height * 0.85
                                 : size.height * 0.62,
                         margin: EdgeInsets.only(
@@ -286,7 +298,8 @@ class NewClientState extends State<NewClient> {
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            content: Text('Content for Step 2'),
+                                            content:
+                                                contentStep2(size, orientation),
                                             isActive: currentStep >= 1,
                                             state: currentStep > 1
                                                 ? StepState.complete
@@ -301,7 +314,12 @@ class NewClientState extends State<NewClient> {
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            content: TextFormField(),
+                                            content: contentStep3(
+                                                size,
+                                                orientation,
+                                                controllerClients,
+                                                selectedGenero,
+                                                imageUrl),
                                             isActive: currentStep >= 2,
                                             state: currentStep == 2
                                                 ? StepState.complete
@@ -310,12 +328,14 @@ class NewClientState extends State<NewClient> {
                                         ],
                                         controlsBuilder: (BuildContext context,
                                             ControlsDetails details) {
-                                          bool isLastStep = currentStep == 2;
+                                          bool isLastStep = (currentStep == 2);
                                           return Container(
                                             alignment: Alignment.bottomLeft,
                                             color: Colors.transparent,
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
+                                              verticalDirection:
+                                                  VerticalDirection.down,
                                               children: <Widget>[
                                                 if (!isLastStep)
                                                   Flexible(
@@ -393,7 +413,7 @@ class NewClientState extends State<NewClient> {
 
   Column contentStep1(
     clientsController controllerClients,
-    String selectedGenero,
+    String selectedG,
     List<String> itemsGenero,
     BuildContext context,
     Size size,
@@ -574,7 +594,7 @@ class NewClientState extends State<NewClient> {
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: const BorderSide(width: 3, color: Colors.orange))),
-        value: selectedGenero,
+        value: selectedG,
         items: itemsGenero
             .map((item) => DropdownMenuItem<String>(
                 value: item,
@@ -583,7 +603,9 @@ class NewClientState extends State<NewClient> {
                         fontSize: 17, color: Colors.black.withOpacity(.7)))))
             .toList(),
         onChanged: (item) => setState(() {
-          selectedGenero = item!;
+          selectedG = item!;
+
+          selectedGenero = selectedG;
         }),
       ),
       const SizedBox(height: 20),
@@ -817,16 +839,28 @@ class NewClientState extends State<NewClient> {
                   BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
         ),
         onTap: () async {
-          DateTime? pickeddate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(1920),
-              lastDate: DateTime(2099));
+          DateTime now = DateTime.now();
+          DateTime firstDate = DateTime(1920);
+          DateTime lastDate = DateTime(now.year - 17, now.month, now.day);
 
-          if (pickeddate != null) {
+          DateTime? pickeddate = await showDatePicker(
+            context: context,
+            initialDate: lastDate,
+            firstDate: firstDate,
+            lastDate: lastDate,
+          );
+
+          /* if (pickeddate != null) {
             setState(() {
               controllerClients.fecha_nacimiento.text =
                   pickeddate.toString().substring(0, 10);
+            });
+          } */
+          if (pickeddate != null) {
+            /* String formattedDate = DateFormat('yyyy-MM-dd').format(pickeddate); */
+            String formattedDate = DateFormat('dd-MM-yyyy').format(pickeddate);
+            setState(() {
+              controllerClients.fecha_nacimiento.text = formattedDate;
             });
           }
         },
@@ -873,12 +907,291 @@ class NewClientState extends State<NewClient> {
       ),
     ]);
   }
-}
 
-TextEditingValue upperCaseTextFormatter(
-    TextEditingValue oldValue, TextEditingValue newValue) {
-  return TextEditingValue(
-    text: newValue.text.toUpperCase(),
-    selection: newValue.selection,
-  );
+  Widget contentStep2(Size size, Orientation orientation) {
+    return Container(
+        //STEP NUMERO 2
+
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  30,
+                ),
+              ),
+              height: orientation == Orientation.portrait
+                  ? size.height * 0.28
+                  : size.height * 0.28,
+              width: orientation == Orientation.portrait
+                  ? size.width * 0.45
+                  : size.width * 0.30,
+              child: imageUrl == ""
+                  ? ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: Image.asset(
+                        profile,
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: Image.file(
+                        File(imageUrl),
+                        fit: BoxFit.fill,
+                        height: size.height,
+                      ),
+                    ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.normal),
+              child: Column(children: [
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal.withOpacity(0.4),
+                      elevation: 28),
+                  onPressed: () async {
+                    //cargar imagen de la camara
+                    if (disable == true) {
+                      authenticationRepository.showMessage("Aviso",
+                          "YA SE CARGO LA FOTO\nNecesitas actualizar...");
+                    } else {
+                      await controllerClients.TakePhoto(imageUrl)
+                          .then((value) => imageUrl = value.toString());
+
+                      if (imageUrl.toString().isEmpty) {
+                        printError(info: "NO HAY IMAGEN (NULL)");
+                      } else {
+                        printError(info: "Selecciono imagen");
+                      }
+                    }
+
+                    setState(() {});
+                  },
+                  icon: Icon(
+                    Icons.camera_alt,
+                    size: 32,
+                    color: Colors.blueGrey[700],
+                  ),
+                  label: const Text(
+                    "Tomar Foto",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+                SizedBox(height: orientation == Orientation.portrait ? 20 : 0)
+              ]),
+            ),
+            SizedBox(
+              height: orientation == Orientation.portrait ? 20 : 5,
+            )
+          ],
+        ));
+  }
+
+  Widget contentStep3(
+    Size size,
+    Orientation orientation,
+    clientsController controller,
+    String selectedGenero,
+    String imgUrl,
+  ) {
+    return Container(
+        //STEP NUMERO 3
+
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.normal),
+              child: Column(children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.withOpacity(0.7),
+                      elevation: 35),
+                  onPressed: () async {
+                    buttonRegister(
+                      controller,
+                      selectedGenero,
+                      size,
+                      imgUrl,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.save,
+                    size: 35,
+                    color: Colors.black,
+                  ),
+                  label: const Text(
+                    "Registrar ",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+              ]),
+            ),
+            const SizedBox(
+              height: 50,
+            )
+          ],
+        ));
+  }
+
+  Future<void> buttonRegister(
+    clientsController controller,
+    String selectedGenero,
+    Size size,
+    String imagUrl,
+  ) async {
+    imageUrl = imagUrl;
+    bool register = false;
+    try {
+/**Validaciones **/ if (formKey.currentState!.validate()) {
+        //MENSAJE DE IMAGEN NULA
+        if (imagUrl.isEmpty) {
+          authenticationRepository.showMessage(
+              "Aviso", "Te falta agregar una foto");
+          /*   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    backgroundColor: Colors.cyan,
+                    content: Text("NO hay imagen")));
+                print("imageUrl {${imageUrl} ${ImagenURl}");
+                */
+          return;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              elevation: 20.0,
+              backgroundColor: Constants.blueColor.withOpacity(0.5),
+              content: const Text("Cargando..."),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          await Future.delayed(const Duration(seconds: 2));
+          await clientsController()
+              .UploadPhoto(imagUrl)
+              .then((value) => imageUrl2 = value.toString());
+        }
+
+        showDialog(
+          barrierDismissible: false,
+          builder: (context) {
+            return Center(
+                child: SpinKitRing(
+              color: Colors.orange.withOpacity(0.9),
+              size: 50.0,
+              lineWidth: 4,
+              duration: const Duration(seconds: 3),
+            ));
+          },
+          // ignore: use_build_context_synchronously
+          context: context,
+        );
+
+        try {
+          if (mounted) {
+            await clientsController()
+                .createClients(
+              nombre: controller.nombre.text.toUpperCase().trim(),
+              apellido_p: controller.apellido_p.text.toUpperCase().trim(),
+              apellido_m: controller.apellido_m.text.toUpperCase().trim(),
+              genero: selectedGenero.toString().trim().toUpperCase(),
+              calle: controller.calle.text.toUpperCase().trim(),
+              municipio_delegacion:
+                  controller.municipio_delegacion.text.toUpperCase().trim(),
+              colonia: controller.colonia.text.toUpperCase().trim(),
+              estado: controller.estado.text.toUpperCase().trim(),
+              curp: controller.curp.text.toUpperCase().replaceAll(" ", ""),
+              codigo_cliente: controller.codigo_cliente.text
+                  .toUpperCase()
+                  .replaceAll(" ", ""),
+              codigo_postal: int.parse(controller.codigo_postal.text.trim()),
+              fecha_nacimiento: DateTime.parse(
+                  controller.fecha_nacimiento.text.split("-").reversed.join()),
+              numero_tel: int.parse(controller.numero_tel.text.trim()),
+              imageUrl: imageUrl2,
+              context: context,
+            )
+                .then((value) {
+              if (value == true) {
+                setState(() {
+                  register = true;
+                  printInfo(info: "Se subio la información...");
+                });
+              }
+            });
+          }
+          if (register == true) {
+            Get.back();
+            Get.back();
+            authenticationRepository.showMessage(
+                "Aviso", "Cliente registrado existosamente");
+            deletecustomerfields(controllerClients);
+            printInfo(info: "registro temminado: $register");
+          } else if (register == false) {
+            authenticationRepository.showMessage("Advertencia",
+                "Cliente no se registro, verifique los datos e intente de nuevo");
+          }
+        } on FirebaseFirestore catch (_) {
+          authenticationRepository.showMessage(
+              "Advertencia", "Error Firebase ");
+        } catch (_) {
+          Get.back();
+          authenticationRepository.showMessage(
+              "Advertencia", "Algo salío mal verifique los datos");
+        }
+
+        //TERMINA LA CONDICIÓN DE VALIDACIÓN
+      } else {
+        authenticationRepository.showMessage(
+            "Advertencia", "Error de registro verifique los datos");
+      }
+    } catch (e) {
+      printError(info: "$e");
+    }
+  }
+
+  TextEditingValue upperCaseTextFormatter(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+
+  void deletecustomerfields(clientsController controller) {
+    controller.codigo_cliente.clear();
+
+    controller.nombre.clear();
+    controller.apellido_m.clear();
+    controller.apellido_p.clear();
+    controller.genero.clear();
+    controller.calle.clear();
+    controller.municipio_delegacion.clear();
+    controller.colonia.clear();
+    controller.estado.clear();
+    controller.curp.clear();
+    controller.codigo_postal.clear();
+    controller.fecha_nacimiento.clear();
+    controller.numero_tel.clear();
+  }
 }
