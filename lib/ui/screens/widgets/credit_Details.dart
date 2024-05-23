@@ -381,7 +381,7 @@ class _CreditDetailsState extends State<CreditDetails> {
                                               PageTransition(
                                                 duration: const Duration(
                                                     milliseconds: 780),
-                                                child: customerDetails(
+                                                child: CustomerDetails(
                                                     cont: 1,
                                                     datos: List.empty(),
                                                     codigoCliente: "22",

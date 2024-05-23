@@ -100,7 +100,7 @@ class PrivilegiosScreenState extends State<PrivilegiosPage> {
             return SizedBox(
               height: 100,
               width: 200,
-              child: textViewCustomer(
+              child: TextViewCustomer(
                   texto: "NO hay datos", color: Constants.blueColor, size: 12),
             );
           }

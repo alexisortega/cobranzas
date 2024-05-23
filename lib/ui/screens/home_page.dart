@@ -603,7 +603,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               onTap: () {
                                                 Get.to(
                                                   preventDuplicates: true,
-                                                  () => customerDetails(
+                                                  () => CustomerDetails(
                                                     cont: index,
                                                     datos: customerData,
                                                     codigoCliente:
@@ -1107,7 +1107,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             context,
             PageTransition(
                 duration: const Duration(milliseconds: 600),
-                child: customerDetails(
+                child: CustomerDetails(
                   cont: cont,
                   datos: customerData,
                   codigoCliente: codigo_cliente,
