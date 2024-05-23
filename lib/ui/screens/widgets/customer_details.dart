@@ -434,11 +434,10 @@ buttonArrow(Size size, Orientation orientation) {
  */
 
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cobranzas/models/constants.dart';
+import 'package:cobranzas/ui/screens/widgets/full_screen_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class CustomerDetails extends StatefulWidget {
@@ -975,13 +974,18 @@ class _MyProfilePicture extends SliverPersistentHeaderDelegate {
                     ),
                   ),
                   child: ClipOval(
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => FullScreenImage(url: imageUrl));
+                      },
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: imageUrl,
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
                   ),
                 ),

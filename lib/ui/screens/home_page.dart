@@ -20,6 +20,8 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'widgets/full_screen_image.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -1239,7 +1241,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       ),
                                       child: GestureDetector(
                                         onTap: () {
-                                          //al presionar la imagen de perfil cliente
+                                          Get.to(() => FullScreenImage(
+                                              url: (snapshot.data?[cont]
+                                                  ["url_foto_Cliente"])));
                                         },
                                         child: CircleAvatar(
                                           backgroundColor: Colors.transparent,
@@ -1314,18 +1318,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     alignment: Alignment.centerLeft,
                                     width: SizeNameTextContainer(size),
                                     color: Colors.transparent,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                          maxLines: 2,
-                                          "${snapshot.data?[cont]['codigo_Cliente']} ${snapshot.data?[cont]['nombre_Cliente']}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Colors.black.withOpacity(0.8),
-                                          )),
-                                    ),
+                                    child: Text(
+                                        overflow: TextOverflow.visible,
+                                        maxLines: 1,
+                                        "${snapshot.data?[cont]['codigo_Cliente']} ${snapshot.data?[cont]['nombre_Cliente']}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.black.withOpacity(0.8),
+                                        )),
                                   ),
                                   Container(
                                     margin:
@@ -1337,7 +1338,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     color: Colors.transparent,
                                     child: Text(
                                       textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
+                                      overflow: TextOverflow.visible,
                                       softWrap: true,
                                       maxLines: 1,
 
