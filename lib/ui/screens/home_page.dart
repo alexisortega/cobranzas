@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     clients = controllerClientes.showClientes();
     showlastFiveClients = controllerClientes.showLastFiveClients();
+
     super.initState();
   }
 
@@ -60,6 +61,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    //todo: construccion  de widgets
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -1154,17 +1157,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 bottom: 5,
               ),
               child: Slidable(
+                key: GlobalKey(),
+                groupTag: "0",
+                enabled: true,
+
                 direction: Axis.horizontal,
                 dragStartBehavior: DragStartBehavior.start,
                 closeOnScroll: true,
+
                 endActionPane: ActionPane(
-                  extentRatio: 0.33,
+                  extentRatio: 0.40,
                   motion: const BehindMotion(),
                   children: [
                     SlidableAction(
                       onPressed: (value) async {
                         await controllerClientes.showDeleteMessage(
-                            "Realmente deseas eliminar a ${(snapshot.data![cont]["codigo_Cliente"])}?",
+                            "Realmente deseas eliminar a ${(snapshot.data![cont]["nombre_Cliente"])}?",
                             (snapshot.data?[cont]["codigo_Cliente"]));
 
                         setState(() {
@@ -1174,12 +1182,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               controllerClientes.showLastFiveClients();
                         });
                       },
+                      flex: 1,
                       spacing: 7,
+                      padding: const EdgeInsets.all(10),
                       icon: Icons.delete,
                       backgroundColor: Constants.orangeColor,
                       foregroundColor: Colors.black,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomLeft: Radius.circular(10)),
                       label: "Eliminar",
+                      autoClose: true,
+                    ),
+                    SlidableAction(
+                      onPressed: (value) async {},
+                      padding: const EdgeInsets.all(10),
+                      flex: 1,
+                      spacing: 7,
+                      icon: Icons.mode_edit_outline_rounded,
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.black,
+                      borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomRight: Radius.circular(10)),
+                      label: "Editar",
                       autoClose: true,
                     ),
                     const SizedBox(
@@ -1187,6 +1213,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     )
                   ],
                 ),
+
                 //listas
                 child: Container(
                   decoration: BoxDecoration(
