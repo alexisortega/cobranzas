@@ -293,7 +293,8 @@ class _NewcustomersState extends State<Newcustomers> {
                       authenticationRepository.showMessage("Aviso",
                           "YA SE CARGO LA FOTO\nNecesitas actualizar...");
                     } else {
-                      await controller.TakePhoto(imageUrl)
+                      await controller
+                          .takePhoto()
                           .then((value) => imageUrl = value.toString());
 
                       if (imageUrl.toString().isEmpty) {
@@ -1014,7 +1015,7 @@ class _NewcustomersState extends State<Newcustomers> {
                 );
                 await Future.delayed(const Duration(seconds: 2));
                 await clientsController()
-                    .UploadPhoto(ImagenURl)
+                    .uploadPhoto(ImagenURl)
                     .then((value) => imageUrl2 = value.toString());
               }
 
@@ -1049,9 +1050,9 @@ class _NewcustomersState extends State<Newcustomers> {
                     estado: controller.estado.text.toUpperCase().trim(),
                     curp:
                         controller.curp.text.toUpperCase().replaceAll(" ", ""),
-                    codigo_cliente: controller.codigo_cliente.text
+                    /*   codigo_cliente: controller.codigo_cliente.text
                         .toUpperCase()
-                        .replaceAll(" ", ""),
+                        .replaceAll(" ", ""), */
                     codigo_postal:
                         int.parse(controller.codigo_postal.text.trim()),
                     fecha_nacimiento:

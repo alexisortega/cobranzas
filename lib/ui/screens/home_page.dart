@@ -1,8 +1,10 @@
 // ignore_for_file: unnecessary_this, import_of_legacy_library_into_null_safe, unrelated_type_equality_checks, prefer_interpolation_to_compose_strings, non_constant_identifier_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/ui/root_page.dart';
 //import 'package:cobranzas/ui/screens/widgets/credit_simulation.dart';
 import 'package:cobranzas/ui/screens/widgets/custom_text.dart';
+import 'package:cobranzas/ui/screens/widgets/edit_clients.dart';
 import 'package:cobranzas/ui/screens/widgets/new_client.dart';
 import 'package:flutter/services.dart';
 
@@ -243,13 +245,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     switch (index) {
                       case 0:
                         //NUEVOS CLIENTES
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                              duration: const Duration(milliseconds: 850),
-                              child: const NewClient(),
-                              type: PageTransitionType.bottomToTop,
-                            )).then((_) {
+
+                        Get.to(
+                          () => const NewClient(),
+                          duration: const Duration(milliseconds: 850),
+                          transition: Transition
+                              .downToUp, // Usamos downToUp para simular bottomToTop
+                        )!
+                            .then((_) {
                           setState(() {
                             clients = controllerClientes.showClientes();
                             showlastFiveClients =
@@ -607,6 +610,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             GestureDetector(
                                               onTap: () {
                                                 Get.to(
+                                                  duration: const Duration(
+                                                      milliseconds: 850),
                                                   preventDuplicates: true,
                                                   () => CustomerDetails(
                                                     cont: index,
@@ -743,10 +748,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int cont) {
-                        if ((snapshot.data?[cont]['nombre_Cliente'])!
+                        if ((snapshot.data?[cont]['codigo_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
-                            (snapshot.data?[cont]['codigo_Cliente'])!
+                            (snapshot.data?[cont]['telefono_Cliente'])!
+                                .toString()
+                                .isCaseInsensitiveContains(search) ||
+                            (snapshot.data?[cont]['nombre_Cliente'])!
                                 .toString()
                                 .isCaseInsensitiveContains(search) ||
                             (snapshot.data?[cont]['apellido_p_Cliente'])!
@@ -1195,7 +1203,56 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       autoClose: true,
                     ),
                     SlidableAction(
-                      onPressed: (value) async {},
+                      onPressed: (value) async {
+                        final String idCliente =
+                            (snapshot.data?[cont]["codigo_Cliente"]);
+                        final String nombreCliente =
+                            (snapshot.data?[cont]["nombre_Cliente"]);
+                        final String apellidoPCliente =
+                            (snapshot.data?[cont]["apellido_p_Cliente"]);
+                        final String apellidomCliente =
+                            (snapshot.data?[cont]["apellido_m_Cliente"]);
+                        final String generoCliente =
+                            (snapshot.data?[cont]["genero_Cliente"]);
+                        final String curpCliente =
+                            (snapshot.data?[cont]["curp_Cliente"]);
+                        final String calleCliente =
+                            (snapshot.data?[cont]["calle_Cliente"]);
+                        final String coloniaCliente =
+                            (snapshot.data?[cont]["colonia_Cliente"]);
+
+                        final String municipioDelegCliente =
+                            (snapshot.data?[cont]["municipio_deleg_Cliente"]);
+
+                        final String estadoCliente =
+                            (snapshot.data?[cont]["estado_Cliente"]);
+                        final int codigoPCliente =
+                            (snapshot.data?[cont]["codigo_p_Cliente"]);
+                        final Timestamp fechaNCliente =
+                            (snapshot.data?[cont]["fecha_n_Cliente"]);
+                        final int telCliente =
+                            (snapshot.data?[cont]["telefono_Cliente"]);
+                        final String urlFotoCliente =
+                            (snapshot.data?[cont]["url_foto_Cliente"]);
+
+                        Get.to(() => EditClients(
+                              idClient: idCliente,
+                              nombre: nombreCliente,
+                              apellidoP: apellidoPCliente,
+                              apellidoM: apellidomCliente,
+                              genero: generoCliente,
+                              curp: curpCliente,
+                              calle: calleCliente,
+                              colonia: coloniaCliente,
+                              municioDelegacion: municipioDelegCliente,
+                              estado: estadoCliente,
+                              codigoPostal: codigoPCliente,
+                              fechaNacimiento:
+                                  fechaNCliente.toDate(),
+                              tel: telCliente,
+                              urlFoto: urlFotoCliente,
+                            ));
+                      },
                       padding: const EdgeInsets.all(10),
                       flex: 1,
                       spacing: 7,
@@ -1348,7 +1405,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     child: Text(
                                         overflow: TextOverflow.visible,
                                         maxLines: 1,
-                                        "${snapshot.data?[cont]['codigo_Cliente']} ${snapshot.data?[cont]['nombre_Cliente']}",
+                                        "${cont + 1} ${snapshot.data?[cont]['nombre_Cliente']} ${snapshot.data?[cont]['apellido_p_Cliente']}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -1363,20 +1420,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     alignment: Alignment.centerLeft,
                                     width: SizeNameTextContainer(size),
                                     color: Colors.transparent,
-                                    child: Text(
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                      maxLines: 1,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.visible,
+                                          softWrap: true,
+                                          maxLines: 1,
 
-                                      "${snapshot.data?[cont]['apellido_p_Cliente']} ${snapshot.data?[cont]['apellido_m_Cliente']}",
-                                      //"${snapshot.data?[cont]['apellido_m']}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.cyan[700]),
+                                          "Tel: ${snapshot.data?[cont]['telefono_Cliente']}",
+                                          //"${snapshot.data?[cont]['apellido_m']}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.cyan[700]),
 
-                                      // ignore: unnecessary_string_escapes
+                                          // ignore: unnecessary_string_escapes
+                                        ),
+                                        const SizedBox(
+                                          width: 50,
+                                        ),
+                                        Text("Activo")
+                                      ],
                                     ),
                                   ),
                                 ],

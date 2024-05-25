@@ -28,6 +28,7 @@ class NewClientState extends State<NewClient> {
   bool isAppBarExpanded = true;
 
   String profile = "";
+  DateTime? pickeddate;
 
   @override
   void initState() {
@@ -53,11 +54,11 @@ class NewClientState extends State<NewClient> {
   bool disable = false;
 
   List<String> itemsGenero = [
-    "Genero",
     'Hombre',
     'Mujer',
   ];
-  String selectedGenero = "Genero";
+  bool isTouched = false;
+  String selectedGenero = "Hombre";
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -419,7 +420,7 @@ class NewClientState extends State<NewClient> {
     Size size,
   ) {
     return Column(children: [
-      const SizedBox(
+      /* const SizedBox(
         height: 10,
       ),
       TextFormField(
@@ -460,7 +461,7 @@ class NewClientState extends State<NewClient> {
                     BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
 
             //
-          )),
+          )), */
       const SizedBox(height: 10),
       TextFormField(
         maxLength: 20,
@@ -566,10 +567,12 @@ class NewClientState extends State<NewClient> {
       const SizedBox(height: 10),
       DropdownButtonFormField<String>(
         validator: (value) {
-          if (value.toString().isCaseInsensitiveContains("genero") ||
-              value.toString().isEmpty) {
+          if (value.toString().isEmpty) {
             return "Necesitás llenar el campo";
-          } else {}
+          }
+          if (isTouched == false) {
+            return 'Por favor seleccione una opción';
+          }
           return null;
         },
         icon: const Icon(
@@ -580,7 +583,7 @@ class NewClientState extends State<NewClient> {
         decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.only(left: 5, right: 10, top: 20, bottom: 10),
-            label: const Text("Genero"),
+            label: const Text("Género"),
             prefixIcon: Icon(
               Icons.person,
               color: Constants.blueColor,
@@ -606,58 +609,62 @@ class NewClientState extends State<NewClient> {
           selectedG = item!;
 
           selectedGenero = selectedG;
+          isTouched = true;
         }),
       ),
       const SizedBox(height: 20),
       TextFormField(
-          maxLength: 18,
-          inputFormatters: [
-            TextInputFormatter.withFunction((oldValue, newValue) =>
-                upperCaseTextFormatter(oldValue,
-                    newValue)), // Aquí aplicamos el formateador personalizado
-          ],
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "Necesitás llenar el campo";
-            } else if (!RegExp(
-                    r'^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$')
-                .hasMatch(value)) {
-              return "CURP en mayúsculas ";
-            } else if (value.length < 18) {
-              return "El Curp es muy corto";
-            }
+        maxLength: 18,
+        inputFormatters: [
+          TextInputFormatter.withFunction((oldValue, newValue) =>
+              upperCaseTextFormatter(oldValue,
+                  newValue)), // Aquí aplicamos el formateador personalizado
+        ],
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Necesitás llenar el campo";
+          } else if (!RegExp(
+                  r'^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$')
+              .hasMatch(value)) {
+            return "CURP válido ";
+          } else if (value.length < 18) {
+            return "El Curp es muy corto";
+          }
 
-            return null;
-          },
-          controller: controllerClients.curp,
-          keyboardType: TextInputType.name,
-          decoration: InputDecoration(
-            label: const Text("Curp"),
-            prefixIcon:
-                Icon(Icons.text_snippet_outlined, color: Constants.blueColor),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                controllerClients.curp.clear();
-              },
-              child: Icon(
-                Icons.cancel,
-                color: Constants.blueColor.withOpacity(0.7),
-              ),
+          return null;
+        },
+        controller: controllerClients.curp,
+        keyboardType: TextInputType.name,
+        decoration: InputDecoration(
+          label: const Text("Curp"),
+          prefixIcon:
+              Icon(Icons.text_snippet_outlined, color: Constants.blueColor),
+          suffixIcon: GestureDetector(
+            onTap: () {
+              controllerClients.curp.clear();
+            },
+            child: Icon(
+              Icons.cancel,
+              color: Constants.blueColor.withOpacity(0.7),
             ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular((10.0)),
-                borderSide:
-                    BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
-          )),
+          ),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular((10.0)),
+              borderSide:
+                  BorderSide(color: Colors.orange.withOpacity(.8), width: 3)),
+        ),
+      ),
       const SizedBox(height: 10),
       TextFormField(
           maxLength: 35,
           validator: (value) {
             if (value!.isEmpty) {
               return "Necesitás llenar el campo";
-            } else if (!RegExp(r'^[a-z A-Z 0-9 \# \.]+$').hasMatch(value)) {
+            }
+            if (!RegExp(r'^[a-z A-Z 0-9 \# \.]+$').hasMatch(value)) {
               return "Ingresé únicamente letras";
-            } else if (value.length < 3) {
+            }
+            if (value.length < 3) {
               return "El nombre es muy corto";
             }
 
@@ -822,9 +829,10 @@ class NewClientState extends State<NewClient> {
       const SizedBox(height: 10),
       TextFormField(
         validator: (value) {
-          if (value.toString().isEmpty) {
+          if (value.toString().isEmpty || value == null) {
             return "Necesitás llenar el campo";
           }
+
           return null;
         },
         controller: controllerClients.fecha_nacimiento,
@@ -843,24 +851,19 @@ class NewClientState extends State<NewClient> {
           DateTime firstDate = DateTime(1920);
           DateTime lastDate = DateTime(now.year - 17, now.month, now.day);
 
-          DateTime? pickeddate = await showDatePicker(
+          pickeddate = await showDatePicker(
             context: context,
             initialDate: lastDate,
             firstDate: firstDate,
             lastDate: lastDate,
           );
 
-          /* if (pickeddate != null) {
-            setState(() {
-              controllerClients.fecha_nacimiento.text =
-                  pickeddate.toString().substring(0, 10);
-            });
-          } */
           if (pickeddate != null) {
             /* String formattedDate = DateFormat('yyyy-MM-dd').format(pickeddate); */
-            String formattedDate = DateFormat('dd-MM-yyyy').format(pickeddate);
+            String formattedDate = DateFormat('dd-MM-yyyy').format(pickeddate!);
             setState(() {
-              controllerClients.fecha_nacimiento.text = formattedDate;
+              controllerClients.fecha_nacimiento =
+                  TextEditingController(text: formattedDate);
             });
           }
         },
@@ -968,7 +971,8 @@ class NewClientState extends State<NewClient> {
                       authenticationRepository.showMessage("Aviso",
                           "YA SE CARGO LA FOTO\nNecesitas actualizar...");
                     } else {
-                      await controllerClients.TakePhoto(imageUrl)
+                      await controllerClients
+                          .takePhoto()
                           .then((value) => imageUrl = value.toString());
 
                       if (imageUrl.toString().isEmpty) {
@@ -1088,7 +1092,7 @@ class NewClientState extends State<NewClient> {
           );
           await Future.delayed(const Duration(seconds: 2));
           await clientsController()
-              .UploadPhoto(imagUrl)
+              .uploadPhoto(imagUrl)
               .then((value) => imageUrl2 = value.toString());
         }
 
@@ -1121,9 +1125,9 @@ class NewClientState extends State<NewClient> {
               colonia: controller.colonia.text.toUpperCase().trim(),
               estado: controller.estado.text.toUpperCase().trim(),
               curp: controller.curp.text.toUpperCase().replaceAll(" ", ""),
-              codigo_cliente: controller.codigo_cliente.text
+              /* codigo_cliente: controller.codigo_cliente.text
                   .toUpperCase()
-                  .replaceAll(" ", ""),
+                  .replaceAll(" ", ""), */
               codigo_postal: int.parse(controller.codigo_postal.text.trim()),
               fecha_nacimiento: DateTime.parse(
                   controller.fecha_nacimiento.text.split("-").reversed.join()),

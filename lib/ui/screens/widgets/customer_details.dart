@@ -500,7 +500,7 @@ class CustomerDetailsState extends State<CustomerDetails> {
 
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
+/*     var orientation = MediaQuery.of(context).orientation; */
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       top: false,

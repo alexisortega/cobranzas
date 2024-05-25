@@ -88,7 +88,7 @@ class _NewUserState extends State<NewUser> {
                         ),
                         child: const CustomTextTitle(
                           title: 'NUEVO USUARIO',
-                          size: 17.0,
+                          size: 14.0,
                         ),
                       )
                     : Padding(

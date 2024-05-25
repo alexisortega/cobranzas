@@ -2,7 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/user_controller.dart';
-import 'package:cobranzas/repository/authentication.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +28,26 @@ class clientsController extends GetxController {
   final municipio_delegacion = TextEditingController();
   final estado = TextEditingController();
   final codigo_postal = TextEditingController();
-  final fecha_nacimiento = TextEditingController();
+  late TextEditingController fecha_nacimiento = TextEditingController();
   final numero_tel = TextEditingController();
-  //fitrar
+  //todo: filtrar/
   final filtrar = TextEditingController();
   int indexCustomer = 0;
+
+  //todo: clase Editar clientes/
+  late TextEditingController Editcodigo_cliente = TextEditingController();
+  late TextEditingController EditNombre = TextEditingController();
+  late TextEditingController EditApellido_m = TextEditingController();
+  late TextEditingController EditApellido_p = TextEditingController();
+  late TextEditingController EditGenero = TextEditingController();
+  late TextEditingController EditCurp = TextEditingController();
+  late TextEditingController EditCalle = TextEditingController();
+  late TextEditingController EditColonia = TextEditingController();
+  late TextEditingController EditMunicipio_delegacion = TextEditingController();
+  late TextEditingController EditEstado = TextEditingController();
+  late TextEditingController EditCodigo_postal = TextEditingController();
+  late TextEditingController EditFecha_nacimiento = TextEditingController();
+  late TextEditingController EditNumero_tel = TextEditingController();
 
   Future showDeleteMessage(String mensaje, String codigo_Cliente) async {
     await Get.defaultDialog(
@@ -86,20 +101,43 @@ class clientsController extends GetxController {
     }
   }
 
-  Future<bool> isCodigoClienteUnique(String codigoCliente) async {
+  /*  Future<bool> isCodigoClienteUnique(String codigoCliente) async {
     final idSuperUsuario = user!.uid;
 
     final querySnapshot = await FirebaseFirestore.instance
         .collection('Clientes')
         .where('codigo_Cliente', isEqualTo: codigoCliente)
-        .where('id_SuperUsuario', isEqualTo: idSuperUsuario)
-        .limit(1)
         .get();
     return querySnapshot.docs.isEmpty;
+  } */
+  Future<bool> isCodigoClienteUnique(String codigoCliente) async {
+    try {
+      final String idSuperUsuario =
+          user!.uid; // Supongo que aquí obtienes el ID del usuario actual
+      final esSuperUser = await userController.esSuperUsuario();
+
+      if (esSuperUser) {
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('Clientes')
+            .where('codigo_Cliente', isEqualTo: codigoCliente)
+            .where('id_SuperUsuario', isEqualTo: idSuperUsuario)
+            .get();
+        return querySnapshot.docs.isEmpty;
+      } else {
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('Clientes')
+            .where('codigo_Cliente', isEqualTo: codigoCliente)
+            .get();
+        return querySnapshot.docs.isEmpty;
+      }
+    } catch (e) {
+      print('Error al verificar la unicidad del código de cliente: $e');
+      return false; // Retorna false en caso de error
+    }
   }
 
   Future<bool> createClients({
-    required String codigo_cliente,
+    /* required String codigo_cliente, */
     required String nombre,
     required String apellido_m,
     required String apellido_p,
@@ -118,22 +156,22 @@ class clientsController extends GetxController {
     try {
       String uIdUserActivo = user!.uid;
       final esSuperUser = await userController.esSuperUsuario();
-      final isUnique = await isCodigoClienteUnique(codigo_cliente);
-
-      if (!isUnique) {
+      /*  final isUnique = await isCodigoClienteUnique(codigo_cliente); */
+      String id_Cliente = database.collection('Clientes').doc().id;
+      /* if (!isUnique) {
         Get.back();
         authenticationRepository.showMessage(
           "Aviso",
-          "El codigo del cliente ya se registro",
-        );
+          "necesitas ingresar otro Id del cliente",
+        ); 
 
         return false;
-      }
+      }*/
 
       if (esSuperUser) {
         if (user != null) {
-          await database.collection('Clientes').doc().set({
-            'codigo_Cliente': codigo_cliente,
+          await database.collection('Clientes').doc(id_Cliente.toString()).set({
+            'codigo_Cliente': id_Cliente.toString(),
             'nombre_Cliente': nombre,
             'apellido_p_Cliente': apellido_m,
             'apellido_m_Cliente': apellido_p,
@@ -164,8 +202,11 @@ class clientsController extends GetxController {
             final idSuperUsuario = userSnapshot.get('id_SuperUsuario');
             final rollSuperUsuario = userSnapshot.get('roll');
 
-            await database.collection('Clientes').doc().set({
-              'codigo_Cliente': codigo_cliente,
+            await database
+                .collection('Clientes')
+                .doc(id_Cliente.toString())
+                .set({
+              'codigo_Cliente': id_Cliente.toString(),
               'nombre_Cliente': nombre,
               'apellido_p_Cliente': apellido_m,
               'apellido_m_Cliente': apellido_p,
@@ -323,7 +364,7 @@ class clientsController extends GetxController {
     }
   }
 
-  Future<Object> TakePhoto(String imageUrl) async {
+  /* Future<Object> TakePhoto(String imageUrl) async {
     //tomar fotografia con la camara
     try {
       ImagePicker imageCustomer = ImagePicker();
@@ -350,17 +391,61 @@ class clientsController extends GetxController {
       imageUrl = file.path;
     }
     return imageUrl;
+  } */
+  Future<String?> takePhoto() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final ImageSource? source = await Get.bottomSheet<ImageSource>(
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Cámara'),
+                onTap: () => Get.back(result: ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Galería'),
+                onTap: () => Get.back(result: ImageSource.gallery),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      if (source == null) {
+        printError(info: "No se seleccionó ninguna opción");
+        return "";
+      }
+
+      final XFile? file = await picker.pickImage(source: source);
+
+      if (file == null) {
+        printError(info: "No se seleccionó ninguna imagen");
+        return "";
+      }
+
+      return file.path;
+    } catch (e) {
+      printError(info: "Error al tomar la foto: $e");
+      return "";
+    }
   }
 
-  Future<Object> UploadPhoto(String imageUrl) async {
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImage = referenceRoot.child("images");
-
-    Reference referenceImageToUpload = referenceDirImage.child(uniqueFileName);
-
+  Future<Object> uploadPhoto(String imageUrl) async {
     try {
+      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      Reference referenceRoot = FirebaseStorage.instance.ref();
+      Reference referenceDirImage = referenceRoot.child("images");
+
+      Reference referenceImageToUpload =
+          referenceDirImage.child(uniqueFileName);
+
       await referenceImageToUpload
           .putFile(File(imageUrl))
           .whenComplete(() => printInfo(info: "Se termino de subir"));
