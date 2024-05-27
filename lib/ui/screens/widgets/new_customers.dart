@@ -1037,7 +1037,7 @@ class _NewcustomersState extends State<Newcustomers> {
               try {
                 if (mounted) {
                   await clientsController()
-                      .createClients(
+                      .createClient(
                     nombre: controller.nombre.text.toUpperCase().trim(),
                     apellido_p: controller.apellido_p.text.toUpperCase().trim(),
                     apellido_m: controller.apellido_m.text.toUpperCase().trim(),

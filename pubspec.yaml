@@ -62,7 +62,7 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   logging: ^1.2.0
   intl: ^0.18.1
-  flutter_form_builder: ^9.2.1
+  
  
   
   

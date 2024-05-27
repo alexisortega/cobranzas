@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/ui/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -54,20 +55,26 @@ class EditClientsState extends State<EditClients> {
   bool isLoading = false;
   bool selectedmenu = false;
 
+  var clients = Future(() => []);
+  var showlastFiveClients = Future(() => []);
+
 // todo : menu desplegable
   List<String> itemsGenero = [
     'Hombre',
     'Mujer',
   ];
   late String selectedGenero = "Mujer";
-  bool isTouched = false;
+
+  String idSeletedClient = "";
 
   @override
   void initState() {
     fondoNewUser = "assets/pantallaEditarCliente.png";
-
+    idSeletedClient = widget.idClient;
     selectedGenero = firstCapitalLetter(widget.genero);
     controllerClients.EditNombre = TextEditingController(text: widget.nombre);
+
+    clients = controllerClients.showClientes();
 
     controllerClients.EditApellido_p =
         TextEditingController(text: widget.apellidoP);
@@ -87,7 +94,7 @@ class EditClientsState extends State<EditClients> {
     controllerClients.EditNumero_tel =
         TextEditingController(text: widget.tel.toString());
 
-    print(widget.idClient);
+    /*  print(widget.idClient);
     print(widget.nombre);
     print(widget.apellidoP);
     print(widget.apellidoM);
@@ -101,7 +108,7 @@ class EditClientsState extends State<EditClients> {
     print(widget.fechaNacimiento);
     print(widget.tel);
     print(widget.urlFoto);
-
+ */
     super.initState();
   }
 
@@ -111,6 +118,8 @@ class EditClientsState extends State<EditClients> {
     }
     return input[0].toUpperCase() + input.substring(1).toLowerCase();
   }
+
+  bool isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -445,15 +454,12 @@ class EditClientsState extends State<EditClients> {
                                         .toList(),
                                     onChanged: (item) => setState(() {
                                       selectedGenero = item!;
-                                      isTouched = true;
                                     }),
                                     validator: (value) {
                                       if (value.toString().isEmpty) {
                                         return "Necesitás llenar el campo";
                                       }
-                                      if (isTouched == false) {
-                                        return 'Por favor seleccione una opción';
-                                      }
+
                                       return null;
                                     },
                                   ),
@@ -828,7 +834,6 @@ class EditClientsState extends State<EditClients> {
                                   ),
 
 //todo: fin del formulario //
-
                                   Container(
                                     height: size.height * 0.1,
                                     width: size.width * 0.6,
@@ -847,30 +852,198 @@ class EditClientsState extends State<EditClients> {
                                             autofocus: true,
 
                                             onPressed: () async {
-                                              isLoading = false;
+                                              bool register = false;
+/* 
+                                              print(
+                                                  "idClient:$idSeletedClient");
+                                              print(
+                                                  "noM:${controllerClients.EditNombre.text}");
+                                              print(
+                                                  "AP:${controllerClients.EditApellido_p.text}");
+                                              print(
+                                                  "AM:${controllerClients.EditApellido_m.text}");
+                                              print("ge:${selectedGenero}");
+                                              print(
+                                                  "curp:${controllerClients.EditCurp.text}");
+                                              print(
+                                                  "call:${controllerClients.EditCalle.text}");
+                                              print(
+                                                  "col:${controllerClients.EditColonia.text}");
+                                              print(
+                                                  "delg:${controllerClients.EditMunicipio_delegacion.text}");
+                                              print(
+                                                  "estado:${controllerClients.EditEstado.text}");
+                                              print(
+                                                  "CP:${controllerClients.EditCodigo_postal.text}");
+                                              print(
+                                                  "FN:${(controllerClients.fecha_nacimiento.text.split("-").reversed.join())}");
+                                              print(
+                                                  "CP:${int.parse(controllerClients.EditNumero_tel.text)}");
+ */
+                                              print(controllerClients
+                                                  .EditFecha_nacimiento);
 
-                                              try {
-                                                //todo Empiza  condicion de forms//
-                                                if (formKey.currentState!
-                                                    .validate()) {
-                                                } else {
+                                              String formatFechaN =
+                                                  controllerClients
+                                                      .EditFecha_nacimiento
+                                                      .text;
+                                              print(formatFechaN);
+
+                                              DateFormat format =
+                                                  DateFormat("dd-MM-yyyy");
+                                              DateTime convertFechaN =
+                                                  format.parse(formatFechaN);
+
+                                              print(convertFechaN);
+
+                                              /* try { */
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    elevation: 20.0,
+                                                    backgroundColor: Constants
+                                                        .blueColor
+                                                        .withOpacity(0.5),
+                                                    content: const Text(
+                                                        "Cargando..."),
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                  ),
+                                                );
+                                                await Future.delayed(
+                                                    const Duration(seconds: 2));
+
+                                                showDialog(
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return Center(
+                                                        child: SpinKitRing(
+                                                      color: Colors.orange
+                                                          .withOpacity(0.9),
+                                                      size: 50.0,
+                                                      lineWidth: 4,
+                                                      duration: const Duration(
+                                                          seconds: 3),
+                                                    ));
+                                                  },
+                                                  // ignore: use_build_context_synchronously
+                                                  context: context,
+                                                );
+
+                                                /*     try { */
+                                                if (mounted) {
+                                                  await controllerClients
+                                                      .updateClient(
+                                                    idClient: idSeletedClient,
+                                                    nombre: controllerClients
+                                                        .EditNombre.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    apellidoP: controllerClients
+                                                        .EditApellido_p.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    apellidoM: controllerClients
+                                                        .EditApellido_m.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    genero: selectedGenero
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    curp: controllerClients
+                                                        .EditCurp.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    calle: controllerClients
+                                                        .EditCalle.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    colonia: controllerClients
+                                                        .EditColonia.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    municipioDelg: controllerClients
+                                                        .EditMunicipio_delegacion
+                                                        .text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    estado: controllerClients
+                                                        .EditEstado.text
+                                                        .toUpperCase()
+                                                        .trim(),
+                                                    codigoPostal: int.parse(
+                                                        controllerClients
+                                                            .EditCodigo_postal
+                                                            .text
+                                                            .toUpperCase()
+                                                            .trim()),
+                                                    fechaNacimiento: convertFechaN
+
+                                                    /*  DateTime
+                                                          .parse(controllerClients
+                                                              .fecha_nacimiento
+                                                              .text
+                                                              .split("-")
+                                                              .reversed
+                                                              .join())) */
+                                                    ,
+                                                    tel: int.parse(
+                                                        controllerClients
+                                                            .EditNumero_tel.text
+                                                            .toUpperCase()
+                                                            .trim()),
+                                                  )
+                                                      .then((value) {
+                                                    if (value == true) {
+                                                      setState(() {
+                                                        register = true;
+                                                        printInfo(
+                                                            info:
+                                                                "Se subio la información...");
+                                                      });
+                                                    }
+                                                  });
+                                                }
+                                                if (register == true) {
+                                                  Get.offAll(
+                                                      () => const RootPage());
+                                                  authenticationRepository
+                                                      .showMessage("Aviso",
+                                                          "Cliente registrado existosamente");
+
+                                                  printInfo(
+                                                      info:
+                                                          "registro temminado: $register");
+                                                } else if (register == false) {
                                                   authenticationRepository
                                                       .showMessage(
                                                           "Advertencia",
-                                                          "Error de registro verifique los datos",
-                                                          context);
+                                                          "Cliente no se registro, verifique los datos e intente de nuevo");
                                                 }
-                                              } on FirebaseFirestore catch (_) {
-                                                authenticationRepository
-                                                    .showMessage(
-                                                        "Advertencia",
-                                                        "Error de base de datos Firebase",
-                                                        context);
-                                              } catch (e) {
+                                                /*  } on FirebaseFirestore catch (_) {
+                                                    authenticationRepository
+                                                        .showMessage(
+                                                            "Advertencia",
+                                                            "Error Firebase ");
+                                                  } catch (_) {
+                                                    Get.back();
+                                                    authenticationRepository
+                                                        .showMessage(
+                                                            "Advertencia",
+                                                            "Algo salío mal verifique los datos");
+                                                  } */
+
+                                                //TERMINA LA CONDICIÓN DE VALIDACIÓN
+                                              } else {
                                                 authenticationRepository
                                                     .showMessage("Advertencia",
-                                                        "Error $e ", context);
+                                                        "Error de registro verifique los datos");
                                               }
+                                              /*  } catch (e) {
+                                                printError(info: "$e");
+                                              } */
                                             },
                                             child: const Row(
                                               children: [

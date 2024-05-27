@@ -3,6 +3,7 @@ import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
 import 'package:cobranzas/repository/authentication.dart';
+import 'package:cobranzas/ui/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -1075,11 +1076,7 @@ class NewClientState extends State<NewClient> {
         if (imagUrl.isEmpty) {
           authenticationRepository.showMessage(
               "Aviso", "Te falta agregar una foto");
-          /*   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    backgroundColor: Colors.cyan,
-                    content: Text("NO hay imagen")));
-                print("imageUrl {${imageUrl} ${ImagenURl}");
-                */
+
           return;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1114,7 +1111,7 @@ class NewClientState extends State<NewClient> {
         try {
           if (mounted) {
             await clientsController()
-                .createClients(
+                .createClient(
               nombre: controller.nombre.text.toUpperCase().trim(),
               apellido_p: controller.apellido_p.text.toUpperCase().trim(),
               apellido_m: controller.apellido_m.text.toUpperCase().trim(),
@@ -1145,8 +1142,8 @@ class NewClientState extends State<NewClient> {
             });
           }
           if (register == true) {
-            Get.back();
-            Get.back();
+            Get.offAll(() => const RootPage());
+
             authenticationRepository.showMessage(
                 "Aviso", "Cliente registrado existosamente");
             deletecustomerfields(controllerClients);

@@ -136,7 +136,7 @@ class clientsController extends GetxController {
     }
   }
 
-  Future<bool> createClients({
+  Future<bool> createClient({
     /* required String codigo_cliente, */
     required String nombre,
     required String apellido_m,
@@ -462,5 +462,48 @@ class clientsController extends GetxController {
     }
 
     return imageUrl;
+  }
+
+  Future<bool> updateClient({
+    required String idClient,
+    required String nombre,
+    required String apellidoP,
+    required String apellidoM,
+    required String genero,
+    required String curp,
+    required String calle,
+    required String colonia,
+    required String municipioDelg,
+    required String estado,
+    required int codigoPostal,
+    required DateTime fechaNacimiento,
+    required int tel,
+  }) async {
+    try {
+      await database.collection('Clientes').doc(idClient).update({
+        'nombre_Cliente': nombre,
+        'apellido_p_Cliente': apellidoP,
+        'apellido_m_Cliente': apellidoM,
+        'genero_Cliente': genero,
+        'curp_Cliente': curp,
+        'calle_Cliente': calle,
+        'colonia_Cliente': colonia,
+        'municipio_deleg_Cliente': municipioDelg,
+        'estado_Cliente': estado,
+        'codigo_p_Cliente': codigoPostal,
+        'fecha_n_Cliente': fechaNacimiento,
+        'telefono_Cliente': tel,
+      });
+
+      print("Información del cliente actualizada exitosamente.");
+
+      return true;
+    } on FirebaseException catch (e) {
+      print("Error de Firebase al actualizar la información del cliente: $e");
+      return false;
+    } catch (e) {
+      print("Error al actualizar la información del cliente: $e");
+      return false;
+    }
   }
 }
