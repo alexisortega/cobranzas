@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
 import 'package:cobranzas/models/custom_text_title.dart';
@@ -55,6 +57,8 @@ class EditClientsState extends State<EditClients> {
   bool isLoading = false;
   bool selectedmenu = false;
 
+  String selectedImage = "";
+
   var clients = Future(() => []);
   var showlastFiveClients = Future(() => []);
 
@@ -70,6 +74,7 @@ class EditClientsState extends State<EditClients> {
   @override
   void initState() {
     fondoNewUser = "assets/pantallaEditarCliente.png";
+
     idSeletedClient = widget.idClient;
     selectedGenero = firstCapitalLetter(widget.genero);
     controllerClients.EditNombre = TextEditingController(text: widget.nombre);
@@ -259,6 +264,99 @@ class EditClientsState extends State<EditClients> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Constants.orangeColor
+                                                .withOpacity(0.5)),
+                                        color: Constants.orangeColor
+                                            .withOpacity(0.18),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))),
+                                    height: orientation == Orientation.portrait
+                                        ? size.height * 0.30
+                                        : size.height * 0.60,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Constants.blueColor,
+                                                  width: 2.0,
+                                                ),
+                                              ),
+                                              child: Stack(
+                                                children: [
+                                                  Hero(
+                                                    tag: selectedImage == ""
+                                                        ? widget.urlFoto
+                                                        : selectedImage,
+                                                    child: CircleAvatar(
+                                                      radius: 100,
+                                                      backgroundImage: selectedImage ==
+                                                              ""
+                                                          ? NetworkImage(
+                                                              widget.urlFoto)
+                                                          : FileImage(File(
+                                                                  selectedImage))
+                                                              as ImageProvider<
+                                                                  Object>?,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    child: ElevatedButton(
+                                                      onPressed: () async {
+                                                        selectedImage =
+                                                            (await controllerClients
+                                                                .takePhoto())!;
+                                                        setState(() {
+                                                          selectedImage;
+                                                        });
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Colors
+                                                            .cyan
+                                                            .withOpacity(0.4),
+                                                        elevation: 0.40,
+                                                        shape:
+                                                            const CircleBorder(),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8),
+                                                      ),
+                                                      child: const RotatedBox(
+                                                        quarterTurns: 1,
+                                                        child: Icon(
+                                                          Icons.sync,
+                                                          size: 27,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                   TextFormField(
                                     controller: controllerClients.EditNombre,
                                     maxLength: 35,
@@ -896,133 +994,185 @@ class EditClientsState extends State<EditClients> {
 
                                               print(convertFechaN);
 
-                                              /* try { */
-                                              if (formKey.currentState!
-                                                  .validate()) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    elevation: 20.0,
-                                                    backgroundColor: Constants
-                                                        .blueColor
-                                                        .withOpacity(0.5),
-                                                    content: const Text(
-                                                        "Cargando..."),
-                                                    behavior: SnackBarBehavior
-                                                        .floating,
-                                                  ),
-                                                );
-                                                await Future.delayed(
-                                                    const Duration(seconds: 2));
+                                              try {
+                                                if (formKey.currentState!
+                                                    .validate()) {
+                                                  if (selectedImage.isEmpty) {
+                                                    authenticationRepository
+                                                        .showMessage("Aviso",
+                                                            "Te falta agregar una foto");
 
-                                                showDialog(
-                                                  barrierDismissible: false,
-                                                  builder: (context) {
-                                                    return Center(
-                                                        child: SpinKitRing(
-                                                      color: Colors.orange
-                                                          .withOpacity(0.9),
-                                                      size: 50.0,
-                                                      lineWidth: 4,
-                                                      duration: const Duration(
-                                                          seconds: 3),
-                                                    ));
-                                                  },
-                                                  // ignore: use_build_context_synchronously
-                                                  context: context,
-                                                );
+                                                    return;
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        elevation: 20.0,
+                                                        backgroundColor:
+                                                            Constants
+                                                                .blueColor
+                                                                .withOpacity(
+                                                                    0.5),
+                                                        content: const Text(
+                                                            "Cargando..."),
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                      ),
+                                                    );
+                                                    await Future.delayed(
+                                                        const Duration(
+                                                            seconds: 2));
+                                                    await clientsController()
+                                                        .uploadPhoto(
+                                                            selectedImage)
+                                                        .then((value) =>
+                                                            selectedImage = value
+                                                                .toString());
+                                                  }
 
-                                                /*     try { */
-                                                if (mounted) {
-                                                  await controllerClients
-                                                      .updateClient(
-                                                    idClient: idSeletedClient,
-                                                    nombre: controllerClients
-                                                        .EditNombre.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    apellidoP: controllerClients
-                                                        .EditApellido_p.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    apellidoM: controllerClients
-                                                        .EditApellido_m.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    genero: selectedGenero
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    curp: controllerClients
-                                                        .EditCurp.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    calle: controllerClients
-                                                        .EditCalle.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    colonia: controllerClients
-                                                        .EditColonia.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    municipioDelg: controllerClients
-                                                        .EditMunicipio_delegacion
-                                                        .text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    estado: controllerClients
-                                                        .EditEstado.text
-                                                        .toUpperCase()
-                                                        .trim(),
-                                                    codigoPostal: int.parse(
-                                                        controllerClients
-                                                            .EditCodigo_postal
-                                                            .text
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      elevation: 20.0,
+                                                      backgroundColor: Constants
+                                                          .blueColor
+                                                          .withOpacity(0.5),
+                                                      content: const Text(
+                                                          "Cargando..."),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                    ),
+                                                  );
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          seconds: 2));
+
+                                                  showDialog(
+                                                    barrierDismissible: false,
+                                                    builder: (context) {
+                                                      return Center(
+                                                          child: SpinKitRing(
+                                                        color: Colors.orange
+                                                            .withOpacity(0.9),
+                                                        size: 50.0,
+                                                        lineWidth: 4,
+                                                        duration:
+                                                            const Duration(
+                                                                seconds: 3),
+                                                      ));
+                                                    },
+                                                    // ignore: use_build_context_synchronously
+                                                    context: context,
+                                                  );
+
+                                                  try {
+                                                    if (mounted) {
+                                                      await controllerClients
+                                                          .updateClient(
+                                                        idClient:
+                                                            idSeletedClient,
+                                                        nombre:
+                                                            controllerClients
+                                                                .EditNombre.text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        apellidoP:
+                                                            controllerClients
+                                                                .EditApellido_p
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        apellidoM:
+                                                            controllerClients
+                                                                .EditApellido_m
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        genero: selectedGenero
                                                             .toUpperCase()
-                                                            .trim()),
-                                                    fechaNacimiento: convertFechaN
+                                                            .trim(),
+                                                        curp: controllerClients
+                                                            .EditCurp.text
+                                                            .toUpperCase()
+                                                            .trim(),
+                                                        calle: controllerClients
+                                                            .EditCalle.text
+                                                            .toUpperCase()
+                                                            .trim(),
+                                                        colonia:
+                                                            controllerClients
+                                                                .EditColonia
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        municipioDelg:
+                                                            controllerClients
+                                                                .EditMunicipio_delegacion
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        estado:
+                                                            controllerClients
+                                                                .EditEstado.text
+                                                                .toUpperCase()
+                                                                .trim(),
+                                                        codigoPostal: int.parse(
+                                                            controllerClients
+                                                                .EditCodigo_postal
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim()),
+                                                        fechaNacimiento:
+                                                            convertFechaN
 
-                                                    /*  DateTime
+                                                        /*  DateTime
                                                           .parse(controllerClients
                                                               .fecha_nacimiento
                                                               .text
                                                               .split("-")
                                                               .reversed
                                                               .join())) */
-                                                    ,
-                                                    tel: int.parse(
-                                                        controllerClients
-                                                            .EditNumero_tel.text
-                                                            .toUpperCase()
-                                                            .trim()),
-                                                  )
-                                                      .then((value) {
-                                                    if (value == true) {
-                                                      setState(() {
-                                                        register = true;
-                                                        printInfo(
-                                                            info:
-                                                                "Se subio la información...");
+                                                        ,
+                                                        tel: int.parse(
+                                                            controllerClients
+                                                                .EditNumero_tel
+                                                                .text
+                                                                .toUpperCase()
+                                                                .trim()),
+                                                        urlImage: selectedImage,
+                                                      )
+                                                          .then((value) {
+                                                        if (value == true) {
+                                                          setState(() {
+                                                            register = true;
+
+                                                            printInfo(
+                                                                info:
+                                                                    "Se subio la información...");
+                                                          });
+                                                        }
                                                       });
                                                     }
-                                                  });
-                                                }
-                                                if (register == true) {
-                                                  Get.offAll(
-                                                      () => const RootPage());
-                                                  authenticationRepository
-                                                      .showMessage("Aviso",
-                                                          "Cliente registrado existosamente");
+                                                    if (register == true) {
+                                                      Get.offAll(() =>
+                                                          const RootPage());
+                                                      authenticationRepository
+                                                          .showMessage("Aviso",
+                                                              "Cliente registrado existosamente");
 
-                                                  printInfo(
-                                                      info:
-                                                          "registro temminado: $register");
-                                                } else if (register == false) {
-                                                  authenticationRepository
-                                                      .showMessage(
-                                                          "Advertencia",
-                                                          "Cliente no se registro, verifique los datos e intente de nuevo");
-                                                }
-                                                /*  } on FirebaseFirestore catch (_) {
+                                                      printInfo(
+                                                          info:
+                                                              "registro temminado: $register");
+                                                    } else if (register ==
+                                                        false) {
+                                                      authenticationRepository
+                                                          .showMessage(
+                                                              "Advertencia",
+                                                              "Cliente no se registro, verifique los datos e intente de nuevo");
+                                                    }
+                                                  } on FirebaseFirestore catch (_) {
                                                     authenticationRepository
                                                         .showMessage(
                                                             "Advertencia",
@@ -1033,17 +1183,18 @@ class EditClientsState extends State<EditClients> {
                                                         .showMessage(
                                                             "Advertencia",
                                                             "Algo salío mal verifique los datos");
-                                                  } */
+                                                  }
 
-                                                //TERMINA LA CONDICIÓN DE VALIDACIÓN
-                                              } else {
-                                                authenticationRepository
-                                                    .showMessage("Advertencia",
-                                                        "Error de registro verifique los datos");
-                                              }
-                                              /*  } catch (e) {
+                                                  //TERMINA LA CONDICIÓN DE VALIDACIÓN
+                                                } else {
+                                                  authenticationRepository
+                                                      .showMessage(
+                                                          "Advertencia",
+                                                          "Error de registro verifique los datos");
+                                                }
+                                              } catch (e) {
                                                 printError(info: "$e");
-                                              } */
+                                              }
                                             },
                                             child: const Row(
                                               children: [

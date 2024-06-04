@@ -478,8 +478,11 @@ class clientsController extends GetxController {
     required int codigoPostal,
     required DateTime fechaNacimiento,
     required int tel,
+    required String urlImage,
   }) async {
     try {
+      /* await deleteImageFromStorage(idClient); */
+
       await database.collection('Clientes').doc(idClient).update({
         'nombre_Cliente': nombre,
         'apellido_p_Cliente': apellidoP,
@@ -493,6 +496,7 @@ class clientsController extends GetxController {
         'codigo_p_Cliente': codigoPostal,
         'fecha_n_Cliente': fechaNacimiento,
         'telefono_Cliente': tel,
+        'url_foto_Cliente': urlImage
       });
 
       print("Información del cliente actualizada exitosamente.");
@@ -504,6 +508,37 @@ class clientsController extends GetxController {
     } catch (e) {
       print("Error al actualizar la información del cliente: $e");
       return false;
+    }
+  }
+
+  Future<void> deleteImageFromStorage(String documentId) async {
+    // Obtener la referencia al documento en Firebase Firestore
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Clientes')
+        .doc(documentId)
+        .get();
+
+    // Verificar si el documento existe y contiene una URL de imagen
+    if (documentSnapshot.exists && documentSnapshot.data() != null) {
+      // Obtener la URL de la imagen desde los datos del documento
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+
+      String? imageUrl;
+      if (data != null && data.containsKey('url_foto_Cliente')) {
+        imageUrl = data['url_foto_Cliente'] as String?;
+      }
+
+      if (imageUrl != null && imageUrl.isNotEmpty) {
+        // Obtener el nombre del archivo de la URL
+        String fileName = imageUrl.split('/').last;
+
+        // Obtener una referencia al archivo en Firebase Storage
+        Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
+
+        // Eliminar el archivo
+        await storageRef.delete();
+      }
     }
   }
 }

@@ -249,7 +249,7 @@ class NewClientState extends State<NewClient> {
                                         elevation: 10.0,
                                         currentStep: currentStep,
                                         connectorColor:
-                                            MaterialStatePropertyAll(
+                                            WidgetStatePropertyAll(
                                                 Constants.blueColor),
                                         onStepTapped: (int step) {
                                           setState(() {
