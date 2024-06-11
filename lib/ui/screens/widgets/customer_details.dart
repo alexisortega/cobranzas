@@ -456,7 +456,7 @@ class _MyProfilePicture extends SliverPersistentHeaderDelegate {
                         Get.to(() => FullScreenImage(url: imageUrl));
                       },
                       child: CachedNetworkImage(
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         imageUrl: imageUrl,
                         placeholder: (context, url) =>
                             const Center(child: CircularProgressIndicator()),

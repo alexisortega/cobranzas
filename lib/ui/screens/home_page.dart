@@ -592,7 +592,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     child: CachedNetworkImage(
                                                   width: size.width,
                                                   height: size.height,
-                                                  fit: BoxFit.cover,
+                                                  fit: BoxFit.fill,
                                                   imageUrl:
                                                       (snapsho.data?[index]
                                                           ["url_foto_Cliente"]),
@@ -1346,7 +1346,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       imageUrl: (snapshot
                                                               .data?[cont]
                                                           ["url_foto_Cliente"]),
-                                                      fit: BoxFit.cover,
+                                                      fit: BoxFit.fill,
                                                       height: size.height,
                                                       width: 63,
                                                       cacheManager:

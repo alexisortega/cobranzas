@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cobranzas/controllers/clients_Controller.dart';
 import 'package:cobranzas/models/constants.dart';
@@ -7,6 +8,7 @@ import 'package:cobranzas/repository/authentication.dart';
 import 'package:cobranzas/ui/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -73,8 +75,9 @@ class EditClientsState extends State<EditClients> {
 
   @override
   void initState() {
-    fondoNewUser = "assets/pantallaEditarCliente.png";
+    print(widget.urlFoto);
 
+    fondoNewUser = "assets/pantallaEditarCliente.png";
     idSeletedClient = widget.idClient;
     selectedGenero = firstCapitalLetter(widget.genero);
     controllerClients.EditNombre = TextEditingController(text: widget.nombre);
@@ -130,7 +133,7 @@ class EditClientsState extends State<EditClients> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var orientation = MediaQuery.of(context).orientation;
-
+    final double radius = size.width * 0.4;
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -274,7 +277,7 @@ class EditClientsState extends State<EditClients> {
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     height: orientation == Orientation.portrait
-                                        ? size.height * 0.30
+                                        ? size.height * 0.35
                                         : size.height * 0.60,
                                     child: Column(
                                       mainAxisAlignment:
@@ -298,18 +301,63 @@ class EditClientsState extends State<EditClients> {
                                                     tag: selectedImage == ""
                                                         ? widget.urlFoto
                                                         : selectedImage,
-                                                    child: CircleAvatar(
-                                                      radius: 100,
-                                                      backgroundImage: selectedImage ==
-                                                              ""
-                                                          ? NetworkImage(
-                                                              widget.urlFoto)
-                                                          : FileImage(File(
-                                                                  selectedImage))
-                                                              as ImageProvider<
-                                                                  Object>?,
-                                                      backgroundColor:
-                                                          Colors.transparent,
+                                                    child: SizedBox(
+                                                      width: orientation ==
+                                                              Orientation
+                                                                  .portrait
+                                                          ? radius * 1
+                                                          : radius * 0.5,
+                                                      height: orientation ==
+                                                              Orientation
+                                                                  .portrait
+                                                          ? radius * 1
+                                                          : radius * 0.5,
+                                                      child: ClipOval(
+                                                        child:
+                                                            selectedImage == ""
+                                                                ? Image.network(
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    widget
+                                                                        .urlFoto,
+                                                                    errorBuilder:
+                                                                        (context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                      return const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator());
+                                                                    },
+                                                                  )
+                                                                : FutureBuilder<
+                                                                    bool>(
+                                                                    future: File(
+                                                                            selectedImage)
+                                                                        .exists(),
+                                                                    builder:
+                                                                        (context,
+                                                                            snapshot) {
+                                                                      if (snapshot
+                                                                              .connectionState ==
+                                                                          ConnectionState
+                                                                              .done) {
+                                                                        if (snapshot.data ==
+                                                                            true) {
+                                                                          return Image.file(
+                                                                              fit: BoxFit.fill,
+                                                                              File(selectedImage));
+                                                                        } else {
+                                                                          return const Center(
+                                                                              child: CircularProgressIndicator());
+                                                                        }
+                                                                      } else {
+                                                                        return const Center(
+                                                                            child:
+                                                                                CircularProgressIndicator());
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                      ),
                                                     ),
                                                   ),
                                                   Positioned(
@@ -997,7 +1045,15 @@ class EditClientsState extends State<EditClients> {
                                               try {
                                                 if (formKey.currentState!
                                                     .validate()) {
-                                                  if (selectedImage.isEmpty) {
+                                                  while (
+                                                      selectedImage.isEmpty ||
+                                                          selectedImage == "") {
+                                                    selectedImage =
+                                                        widget.urlFoto;
+                                                  }
+
+                                                  if (selectedImage.isEmpty ||
+                                                      selectedImage == "") {
                                                     authenticationRepository
                                                         .showMessage("Aviso",
                                                             "Te falta agregar una foto");
@@ -1021,9 +1077,12 @@ class EditClientsState extends State<EditClients> {
                                                                 .floating,
                                                       ),
                                                     );
+
                                                     await Future.delayed(
                                                         const Duration(
                                                             seconds: 2));
+
+                                                    print(selectedImage);
                                                     await clientsController()
                                                         .uploadPhoto(
                                                             selectedImage)
@@ -1160,7 +1219,7 @@ class EditClientsState extends State<EditClients> {
                                                           const RootPage());
                                                       authenticationRepository
                                                           .showMessage("Aviso",
-                                                              "Cliente registrado existosamente");
+                                                              "Cliente se actualizó existosamente");
 
                                                       printInfo(
                                                           info:
@@ -1170,7 +1229,7 @@ class EditClientsState extends State<EditClients> {
                                                       authenticationRepository
                                                           .showMessage(
                                                               "Advertencia",
-                                                              "Cliente no se registro, verifique los datos e intente de nuevo");
+                                                              "Cliente no se guardo, verifique los datos e intente de nuevo");
                                                     }
                                                   } on FirebaseFirestore catch (_) {
                                                     authenticationRepository

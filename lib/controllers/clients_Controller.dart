@@ -80,36 +80,37 @@ class clientsController extends GetxController {
       CollectionReference clientesRef =
           FirebaseFirestore.instance.collection('Clientes');
 
-      // Realizamos una consulta para obtener el documento con el campo "codigo_Cliente" igual a codigoCliente
-      QuerySnapshot querySnapshot = await clientesRef
-          .where('codigo_Cliente', isEqualTo: codigo_cliente)
-          .get();
+      DocumentSnapshot snapshot =
+          await database.collection('Clientes').doc(codigo_cliente).get();
 
-      // Verificamos si se encontró algún documento
-      if (querySnapshot.docs.isNotEmpty) {
-        // Si se encontró al menos un documento, eliminamos el primero encontrado
-        DocumentSnapshot documentoAEliminar = querySnapshot.docs.first;
-        await documentoAEliminar.reference.delete();
+      // Verificar si el documento existe
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        String urlFotoCliente = data['url_foto_Cliente'] as String;
 
-        print('Documento eliminado exitosamente');
-      } else {
-        print(
-            'No se encontraron documentos con el código de cliente especificado');
+        // Realizamos una consulta para obtener el documento con el campo "codigo_Cliente" igual a codigoCliente
+        QuerySnapshot querySnapshot = await clientesRef
+            .where('codigo_Cliente', isEqualTo: codigo_cliente)
+            .get();
+
+        // Verificamos si se encontró algún documento
+        if (querySnapshot.docs.isNotEmpty) {
+          // Si se encontró al menos un documento, eliminamos el primero encontrado
+          DocumentSnapshot documentoAEliminar = querySnapshot.docs.first;
+          await documentoAEliminar.reference.delete();
+          await deleteImage(urlFotoCliente);
+
+          print('Documento eliminado exitosamente');
+        } else {
+          print(
+              'No se encontraron documentos con el código de cliente especificado');
+        }
       }
     } catch (e) {
       print('Error al eliminar el documento: $e');
     }
   }
 
-  /*  Future<bool> isCodigoClienteUnique(String codigoCliente) async {
-    final idSuperUsuario = user!.uid;
-
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('Clientes')
-        .where('codigo_Cliente', isEqualTo: codigoCliente)
-        .get();
-    return querySnapshot.docs.isEmpty;
-  } */
   Future<bool> isCodigoClienteUnique(String codigoCliente) async {
     try {
       final String idSuperUsuario =
@@ -392,7 +393,7 @@ class clientsController extends GetxController {
     }
     return imageUrl;
   } */
-  Future<String?> takePhoto() async {
+  /* Future<String?> takePhoto() async {
     try {
       final ImagePicker picker = ImagePicker();
       final ImageSource? source = await Get.bottomSheet<ImageSource>(
@@ -426,6 +427,54 @@ class clientsController extends GetxController {
 
       if (file == null) {
         printError(info: "No se seleccionó ninguna imagen");
+        return "";
+      }
+
+      return file.path;
+    } catch (e) {
+      printError(info: "Error al tomar la foto: $e");
+      return "";
+    }
+  } */
+
+  Future<String?> takePhoto() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final ImageSource? source = await Get.bottomSheet<ImageSource>(
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Cámara'),
+                onTap: () => Get.back(result: ImageSource.camera),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      if (source == null) {
+        printError(info: "No se seleccionó ninguna opción");
+        return "";
+      }
+
+      final XFile? file = await picker.pickImage(source: source);
+
+      if (file == null) {
+        printError(info: "No se seleccionó ninguna imagen");
+        return "";
+      }
+
+      // Asegurarse de que el archivo existe y es accesible
+      final bool fileExists = await File(file.path).exists();
+      if (!fileExists) {
+        printError(
+            info:
+                "La imagen seleccionada no es válida o no se puede acceder a ella");
         return "";
       }
 
@@ -481,27 +530,40 @@ class clientsController extends GetxController {
     required String urlImage,
   }) async {
     try {
-      /* await deleteImageFromStorage(idClient); */
+      DocumentSnapshot snapshot =
+          await database.collection('Clientes').doc(idClient).get();
 
-      await database.collection('Clientes').doc(idClient).update({
-        'nombre_Cliente': nombre,
-        'apellido_p_Cliente': apellidoP,
-        'apellido_m_Cliente': apellidoM,
-        'genero_Cliente': genero,
-        'curp_Cliente': curp,
-        'calle_Cliente': calle,
-        'colonia_Cliente': colonia,
-        'municipio_deleg_Cliente': municipioDelg,
-        'estado_Cliente': estado,
-        'codigo_p_Cliente': codigoPostal,
-        'fecha_n_Cliente': fechaNacimiento,
-        'telefono_Cliente': tel,
-        'url_foto_Cliente': urlImage
-      });
+      // Verificar si el documento existe
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        String urlFotoCliente = data['url_foto_Cliente'] as String;
 
-      print("Información del cliente actualizada exitosamente.");
+        await database.collection('Clientes').doc(idClient).update({
+          'nombre_Cliente': nombre,
+          'apellido_p_Cliente': apellidoP,
+          'apellido_m_Cliente': apellidoM,
+          'genero_Cliente': genero,
+          'curp_Cliente': curp,
+          'calle_Cliente': calle,
+          'colonia_Cliente': colonia,
+          'municipio_deleg_Cliente': municipioDelg,
+          'estado_Cliente': estado,
+          'codigo_p_Cliente': codigoPostal,
+          'fecha_n_Cliente': fechaNacimiento,
+          'telefono_Cliente': tel,
+          'url_foto_Cliente': urlImage
+        });
 
-      return true;
+        print("Información del cliente actualizada exitosamente.");
+
+        deleteImage(urlFotoCliente);
+        print("se elimino correctamente la imagen");
+
+        return true;
+      } else {
+        print('El documento del cliente no existe.');
+        return false;
+      }
     } on FirebaseException catch (e) {
       print("Error de Firebase al actualizar la información del cliente: $e");
       return false;
@@ -511,34 +573,28 @@ class clientsController extends GetxController {
     }
   }
 
-  Future<void> deleteImageFromStorage(String documentId) async {
-    // Obtener la referencia al documento en Firebase Firestore
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection('Clientes')
-        .doc(documentId)
-        .get();
+  Future<void> deleteImage(String imageUrl) async {
+    try {
+      // Paso 1: Eliminar la referencia en Firestore
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Clientes')
+          .where('url_foto_Cliente', isEqualTo: imageUrl)
+          .get();
 
-    // Verificar si el documento existe y contiene una URL de imagen
-    if (documentSnapshot.exists && documentSnapshot.data() != null) {
-      // Obtener la URL de la imagen desde los datos del documento
-      Map<String, dynamic>? data =
-          documentSnapshot.data() as Map<String, dynamic>?;
-
-      String? imageUrl;
-      if (data != null && data.containsKey('url_foto_Cliente')) {
-        imageUrl = data['url_foto_Cliente'] as String?;
+      // Iterar sobre los documentos encontrados (puede haber múltiples en caso de duplicados)
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        // Eliminar el documento
+        await doc.reference.delete();
       }
 
-      if (imageUrl != null && imageUrl.isNotEmpty) {
-        // Obtener el nombre del archivo de la URL
-        String fileName = imageUrl.split('/').last;
+      // Paso 2: Eliminar el archivo de Firebase Storage
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.refFromURL(imageUrl);
+      await ref.delete();
 
-        // Obtener una referencia al archivo en Firebase Storage
-        Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-
-        // Eliminar el archivo
-        await storageRef.delete();
-      }
+      print('Imagen eliminada con éxito.');
+    } catch (error) {
+      print('Error al eliminar la imagen: $error');
     }
   }
 }
